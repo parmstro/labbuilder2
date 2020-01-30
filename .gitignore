@@ -1,0 +1,7 @@
+# On branch master
+#	.gitignore
+playbooks/bootstrap_config
+playbooks/inventory
+playbooks/locks/
+vars/encrypted_password.yml
+library/
