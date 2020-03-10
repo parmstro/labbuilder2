@@ -1,0 +1,15 @@
+ # This is the partition table for a "Common Profile for General-Purpose Computer Systems" compliant system
+ # NOTE: requires 1st disk = 50G
+ zerombr
+ clearpart --all --initlabel
+ # makes no sense here to place swap or any lv specifically - all virtualized disk laid over SSD environment
+ part /boot --fstype ext4 --size=2048
+ part swap --size=8192
+ part pv.01 --size=204800 --encrypted --cipher=aes-cbc-essiv:sha256 --passphrase=<% host_param('luks_passphrase') %> 
+
+ volgroup vg_root pv.01
+ logvol /tmp  --vgname=vg_root --size=1024 --name=lv_tmp --fstype=xfs
+ logvol /var/log --vgname=vg_root --size=6144 --name=lv_var_log --fstype=xfs 
+ logvol /var/log/audit --vgname=vg_root --size=1024 --name=lv_var_audit --fstype=xfs
+ logvol /  --vgname=vg_root --size=24576 --name=lv_root --fstype=xfs
+ logvol /var --vgname=vg_root --size=1 --grow --maxsize=65536 --name=lv_var --fstype=xfs 

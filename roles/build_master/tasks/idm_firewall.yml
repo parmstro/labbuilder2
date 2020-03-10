@@ -1,0 +1,81 @@
+---
+# IdM Firewall rules.
+# This environment requires RHEL7 
+# firewalld is installed by default
+- name: Ensure firewalld is installed
+  yum:
+    name: firewalld
+    state: latest
+
+- name: Ensure firewalld is running
+  service:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: Ensure https ports are open
+  firewalld:
+    service: https
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the ldap ports are open
+  firewalld:
+    service: freeipa-ldap
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the ldaps ports are open
+  firewalld:
+    service: freeipa-ldaps
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the dns ports are open
+  firewalld:
+    service: dns
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the ntp ports are open
+  firewalld:
+    service: ntp
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the kerberos ports are open
+  firewalld:
+    service: kerberos
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the replication ports are open
+  firewalld:
+    service: freeipa-replication
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure the ad trust ports are open
+  firewalld:
+    service: freeipa-trust
+    permanent: true
+    state: enabled
+    zone: public
+
+- name: Ensure firewall rules are reloaded
+  command: "firewall-cmd --reload"
+
+- name: Log the firewall rules
+  command: "firewall-cmd --list-all"
+  register: fc
+
+- debug:
+    msg: "{{ fc.stdout | to_nice_json }}"
+

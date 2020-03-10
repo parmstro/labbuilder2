@@ -1,0 +1,25 @@
+---
+# This play creates the Content View Filters for a Content View
+#
+
+- name: "Create the content view filter {{ cvf.name }}"
+  katello_content_view_filter:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    name: "{{ cvf.name }}"
+    description: "{{ cvf.description }}"
+    content_view: "{{ cv.name }}"
+    filter_type: "{{ cvf.type }}"
+    inclusion: "{{ cvf.inclusion }}"
+    repositories: "{{ cvf.repositories }}"
+
+- name: "Configure Content View Filter Rules"
+  include_tasks: create_cvf_rules.yml
+  loop: "{{ cvf.rules }}"
+  loop_control:
+    loop_var: cvfr
+  when: "cvf.rules is defined"
+

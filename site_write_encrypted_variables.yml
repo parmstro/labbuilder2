@@ -1,0 +1,32 @@
+---
+
+- name: create a random variable
+  block:
+  - set_fact:
+      options: "-l {{ var.minlength }}"
+  
+  - set_fact: 
+      options: "{{ options }} -s {{ var.special }}"
+    when: "var.special is defined"
+
+  - command: "mkpasswd {{ options }}" 
+    register: result
+
+  - set_fact:
+      encrypt_this: "{{ result.stdout | quote }}"
+  when: "var.value is not defined"
+
+- set_fact:
+    encrypt_this: "{{ var.value }}"
+  when: "var.value is defined"
+
+- name: encrypt it
+  shell: "echo {{ encrypt_this }} | ansible-vault encrypt_string --vault-id {{ password_file }}  --stdin-name {{ var.name }}"
+  register: output
+
+- name: write the variable to the file
+  blockinfile: 
+    path: "{{ output_file }}"
+    marker: "# {mark}  {{ var.name }}  ANSIBLE MANAGED BLOCK"
+    block: "{{ output.stdout }}"
+

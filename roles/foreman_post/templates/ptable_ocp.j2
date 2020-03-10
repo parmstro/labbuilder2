@@ -1,0 +1,31 @@
+ # This is the partition table for a "CPGPC" compliant OpenShift Container Platform system
+ # NOTE: requires 1st disk = 80G
+ zerombr
+ clearpart --all --initlabel
+ # makes no sense here to place swap or any lv specifically - all virtualized disk laid over SSD environment
+
+ <% if @host.provider.downcase == 'vmware' %>
+ part /boot --fstype ext4 --size=512 --ondisk=sda
+ part swap --recommended --ondisk=sda
+ part pv.01 --size=1 --grow --ondisk=sda
+ <% end -%>
+ 
+ <% if @host.provider.downcase == 'rhv' %>
+ part /boot --fstype ext4 --size=512 --ondisk=vda
+ part swap --recommended --ondisk=vda
+ part pv.01 --size=1 --grow --ondisk=vda
+ <% end -%>
+
+ <% if @host.provider.downcase == 'baremetal' %>
+ part /boot --fstype ext4 --size=512 --ondisk=sda
+ part swap --size=4098 --ondisk=sda
+ part pv.01 --size=1 --grow --ondisk=sda
+ <% end -%>
+ 
+ volgroup vg_root pv.01
+ logvol /tmp  --vgname=vg_root --size=1024 --name=lv_tmp --fstype=xfs
+ logvol /var/log --vgname=vg_root --size=6144 --name=lv_var_log --fstype=xfs 
+ logvol /var/log/audit --vgname=vg_root --size=1024 --name=lv_var_audit --fstype=xfs
+ logvol /  --vgname=vg_root --size=24576 --name=lv_root --fstype=xfs
+ logvol /var --vgname=vg_root --size=32768 --name=lv_var --fstype=xfs
+ 

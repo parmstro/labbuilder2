@@ -1,0 +1,8 @@
+---
+- name: Configure the specified mandatory subnets.
+  include_tasks: create_subnet.yml
+  loop: "{{ subnets_mandatory }}"
+  loop_control:
+    loop_var: subnet
+  when: "subnets_mandatory is defined"
+

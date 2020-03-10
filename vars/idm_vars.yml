@@ -1,0 +1,32 @@
+---
+setupdns: true
+makehomedir: true
+nodnshost: true
+sshtrustdns: true
+autoreversedns: true
+dnsforwarders:
+- '8.8.8.8'
+dnsforwardonly: true
+useextrernalcert: false
+externalcacertfiledestdir: ""
+externalcacertfilesrc: ""
+externalcacertfiledest: ""
+idmserveropts: ""
+default_password: "RedHat2019"
+additional_users:
+- { login: "sat_admin", first: "Sat", last: "Admin" }
+- { login: "sat_org_admin", first: "Org", last: "Admin" }
+- { login: "site_admin", first: "Site", last: "Admin" }
+- { login: "comply_mgr", first: "Comply", last: "Mgr" }
+- { login: "comply_aud", first: "Comply", last: "Aud" }
+- { login: "pfy_opertator", first: "PFY", last: "Operator" }
+- { login: "bofh", first: "B", last: "OperatorFH" }
+- { login: "content_mgr", first: "Content", last: "Mgr" }
+additional_group_users:
+- { group: "satgroup-administrator", user: "sat_admin", "poc_admin" }
+- { group: "satgroup-org-administrator", user: "sat_org_admin", "poc_admin" }
+- { group: "satgroup-site-administrator", user: "site_admin", "poc_admin" }
+- { group: "satgroup-compliance-manager", user: "comply_mgr", "poc_admin" }
+- { group: "satgroup-compliance-auditor", user: "comply_aud", "poc_admin" }
+- { group: "satgroup-operator", user: "pfy_operator", "bofh" }
+- { group: "satgroup-content-manager", user: "content_mgr", "poc_admin" }

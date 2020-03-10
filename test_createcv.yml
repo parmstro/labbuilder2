@@ -1,0 +1,83 @@
+---
+# This is a test play to sync a product 
+
+- name: "Test Product Sync"
+  hosts: localhost
+  remote_user: root
+  gather_facts: yes
+
+  vars_prompt:
+  - name: foreman_admin_username
+    prompt: "Enter the Username"
+    private: "no"
+  - name: foreman_admin_password
+    prompt: "Enter the password for {{ foreman_admin_username }}"
+    private: "yes"
+
+  vars:
+    foreman_initial_organization: "RedHatCanada"
+    foreman_server_url: "https://sat6.parmstrong.ca"
+    foreman_validate_certs: true
+    foreman_admin_username: ""
+    foreman_admin_password: ""
+    errata_end_date: "2020-02-07"
+    cvs_mandatory:
+      - name: "TestContentView"
+        desc: "Delete Me"
+        org: "{{ foreman_initial_organization }}"
+        repositories:
+        - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
+          product: "Red Hat Ansible Engine"
+        - name: "Red Hat Satellite Tools 6.6 for RHEL 7 Server RPMs x86_64"
+          product: "Red Hat Enterprise Linux Server"
+        - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64"
+          product: "Red Hat Enterprise Linux Server"
+        - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs x86_64 7Server"
+          product: "Red Hat Enterprise Linux Server"
+        - name: "Red Hat Enterprise Linux 7 Server - RH Common RPMs x86_64 7Server"
+          product: "Red Hat Enterprise Linux Server"
+        - name: "Red Hat Enterprise Linux 7 Server RPMs x86_64 7Server"
+          product: "Red Hat Enterprise Linux Server"
+        filters:
+        - name: "IncludePackagesNoErrata"
+          type: "rpm"
+          inclusion: "true"
+          description: "Include all packages with no errata for all repositories"
+          original_packages: true
+          repositories: "[]"
+        - name: "IncludeErrataByDate"
+          type: "erratum"
+          inclusion: "true"
+          description: "Include all errata updated as of the 1st of the month"
+          original_packages: false
+          repositories: "[]"
+          rules:
+          - name: "errata-by-date-{{ errata_end_date }}"
+            start_date: ""
+            end_date: "{{ errata_end_date }}"
+            date_type: "issued"
+            types:
+            - "enhancement"
+            - "bugfix"
+            - "security"
+        - name: "NoFireFox"
+          type: "rpm"
+          inclusion: "false"
+          description: "Do provide Firefox to be installed on servers"
+          original_packages: false
+          repositories: "[]"
+          rules:
+          - name: "firefox*"
+            basearch: "x86_64"
+
+
+  tasks:
+
+  - name: "Creating the specified content views"
+    include_tasks: ./tests/create_testcv.yml
+    loop: "{{ cvs_mandatory }}"
+    loop_control:
+      loop_var: cv
+
+
+

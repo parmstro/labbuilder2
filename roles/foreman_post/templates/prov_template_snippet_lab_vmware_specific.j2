@@ -1,0 +1,15 @@
+<%#
+kind: snippet
+name: vmware_specific
+%>
+
+# OSS version of vmware tools managed by vendors.
+yum -y install open-vm-tools 
+
+# if we are going to clone this image to a template we need to have cloud-init installed 
+# this requires the rh-common-rpms repo for the appropriate major version... we can * it
+# echo "Installing cloud-init for template modification"
+# subscription-manager repos --enable=rhel-*-server-rh-common-rpms
+# yum -y install cloud-init
+
+

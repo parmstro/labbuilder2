@@ -1,0 +1,19 @@
+---
+#  Add the repository to the custom product
+#
+
+- name: "Add repository {{ cpr.name }}"
+  katello_repository:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    name: "{{ cpr.name }}"
+    content_type: "{{ cpr.content_type }}"
+    product: "{{ cp.name }}"
+    url: "{{ cpr.url }}"
+    mirror_on_sync: "{{ cpr.mirror_on_sync }}"
+    download_policy: "{{ cpr.download_policy }}"
+    state: present
+

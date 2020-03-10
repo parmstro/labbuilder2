@@ -1,0 +1,6 @@
+---
+
+- name: "END Build - {{ role_name }} complete"
+  file:
+    path: "{{ locks_dir }}/{{ role_name }}_complete"
+    state: touch

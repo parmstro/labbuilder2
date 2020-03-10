@@ -1,0 +1,47 @@
+<%#
+kind: provision
+name: RHVH Kickstart default
+oses: 
+- RHVH
+%>
+install
+liveimg --url=<%= host_param('rhvh_image') %>squashfs.img
+ 
+network --bootproto static --ip=<%= @host.ip %> --netmask=<%= @host.subnet.mask %> --gateway=<%= @host.subnet.gateway %> --nameserver=<%= @host.subnet.dns_primary %> --hostname <%= @host.name %> --device=<%= @host.mac -%>
+
+<%= @host.diskLayout %>
+
+rootpw --iscrypted <%= root_pass %>
+
+# installation answers
+lang en_US.UTF-8
+timezone <%= host_param('time-zone') || 'UTC' %>
+keyboard us
+firewall --service=ssh  
+services --enabled=sshd  
+
+text
+reboot
+
+%post --log=/root/ks.post.log --erroronfail 
+nodectl init
+
+/usr/sbin/ntpdate -sub <%= host_param('ntp_server1') || '0.fedora.pool.ntp.org' %>
+/usr/sbin/hwclock --systohc
+
+
+<%= snippet 'rhc_subscription_manager_registration' %>
+<%= snippet 'kickstart_networking_setup' %>
+<% if host_enc['parameters']['realm'] && @host.realm && @host.realm.realm_type == 'Red Hat Identity Management' -%>
+<%= snippet 'rhc_freeipa_register' %>
+<% end -%>
+
+<%= snippet 'rhc_remote_execution_ssh_keys' %>
+
+
+/usr/bin/curl <%= foreman_url('built') %>
+
+sync  
+systemctl reboot
+%end
+

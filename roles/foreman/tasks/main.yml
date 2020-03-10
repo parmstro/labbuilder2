@@ -1,0 +1,39 @@
+---
+# This play sets up the main Satellite Server
+# This must complete successfully before creating any capsule servers
+# This play now uses the yml template method for generating the installation configuration
+# Please see satellite-answers.default.yml in the template directory
+#
+- set_fact:
+    foreman_exists: false
+
+- name: Deploy the configuration Template to foreman-installer directory (backup original)
+  template:
+    src: templates/satellite-answers.yaml.j2
+    dest: /etc/foreman-installer/scenarios.d/satellite-answers.yaml
+    backup: yes
+
+- name: Deploy the custom-hiera.yaml.j2 template - disabling weak encryption (backup original)
+  template:
+    src: templates/custom-hiera.yaml.j2
+    dest: /etc/foreman-installer/custom-hiera.yaml
+    backup: yes
+
+- name: Determine if Foreman/Satellite is already installed
+  command: "foreman-maintain health check"
+  register: health_check
+  ignore_errors: true
+
+- set_fact:
+    foreman_exists: true
+  when: "health_check.stdout == ''"
+
+- name: Install the Foreman/Satellite Server
+  command: "satellite-installer --scenario={{ scenario }}"
+  when: "foreman_exists == false"
+
+- name: Foreman/Satellite is already installed, resetting the installation databases
+  command: "satellite-installer --reset"
+  when: 
+    - "reset_foreman == true"
+    - "foreman_exists == true"

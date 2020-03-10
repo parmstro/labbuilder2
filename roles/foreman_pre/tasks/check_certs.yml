@@ -1,0 +1,7 @@
+---
+# Call katello-check-certs to verify the certs we just created.
+#
+
+- name: Checking the certificates for Satellite
+  command: "katello-certs-check -c {{ ipa_server_crt_file }} -k {{ ipa_server_key_file }} -b {{ ipa_server_ca_file }}"
+

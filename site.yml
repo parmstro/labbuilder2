@@ -1,0 +1,150 @@
+---
+# This is the lab_builder entry point
+# This play will start the build_master and the foreman
+# The builder definitions and phase definitions you provide
+# will determine what is built.
+# note, this playbook requires that you run prepare.yml first
+#
+- name: "Sanity Check..."
+  hosts: all
+  remote_user: root
+  gather_facts: true
+
+  tasks:
+
+  - name: "Just ping them for me..."
+    ping:
+
+##############################################
+
+- name: "Starting lab_builder" 
+  hosts: build_master 
+  remote_user: root
+  gather_facts: true
+
+  vars_prompt:
+    - name: "cdn_username_prompt"
+      prompt: "Enter the username to log into the Red Hat CDN for container images (will be encrypted)"
+      default: "parmstro@redhat.com"
+      private: no
+    - name: "cdn_password_prompt"
+      prompt: "Enter the password to log into the Red Hat CDN for container images (will be encrypted)"
+      default: ""
+      private: yes
+    - name: "root_password"
+      prompt: "Enter the desired administrative password for the lab (will be encrypted)"
+      default: "#M@k31t5omeThing[0mpl3x"
+      private: yes
+
+
+  vars:
+    phase_name: "bootstrap_build_master"
+    epf_overwrite: true
+
+  tasks:
+
+# TODO: Lock variable files exclusively, these are very long processes
+#       where it would easily be possible for these to change 
+#       underneath us. We don't want that.
+
+  - name: "PHASE 1 - BEGIN bootstrap build_master"
+    include_tasks: play_init.yml
+
+# TODO: Put sanity_check code here, steal it from openshift
+
+  - name: "Apply role of build_master to {{ ansible_fqdn }}"
+    include_role:
+       name: build_master
+
+
+#######################################################
+
+- name: "PHASE 1 - BEGIN bootstrap foreman"
+  hosts: foreman
+  remote_user: root
+  gather_facts: yes
+
+  vars:
+    phase_name: "bootstrap_foreman"
+    epf_overwrite: false
+
+  tasks:
+  
+  - name: "Phase initialization - {{ ansible_fqdn }} "
+    include_tasks: play_init.yml
+
+  # We could make the foreman_pre role a dependency of foreman
+  # however this tends to obscure its precense and importance
+  # I prefer to make it explicit here to prompt users to go
+  # investigate the role and its behaviour
+
+  - name: "Apply role of foreman_pre to {{ ansible_fqdn }}"
+    include_role:
+      name: foreman_pre
+
+  - name: "Apply role of foreman to {{ ansible_fqdn }}"
+    include_role:
+      name: foreman
+  
+  # Ditto for foreman_post 
+  # This is where all the configuration happens anyway...
+  - name: "Apply role of foreman_post to {{ ansible_fqdn }}"
+    include_role:
+      name: foreman_post
+
+  - name: "END PHASE 1 - bootstrap complete"
+    file:
+      path: "{{ locks_dir }}/bootstrap_complete"
+      state: touch
+
+# At the end of Phase 1, we have created the provisioning rule for RHHI deployment
+# Power on the rest of the baremetal systems and Satellite will deploy the base hypervisors
+# on baremetal appropriately selected from inventory.
+# Phase 2 processing will occur when we have N number of hypervisors provisioned from our rule
+# where N is the number configured in our variable file N = (3|6|9|12) as this is the restriction
+# for RHHI
+#
+#
+# Phase 2 - RHHI deployment and configuration
+#
+# In Phase 2 - we connect to the first listed (arbitrary) hypervisor as our deployment host
+# this is where we will ensure that the configuration for RHHI is deployed.
+# 
+# At the end of Phase 2 RHHI will be deployed, RHVM will be integrated into our IdM REALM
+# and our Satellite will be configured with a Compute Resource for RHHI, Approprite Compute Profiles, 
+# Host Groups, Host Group variables, Ansible roles specific to Satellite and the general preparation for deployment of
+# our remaining infrastructure hosts that will occur in Phase 3.
+#
+#
+# Phase 3 - Ansible Tower Deployment, Satellite Maintenance Automation, and other required services.
+# 
+# In Phase 3, we will deploy Ansible Tower (standalone at first) and configure the jobs required to 
+# manage and maintain Satellite Content and Publishing. Ansible Tower will be deployed as a VM on RHHI.
+# Jobs, Workflows and Schedules will be created to publish and smoke test basic content in Satellite
+# on a monthly basis. Any additional service related systems can be deployed here as well.
+# IdM integration
+#
+#
+# Phase 4 - OpenShift Deployment
+# 
+# HA deployment of OpenShift 4.3 with Red Hat Container Storage
+# 3-masters
+# 1-bastion
+# 4+ node hosts
+# other nodes as this evolves
+# Integration of authentication into IdM
+#
+#
+# Phase 5 - Sample Application Deployments.
+# Sample OpenShift Application - with SSO integration
+# Sample SAP deployment
+# Sample Windows Deployment
+#
+#
+# Phase N - MultiCloud
+# Extend OpenShift Sample application to Cloud
+# Extended use of ImageBuilder and integration with Cloud
+# Extended use of Tower.
+#
+# At this point we can be done and start managing this with the tools that we have deployed.
+#

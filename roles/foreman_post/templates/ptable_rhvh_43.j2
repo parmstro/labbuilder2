@@ -1,0 +1,59 @@
+# This supports Red Hat Virtualization Hypervisor 4.3 custom partitioning
+# This meets the requirement for deploying Red Hat Hyperconverged Infrastructure for Virtualization
+# This script selects the smallest drive on the system that meets minimum requirements as the boot drive
+# allowing the largest drive to be used for gluster storage.
+
+
+# include the partitioning logic from the pre section.
+%include /tmp/part-include
+
+%pre
+# pre section
+# determine the first drive that is 
+# - not removable 
+# - is larger than MINSIZE
+# - is smaller than MAXSIZE - set MAXSIZE so that your gluster volumes are not selected
+ 
+DIR="/sys/block"
+
+# minimum size of hard drive needed specified in GIGABYTES
+MINSIZE=60
+MAXSIZE=520
+BOOTDRIVE=""
+
+# /sys/block/*/size is in 512 byte chunks
+
+for DEV in sda sdb sdc sdd; do
+  if [ -d $DIR/$DEV ]; then
+    REMOVABLE=`cat $DIR/$DEV/removable`
+    if (( $REMOVABLE == 0 )); then
+      echo $DEV
+      SIZE=`cat $DIR/$DEV/size`
+      GB=$(($SIZE/2**21))
+      if [ $GB -gt $MINSIZE ] && [ $GB -lt $MAXSIZE ]; then
+        echo "$(($SIZE/2**21))"
+        if [ -z $BOOTDRIVE ]; then
+          BOOTDRIVE=$DEV
+        fi
+      fi
+    fi
+  fi
+done
+
+echo "clearpart --all" > /tmp/part-include
+echo "part /boot --fstype xfs --size=1024 --ondisk=$BOOTDRIVE" >> /tmp/part-include
+echo "part pv.01 --size=65536 --grow --ondisk=$BOOTDRIVE" >> /tmp/part-include
+
+%end
+
+volgroup HostVG pv.01 --reserved-percent=20
+logvol swap --vgname=HostVG --name=swap --fstype=swap --recommended
+logvol none --vgname=HostVG --name=HostPool --thinpool --size=59392 --grow
+logvol / --vgname=HostVG --name=root --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=20480
+logvol /var --vgname=HostVG --name=var --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=16384
+logvol /var/crash --vgname=HostVG --name=var_crash --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=10240
+logvol /var/log --vgname=HostVG --name=var_log --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=16384
+logvol /var/log/audit --vgname=HostVG --name=var_audit --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=2048
+logvol /home --vgname=HostVG --name=home --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=1024
+logvol /tmp --vgname=HostVG --name=tmp --thin --fstype=ext4 --poolname=HostPool --fsoptions="defaults,discard" --size=1024
+

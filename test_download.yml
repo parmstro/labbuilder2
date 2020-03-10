@@ -17,7 +17,9 @@
 
   vars:
     manifest_name: "sat66.labbuilder.ca"
-    manifest_path: "./manifest.zip"
+    manifest_path: "./sat66.labbuilder.ca.zip"
+    portal_url: "https://subscription.rhsm.redhat.com"
+    validate_certs: true
     cdn_username: ""
     cdn_password: ""
 

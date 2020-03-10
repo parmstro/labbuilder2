@@ -1,0 +1,71 @@
+---
+# add standard users in a POC
+# 
+
+- name: "Add basic POC admin and developer users"
+  ipa_user:
+    name: "{{ item.login }}"
+    givenname: "{{ item.first }}"
+    sn: "{{ item.last }}"
+    password: "{{ default_password }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { login: "poc_admin", first: "POC", last: "Admin" }
+    - { login: "developer1", first: "Developer", last: "One" }
+    - { login: "developer2", first: "Developer", last: "Two" }
+    - { login: "developer3", first: "Developer", last: "Three" }
+
+- name: "Add any additional users required"
+  ipa_user:
+    name: "{{ item.login }}"
+    givenname: "{{ item.first }}"
+    sn: "{{ item.last }}"
+    password: "{{ default_password }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items: "{{ additional_users }}"
+  when: "additional_users is defined"
+
+- name: "Add basic POC members to groups"
+  ipa_group:
+    name: "{{ item.group }}"
+    user: "{{ item.user }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { group: "admins", user: "admin", "poc_admin" }
+    - { group: "ocpgroup-developer", user: "developer1", "developer2", "developer3" }
+
+- name: "Add basic POC groups to groups"
+  ipa_group:
+    name: "{{ item.group }}"
+    group: "{{ item.value }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { group: "evmgroup-super_administrator", value: "admins" }
+    - { group: "satgroup-administrator", value: "admins" }
+    - { group: "towergroup-administrator", value: "admins" }
+    - { group: "ocpgroup-cluster_administrator", value: "admins" }
+
+- name: "Add any additional users to groups"
+  ipa_group:
+    name: "{{ item.group }}"
+    user: "{{ item.user }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items: "{{ additional_group_users }}"
+  when: "additional_group_users is defined"
+
+

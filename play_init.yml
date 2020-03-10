@@ -1,0 +1,132 @@
+---
+# This file is used to load the global environment for each play. 
+# The example configuration requires these includes, add or remove 
+# what is needed to suit your purposes.
+
+- set_fact: 
+    vars_dir: "{{ playbook_dir }}/vars"
+  tags:
+    - always
+
+- name: "Configure Red Hat IdM prerequisites"
+  set_fact:
+    idm_variable_file: "{{ vars_dir }}/idm_vars.yml"
+  tags:
+    - always
+
+- name: "Configure Red Hat Satellite prerequisites"
+  set_fact:
+    sat_variable_file: "{{ vars_dir }}/sat_vars.yml"
+  tags:
+    - always
+
+- name: "Configure Lab Builder Phase Definition file"
+  set_fact:
+    phase_definition_file: "{{ vars_dir }}/phase_definition.yml"
+  tags:
+    - always
+
+- name: "Set Base Configuration Password Randomization"
+  set_fact:
+    password_config_file: "{{ vars_dir }}/password_vars.yml"
+  tags:
+    - always
+
+- name: "Configure Encrypted Password Target File"
+  set_fact:
+    encrypted_passwords_file: "{{ vars_dir }}/encrypted_password.yml"
+  tags:
+    - always
+
+- name: "Configure Phase Lock directory"
+  set_fact:
+    locks_dir: "{{ playbook_dir }}/locks"
+  tags:
+    - always
+
+- name: "Initialize bootstrap_role"
+  set_fact:
+    bootstrap_role: "none"
+  tags:
+    - always
+
+- name: "Ensuring lock dir"
+  file:
+    path: "{{ locks_dir }}"
+    state: directory
+  tags:
+    - always
+
+- name: "Write phase lock file"
+  file:
+    path: "{{ locks_dir }}/{{ phase_name }}_begin"
+    state: touch
+  tags:
+    - always
+
+- name: "Has prepare been run"
+  stat:
+    path: "{{ playbook_dir }}/bootstrap_config"
+  register: bc
+  tags:
+    - always
+
+- fail:
+    msg: "Bootstrap configuration not found. Please run ansible-playbook prepare.yml and reboot before running site.yml"
+  when: "bc.stat.exists == false and bootstrap_role == 'buildmaster'"
+  tags:
+    - always
+
+- name: "Reading bootstrap configuration"
+  include_vars:
+    file: "{{ playbook_dir }}/bootstrap_config"
+  tags:
+    - always
+
+- name: "Starting lab_builder for {{ ansible_fqdn }} in {{ phase_name }}"
+  include_vars: 
+    file: "{{ phase_definition_file }}"
+  tags:
+    - always
+    
+- name: "Including specified password generation file {{ password_config_file }}"
+  include_vars: 
+    file: "{{ password_config_file }}"
+  tags:
+    - always
+
+- name: "Generate passwords"
+  include_tasks: site_generate_passwords.yml
+  tags:
+    - always
+
+- name: "Include encrypted passwords"
+  include_vars:
+    file: "{{ output_file }}"
+  tags:
+    - always
+
+- name: "Include IdM Related Global Configuration"
+  include_vars:
+    file: "{{ idm_variable_file }}"
+  tags:
+    - always
+
+- name: "Include Satellite Related Global Configuration"
+  include_vars:
+    file: "{{ sat_variable_file }}"
+  tags:
+    - always
+
+- name: "Set Variable files to read only"
+  file:
+    dest: "{{ vars_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0744
+    recurse: yes
+  tags:
+    - always
+
+

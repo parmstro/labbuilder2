@@ -16,8 +16,8 @@
     private: "yes"
 
   vars:
-    manifest_name: "test2_manifest"
-    manifest_path: "/tmp/test2_manifest.zip"
+    manifest_name: "empty_manifest"
+    manifest_path: "./empty_manifest.zip"
     portal_url: "https://subscription.rhsm.redhat.com"
     validate_certs: false 
     cdn_username: ""

@@ -1,0 +1,27 @@
+<%#
+kind: snippet
+name: rhv_specific
+%>
+
+# if this is a server install, just install the guest agent and spice agent
+echo "Installing the RHEVM Guest Agent"
+subscription-manager repos --enable=rhel-*-server-rh-common-rpms
+
+yum -y install ovirt-guest-agent-common
+systemctl start ovirt-guest-agent
+systemctl enable ovirt-guest-agent
+
+yum -y install spice-vdagent
+systemctl start spice-vdagentd
+systemctl enable spice-vdagentd
+
+# if this is a workstation install, install all the bits for UI integration
+# yum -y install rhevm-guest-agent*
+
+# if we are going to clone this image to a template we need to have cloud-init installed 
+# this requires the rh-common-rpms repo for the appropriate major version... we can * it
+<% if host_param("is_template") == 1 -%>
+    echo "Installing cloud-init for template modification"
+    yum -y install cloud-init
+<% end -%>
+

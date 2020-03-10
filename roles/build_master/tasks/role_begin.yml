@@ -1,0 +1,6 @@
+---
+
+- name: "BEGIN Build - {{ role_name }} being applied."
+  file:
+    path: "{{ locks_dir }}/{{ role_name }}_begin"
+    state: touch

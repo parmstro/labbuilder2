@@ -1,0 +1,92 @@
+---
+# standard user groups in a POC
+#
+
+- name: Add the standard groups for controlling CloudForms Access
+  ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { name: "evmgroup-administrator", desc: "CloudForms Server Administrators" }
+    - { name: "evmgroup-approver", desc: "CloudForms Service Approvers" } 
+    - { name: "evmgroup-auditor", desc: "CloudForms Systems Auditors" }
+    - { name: "evmgroup-desktop", desc: "CloudForms Desktop Users" }
+    - { name: "evmgroup-operator", desc: "CloudForms Server Operators" }
+    - { name: "evmgroup-security", desc: "CloudForms Security Administrators" }
+    - { name: "evmgroup-super_administrator", desc: "CloudForms Super Administrators" }
+    - { name: "evmgroup-support", desc: "CloudForms Systems Maintenance Operators" }
+    - { name: "evmgroup-user", desc: "CloudForms General Users" }
+    - { name: "evmgroup-user_limited_self_service", desc: "CloudForms Restricted Self Service Users" }
+    - { name: "evmgroup-vm_user", desc: "CloudForms Virtual Machine Users" }
+    - { name: "evmgroup-tenant_administrator", desc: "CloudForms Tenant Administrators" }
+    - { name: "evmgroup-tenant_quota_administrator", desc: "CloudForms Tenant Quota Administrators" }
+
+- name: Add the standard groups for controlling Satellite Access
+  ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { name: "satgroup-administrator", desc: "Satellite Server Administrators" }
+    - { name: "satgroup-org-administrator", desc: "Satellite Default Org Administrators - Manager Role" }
+    - { name: "satgroup-site-administrator", desc: "Satellite Default Org Administrators - Manager Role for a Location" }
+    - { name: "satgroup-compliance-manager", desc: "Satellite Systems Compliance Managers - Full control compliance content" }
+    - { name: "satgroup-compliance-auditor", desc: "Satellite Systems Compliance Auditor - Read only control compliance content" }
+    - { name: "satgroup-operator", desc: "Satellite Server Operators - Full control on hosts and content hosts" }
+    - { name: "satgroup-sub-manager", desc: "Satellite Subscription Manager - manage all subsc:riptions" }
+    - { name: "satgroup-content-manager", desc: "Satellite Content Manager - manage all content" }
+
+- name: Add the standard groups for controlling Ansible Tower Access
+  ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { name: "towergroup-administrator", desc: "Ansible Tower Administrators" }
+    - { name: "towergroup-auditor", desc: "Ansible Tower Auditors" }
+    - { name: "towergroup-operator", desc: "Ansible Tower Server Operators" }
+    - { name: "towergroup-proj_manager", desc: "Ansible Tower Project Manager" }
+    - { name: "towergroup-template_manager", desc: "Ansible Tower Template Manager" }
+    - { name: "towergroup-user", desc: "Ansible Tower User - can run basic Templates and Workflows" }
+
+- name: Add the standard groups for controlling OpenShift Container Platform Access
+  ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { name: "ocpgroup-cluster_administrator", desc: "OpenShift Container Platform Cluster Administrators" }
+    - { name: "ocpgroup-operator", desc: "OpenShift Container Platform Cluster Operators" }
+    - { name: "ocpgroup-proj_administrator", desc: "OpenShift Container Platform Project Administrator" }
+    - { name: "ocpgroup-developer", desc: "OpenShift Container Platform Developer" }
+
+- name: Add the standard host groups for controlling sudo and HBAC access
+  ipa_hostgroup:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ idm_admin }}"
+  with_items:
+    - { name: "ocp-servers", desc: "OpenShift Container Platform Nodes, Routers and Load Balancers" }
+    - { name: "ocp-masters", desc: "OpenShift Container Platform Master Servers" }
+    - { name: "cfme-servers", desc: "CloudForms Management Platform Servers" }
+    - { name: "sat-servers", desc: "Satellite Servers and Capsules" }
+    - { name: "awx-servers", desc: "Ansible Tower Servers" }
+    - { name: "util-servers", desc: "Utility Servers for General Purpose work" }
+
+

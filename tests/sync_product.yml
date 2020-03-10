@@ -1,0 +1,12 @@
+---
+# This tasks syncs all repositories for a product
+#
+- name: "Sync the mandatory products with the CDN"
+  katello_sync:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    product: "{{ product_name }}"
+

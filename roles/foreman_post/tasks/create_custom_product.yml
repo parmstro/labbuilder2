@@ -1,0 +1,21 @@
+---
+# This play will generate the required repositories for the custom products if any.
+#
+ 
+- name: "Create custom product {{ cp.name }}"
+  katello_product:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    name: "cp.name"
+    state: present
+
+
+- name: "Create the Repositories required for the custom product."
+  include_tasks: add_custom_product_repo.yml
+  loop: "{{ cp.repos }}"
+  loop_control: 
+    loop_var: cpr
+  when: "cp.repos is defined"

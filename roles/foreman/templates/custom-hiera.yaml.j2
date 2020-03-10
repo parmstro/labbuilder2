@@ -1,0 +1,58 @@
+---
+# This YAML file lets you set your own custom configuration in Hiera for the
+# installer puppet modules that might not be exposed to users directly through
+# installer arguments.
+#
+# For example, to set 'TraceEnable Off' in Apache, a common requirement for
+# security auditors, add this to this file:
+#
+#   apache::trace_enable: Off
+#
+# Consult the full module documentation on http://forge.puppetlabs.com,
+# or the actual puppet classes themselves, to discover options to configure.
+#
+# Do note, setting some values may have unintended consequences that affect the
+# performance or functionality of the application. Consider the impact of your
+# changes before applying them, and test them in a non-production environment
+# first.
+#
+# Here are some examples of how you tune the Apache options if needed:
+#
+# apache::mod::prefork::startservers: 8
+# apache::mod::prefork::minspareservers: 5
+# apache::mod::prefork::maxspareservers: 20
+# apache::mod::prefork::serverlimit: 256
+# apache::mod::prefork::maxclients: 256
+# apache::mod::prefork::maxrequestsperchild: 4000
+#
+# Here are some examples of how you tune the PostgreSQL options if needed:
+#
+# postgresql::server::config_entries:
+#   max_connections: 600
+#   shared_buffers: 1024MB
+# Added by foreman-installer during upgrade, run the installer with --upgrade-mongo-storage to upgrade to WiredTiger.
+mongodb::server::storage_engine: 'mmapv1'
+
+# ABOVE THIS LINE IS PLAIN OLD SATELLITE-INSTALLER
+# BELOW added by lab_builder and is STRONGLY RECOMMENDED for all installations.
+# This is being added before satellite-installer is run, so will be handled from the outset.
+
+# From: 7.1. Disabling Weak SSL 2.0 and SSL 3.0 Encryption
+# https://access.redhat.com/documentation/en-us/red_hat_satellite/6.6/html/administering_red_hat_satellite/disabling_weak_ssl_encryption
+
+# Foreman Proxy
+foreman_proxy::tls_disabled_versions: [ '1.1' ]
+
+# Dynflow
+foreman_proxy::plugin::dynflow::tls_disabled_versions: [ '1.1' ]
+
+# Apache
+apache::mod::ssl::ssl_protocol: [ 'ALL' , '-SSLv3' , '-TLSv1' , '-TLSv1.1' , '+TLSv1.2' ]
+
+# Tomcat / Candlepin
+candlepin::tls_versions: [ '1.2' ]
+
+# QPID Dispatch
+foreman_proxy_content::qpid_router_ssl_protocols: [ 'TLSv1.2' ]
+foreman_proxy_content::qpid_router_ssl_ciphers: 'ALL:!aNULL:+HIGH:-SSLv3:!IDEA-CBC-SHA'
+

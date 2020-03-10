@@ -1,0 +1,15 @@
+<%#
+kind: PXELinux
+name: RHVH43 PXELinux
+%>
+# Created for booting new hypervisors
+#
+
+DEFAULT rhvh
+
+LABEL rhvh
+   KERNEL <%= @kernel %>  
+   APPEND initrd=<%= @initrd %>  inst.ks=<%= foreman_url("provision") %>  inst.stage2=<%= @host.operatingsystem.medium_uri(@host) %> intel_iommu=on ssh_pwauth=1 local_boot_trigger=<%= foreman_url("built") %>
+   IPAPPEND 2  
+
+
