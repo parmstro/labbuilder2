@@ -24,11 +24,11 @@
 
   vars_prompt:
     - name: "cdn_username_prompt"
-      prompt: "Enter the username to log into the Red Hat CDN for container images (will be encrypted)"
+      prompt: "Enter the username to log into the Red Hat CDN (will be encrypted)"
       default: "parmstro@redhat.com"
       private: no
     - name: "cdn_password_prompt"
-      prompt: "Enter the password to log into the Red Hat CDN for container images (will be encrypted)"
+      prompt: "Enter the password to log into the Red Hat CDN (will be encrypted)"
       default: ""
       private: yes
     - name: "root_password"
@@ -43,14 +43,9 @@
 
   tasks:
 
-# TODO: Lock variable files exclusively, these are very long processes
-#       where it would easily be possible for these to change 
-#       underneath us. We don't want that.
 
   - name: "PHASE 1 - BEGIN bootstrap build_master"
     include_tasks: play_init.yml
-
-# TODO: Put sanity_check code here, steal it from openshift
 
   - name: "Apply role of build_master to {{ ansible_fqdn }}"
     include_role:
@@ -93,10 +88,14 @@
       name: foreman_post
 
   - name: "END PHASE 1 - bootstrap complete"
-    file:
-      path: "{{ locks_dir }}/bootstrap_complete"
-      state: touch
+    debug:
+      msg: "Prepare for PHASE 2 - pausing for system power on and discovery"
 
+  - name: "Waiting {{ pause_minutes }} minutes for Discovery"
+    pause:
+      minutes: "{{ pause_minutes }}"
+      prompt: "Press Ctrl+C then - press c to continue early OR press a to abort"
+      
 # At the end of Phase 1, we have created the provisioning rule for RHHI deployment
 # Power on the rest of the baremetal systems and Satellite will deploy the base hypervisors
 # on baremetal appropriately selected from inventory.
