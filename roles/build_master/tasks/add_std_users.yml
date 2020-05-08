@@ -52,7 +52,6 @@
     ipa_user: "admin"
     ipa_pass: "{{ idm_admin }}"
   with_items:
-    - { group: "evmgroup-super_administrator", value: "admins" }
     - { group: "satgroup-administrator", value: "admins" }
     - { group: "towergroup-administrator", value: "admins" }
     - { group: "ocpgroup-cluster_administrator", value: "admins" }

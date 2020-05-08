@@ -51,23 +51,6 @@
     - ocpgroup-cluster_administrator
     - ocpgroup-operator
 
-
-- name: "Add the cfme-admin sudo rule"
-  ipa_sudorule:
-    name: "cfme-admin"
-    description: "Control sudo access on CloudForms Servers"
-    state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ idm_admin }}"
-    cmdcategory: all
-    hostgroup:
-    - cfme-servers
-    usergroup:
-    - evmgroup-super_administrator
-    - evmgroup-administrator
-    - evmgroup-operator
-
 - name: "Add the awx-admin sudo rule"
   ipa_sudorule:
     name: "awx-admin"

@@ -2,29 +2,6 @@
 # standard user groups in a POC
 #
 
-- name: Add the standard groups for controlling CloudForms Access
-  ipa_group:
-    name: "{{ item.name }}"
-    description: "{{ item.desc }}"
-    state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ idm_admin }}"
-  with_items:
-    - { name: "evmgroup-administrator", desc: "CloudForms Server Administrators" }
-    - { name: "evmgroup-approver", desc: "CloudForms Service Approvers" } 
-    - { name: "evmgroup-auditor", desc: "CloudForms Systems Auditors" }
-    - { name: "evmgroup-desktop", desc: "CloudForms Desktop Users" }
-    - { name: "evmgroup-operator", desc: "CloudForms Server Operators" }
-    - { name: "evmgroup-security", desc: "CloudForms Security Administrators" }
-    - { name: "evmgroup-super_administrator", desc: "CloudForms Super Administrators" }
-    - { name: "evmgroup-support", desc: "CloudForms Systems Maintenance Operators" }
-    - { name: "evmgroup-user", desc: "CloudForms General Users" }
-    - { name: "evmgroup-user_limited_self_service", desc: "CloudForms Restricted Self Service Users" }
-    - { name: "evmgroup-vm_user", desc: "CloudForms Virtual Machine Users" }
-    - { name: "evmgroup-tenant_administrator", desc: "CloudForms Tenant Administrators" }
-    - { name: "evmgroup-tenant_quota_administrator", desc: "CloudForms Tenant Quota Administrators" }
-
 - name: Add the standard groups for controlling Satellite Access
   ipa_group:
     name: "{{ item.name }}"

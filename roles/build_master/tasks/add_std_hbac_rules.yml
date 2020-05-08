@@ -63,22 +63,6 @@
     usergroup:
     - satgroup-operators
 
-- name: "Create a CFME Operators HBAC rule"
-  ipa_hbacrule:
-    name: cfme-operators
-    description: "Satellite Operators can access the Satellite and Capsule Servers"
-    state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ idm_admin }}"
-    hostgroup:
-    - cfme-servers
-    servicecategory: all
-    usergroup:
-    - evmgroup-super_administrator
-    - evmgroup-administrator
-    - evmgroup-operator
-
 - name: "Create a AWX Operators HBAC rule"
   ipa_hbacrule:
     name: cfme-operators

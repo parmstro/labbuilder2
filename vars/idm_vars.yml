@@ -1,18 +1,56 @@
 ---
-setupdns: true
-makehomedir: true
-nodnshost: true
-sshtrustdns: true
-autoreversedns: true
-dnsforwarders:
-- '8.8.8.8'
-dnsforwardonly: true
-useextrernalcert: false
-externalcacertfiledestdir: ""
-externalcacertfilesrc: ""
-externalcacertfiledest: ""
-idmserveropts: ""
-default_password: "RedHat2019"
+# Basic Variables for ipaserver role
+ipaserver: "buildmaster"
+ipaadmin_password: "{{ vault_ipaadmin_password }}"
+ipaserver_ip_address: "{{ bootstrap_ip }}"
+ipaserver_domain: "labbuilder.ca"
+ipaserver_realm: "LABBUILDER.CA"
+ipaserver_hostname: "{{ bootstrap_fqdn }}"
+ipaserver_no_host_dns: true
+
+# Server Variables
+# ipaserver_setup_adtrust: false
+# ipaserver_setup_kra: false
+ipaserver_setup_dns: true
+ipaserver_idstart: "random"
+ipaserver_idmax: ""
+ipaserver_no_hbac_allow: false
+# ipaserver_no_ui_redirect: false 
+# ipaserver_dirsrv_config_file: ""
+# ipaserver_pki_config_override: ""
+
+# Client Variables
+#ipaclient_ntp_servers: ""    #The list defines the NTP servers to be used. (required=no)
+#ipaclient_ntp_pool: ""       #The string value defines the ntp server pool to be used. (required=no)
+#ipaclient_no_ntp: false      #The bool value defines if NTP will not be configured and enabled. (default: false) (required=no)
+ipaclient_ssh_trust_dns: true #The bool value defines if OpenSSH client will be configured to trust DNS SSHFP records. (default: false) (required=no)
+ipaclient_no_ssh: false       #The bool value defines if OpenSSH client will be configured. default is to configure (default: false) (required=no)
+ipaclient_no_sshd: false      #The bool value defines if OpenSSH server will be configured. default is to configure  default: false) (required=no)
+ipaclient_no_sudo: false      #The bool value defines if SSSD will be configured as a data source for sudo. default is to configure (default: false) (required=no)
+ipaclient_no_dns_sshfp: false #The bool value defines if DNS SSHFP records will not be created automatically. default is to create records (default: false) (required=no)
+
+# DNS Variables
+# ipaserver_allow_zone_overlap: false
+# ipaserver_reverse_zones: "" # The reverse DNS zones to use. (list of strings) (required=no)
+# ipaserver_no_reverse: false # Do not create reverse DNS zone. (bool, default: false) (required=no)
+# ipaserver_auto_reverse: false #Try to resolve reverse records and reverse zones for server IP addresses. (bool, default: false) (required=no)
+# ipaserver_zonemgr: ""  #The e-mail address of the DNS zone manager. (string, default: hostmaster@DOMAIN.) (required=no)
+
+ipaserver_forwarders: "8.8.8.8" #Add DNS forwarders to the DNS configuration. (list of strings) (required=no)
+
+# ipaserver_no_forwarders: false #Do not add any DNS forwarders. Root DNS servers will be used instead. (bool, default: false) (required=no)
+# ipaserver_auto_forwarders: false #Add DNS forwarders configured in /etc/resolv.conf to the list of forwarders used by IPA DNS. (bool, default: false) (required=no)
+ipaserver_forward_policy: "only" #DNS forwarding policy for global forwarders specified using other options. (choice: first|only) (required=no)
+# ipaserver_no_dnssec_validation: false #Disable DNSSEC validation on this server. (bool, default: false) (required=no)
+
+# Special Variables for ipaserver role
+ipaserver_install_packages: true
+ipaserver_setup_firewalld: true
+# ipaserver_external_cert_files_from_controller: ""
+# ipaserver_copy_csr_to_controller: false
+
+# Lab User information
+default_password: "{{ vault_default_password }}"
 additional_users:
 - { login: "sat_admin", first: "Sat", last: "Admin" }
 - { login: "sat_org_admin", first: "Org", last: "Admin" }
@@ -30,3 +68,5 @@ additional_group_users:
 - { group: "satgroup-compliance-auditor", user: "comply_aud", "poc_admin" }
 - { group: "satgroup-operator", user: "pfy_operator", "bofh" }
 - { group: "satgroup-content-manager", user: "content_mgr", "poc_admin" }
+
+
