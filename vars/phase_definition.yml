@@ -31,6 +31,8 @@ bootstrap:
       builder_dir: "{{ playbook_dir }}"
       roles: [foreman_pre,foreman,foreman_post]
 
+# Wait for Discovery
+  pause_minutes: 5
 
 # Start of Phase 2
 # Create any additional bootstrap infrastructure here
