@@ -5,4 +5,4 @@ playbooks/inventory
 playbooks/locks/
 vars/encrypted_password.yml
 library/
-images/rhel-server-7.9-update-9-x86_64-kvm.qcow2
+images/
