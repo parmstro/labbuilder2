@@ -1,32 +1,29 @@
 TODO:
-- time to retrace our steps
-- investigate using foreman-ansible-modules as they are community supported
-  - current issue is the need to manage username and password with each call
-  - this is a shitty model - using hammer obfuscates much.
-  - hammer is fully supported.
+2022-01-20
 
+This is the 2022 reboot of labbuilder.
+
+Restating our goals. 
+
+1) create code to extract **configuration only** dumps from our Red Hat technologies 
+2) create code to consume the configuration dumps to allow us to recreate complex environments
+3) start with Red Hat Identity Management, Satellite and Ansible Automation Platform - the enterprise service and construction backplane. 4) extend to other infrastucture planes such as container platform and virtualization, storage infrastucture, etc..
+
+Binary bootstrap model. 
+Use ansible locally to create and configure an IdM server
+Use ansible locally to create a Satellite server
+Use ansible locally to create have Satellite provision an AAP controller server and then use ansible locally to configure AAP
+Use tower to run workflows to create additional infrastructure.
+- IdM replicas
+- Satellite capsules
+- AAP controller cluster
+- OpenShift clusters
+
+
+Tasks:
 - rebuild base builder image
 - retest everything built so far
 - check discovery
-- configure rhv image repo
-- create rhv (all) media
-- create rhc (all) partition tables
-- create rhv (all) pxe template
-- create rhv (all) provisioning template 
-- create provisioning snippets
-- create rhv (all) os
-- create discovery rules for rhv hosts
-  - search = "disk_count = 2 and memory > 32000 and facts.interfaces ~ "*,*,*,*""
-  # this gets us systems with 2 hdds, 32GB ram and 3 nics. This is required for RHHI
-
-- power-on hosts
-- provision rhv hosts (auto)
-  - because of the above rule, this should happen automagically if we have systems that meet 
-- figure out how to make them hyper-converged
-- configure RHHI hosts
-- configure rhvm
-- create compute resource for rhv
-- create compute profiles for rhv
 - install and configure virt-who
 - create Globals
 - configure remote-execution
@@ -42,8 +39,5 @@ TODO:
 - configure tower example jobs
 
 - deploy OpenShift
-
-
-
 
 - populate meta.yml information
