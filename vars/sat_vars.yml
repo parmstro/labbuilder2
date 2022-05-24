@@ -659,7 +659,7 @@ custom_products:
       url: "https://mirror.csclub.uwaterloo.ca/fedora/linux/releases/31/Everything/x86_64/os/"
       username: ""
       password: ""
-   - name: fedora31_updates
+    - name: fedora31_updates
       upstream_name: fedora_updates
       repository_content_type: yum
       url: "https://mirror.csclub.uwaterloo.ca/fedora/linux/updates/31/Everything/x86_64/"
