@@ -197,15 +197,10 @@ repos_mandatory:
      basearch: "x86_64"
      releasever: "7Server"
 
-   - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.6"
+   - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
      product: "Red Hat Enterprise Linux Server"
      basearch: "x86_64"
-     releasever: "7.6"
-
-   - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.7"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7.7"
+     releasever: "7.9"
 
    - name: "Red Hat Insights 3 for RHEL 7 Server RPMs x86_64"
      product: "Red Hat Enterprise Linux Server"
@@ -217,7 +212,7 @@ repos_mandatory:
      basearch: "x86_64"
      releasever: ""
 
-   - name: "Red Hat Satellite Tools 6.6 for RHEL 7 Server RPMs x86_64"
+   - name: "Red Hat Satellite Tools 6.10 for RHEL 7 Server RPMs x86_64"
      product: "Red Hat Enterprise Linux Server"
      basearch: "x86_64"
      releasever: "7Server"
@@ -239,25 +234,15 @@ repos_mandatory:
      basearch: "x86_64"
      releasever: "8"
 
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8"
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8.5"
      product: "Red Hat Enterprise Linux for x86_64"
      basearch: "x86_64"
-     releasever: "8"
+     releasever: "8.5"
 
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8.1"
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8.5"
      product: "Red Hat Enterprise Linux for x86_64"
      basearch: "x86_64"
-     releasever: "8.1"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8.1"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8.1"
+     releasever: "8.5"
 
    - name: "Red Hat Ansible Engine 2.9 for RHEL 8 x86_64 RPMs x86_64"
      product: "Red Hat Ansible Engine"
@@ -270,49 +255,7 @@ repos_mandatory:
      releasever: "8"
 
 
-#RHV
-   - name: "Red Hat Virtualization Host 7 RPMs x86_64"
-     product: "Red Hat Virtualization Host"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Virtualization Manager v4.3 RHEL 7 Server RPMs x86_64"
-     product: "Red Hat Virtualization Manager"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat Virtualization 4 Management Agents for RHEL 7 RPMs x86_64 7Server"
-     product: "Red Hat Virtualization"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Virtualization Manager 4 Tools RHEL 7 Server RPMs x86_64"
-     product: "Red Hat Virtualization Manager"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "JBoss Enterprise Application Platform 7.2 RHEL 7 Server RPMs x86_64"
-     product: "JBoss Enterprise Application Platform"
-     basearch: "x86_64"
-     releasever: ""
-
-#Gluster Storage
-   - name: "Red Hat Gluster Storage 3 Server (RPMs)"
-     product: "Red Hat Gluster Storage Server for On-premise"
-     basearch: "x86_64"
-     releasever: "7Server"
-
 repos_optional:
-   - name: "Red Hat OpenShift Container Platform 4.2 for RHEL 8 x86_64 RPMs x86_64"
-     product: "Red Hat OpenShift Container Platform"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat OpenShift Container Platform 4.2 RPMs x86_64"
-     product: "Red Hat OpenShift Container Platform"
-     basearch: "x86_64"
-     releasever: ""
-
    - name: "Red Hat Enterprise Linux High Availability for RHEL 7 Server RPMs x86_64 7Server"
      product: "Red Hat Enterprise Linux High Availability for x86_64"
      basearch: "x86_64"
@@ -359,15 +302,15 @@ lifecycle_environments:
      prior: "Prod"
 
 setup_base_soe_cv: "true"
-errata_end_date: "2020-03-01"
+errata_end_date: "{{ ansible_date_time.date }}"
 cvs_mandatory:
-  - name: "SOE_RHEL"
-    desc: "Our Red Hat Enterprise Linux Standard Operating Environment Content - {{ builder_run_tag }}"
+  - name: "SOE_RHEL7"
+    desc: "Our Red Hat Enterprise Linux 7 Standard Operating Environment Content - {{ builder_run_tag }}"
     org: "{{ foreman_initial_organization }}"
     repositories:
     - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
       product: "Red Hat Ansible Engine"
-    - name: "Red Hat Satellite Tools 6.6 for RHEL 7 Server RPMs x86_64"
+    - name: "Red Hat Satellite Tools 6.10 for RHEL 7 Server RPMs x86_64"
       product: "Red Hat Enterprise Linux Server"
     - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64"
       product: "Red Hat Enterprise Linux Server"
@@ -377,8 +320,10 @@ cvs_mandatory:
       product: "Red Hat Enterprise Linux Server"
     - name: "Red Hat Enterprise Linux 7 Server RPMs x86_64 7Server"
       product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
+      product: "Red Hat Enterprise Linux Server"
     filters:
-    - name: "IncludePackagesNoErrata"
+    - name: "IncludeAllPackagesNoErrata"
       type: "rpm"
       inclusion: "true"
       description: "Include all packages with no errata for all repositories"
@@ -406,124 +351,71 @@ cvs_mandatory:
       rules:
       - name: "firefox*"
         basearch: "x86_64"
-
-  - name: "OCP4"
-    desc: "Our Current OpenShift Container Platform Content - {{ builder_run_tag }}"
+    date_filter_name: "IncludeErrataByDate"
+    environments:
+    - "Dev"
+    - "QA"
+    - "Prod"
+  
+  - name: "SOE_RHEL8"
+    desc: "Red Hat Enterprise Linux 8 Standard Operating Environment Content"
     org: "{{ foreman_initial_organization }}"
     repositories:
-    - name: "Red Hat OpenShift Container Platform 4.2 RPMs x86_64"
-      product: "Red Hat OpenShift Container Platform"
-    filters:
-    - name: "IncludePackagesNoErrata"
-      type: "rpm"
-      inclusion: "true"
-      desc: "Include all packages with no errata for all repositories"
-      originalpackages: "true"
-      repositories: "all"
-    - name: "IncludeErrataByDate"
-      type: "erratum"
-      inclusion: "true"
-      desc: "Include all errata updated as of the 1st of the month"
-      repositories: "all"
-      rules:
-      - name: "errata-by-date-{{ errata_end_date }}"
-        enddate: "{{ errata_end_date }}"
-        datetype: "issued"
-        types:
-        - "enhancement"
-        - "bugfix"
-        - "security"
-
-  - name: "RHS_Gluster"
-    desc: "Our Current Non-Hyperconverged Gluster Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    repositories:
-    - name: "Red Hat Gluster Storage 3.1 Server RPMs x86_64 7Server"
-      product: "Red Hat Gluster Storage Server for On-premise"
-    filters:
-    - name: "IncludePackagesNoErrata"
-      type: "rpm"
-      inclusion: "true"
-      desc: "Include all packages with no errata for all repositories"
-      originalpackages: "true"
-      repositories: "all"
-    - name: "IncludeErrataByDate"
-      type: "erratum"
-      inclusion: "true"
-      desc: "Include all errata updated as of the 1st of the month"
-      repositories: "all"
-      rules:
-      - name: "errata-by-date-{{ errata_end_date }}"
-        enddate: "{{ errata_end_date }}"
-        datetype: "issued"
-        types:
-        - "enhancement"
-        - "bugfix"
-        - "security"
-
-  - name: "RHVH"
-    desc: "Our Current RHEV Hypervisor Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    repositories:
-    - name: "Red Hat Satellite Tools 6.6 for RHEL 7 Server RPMs x86_64"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
+    - name: "Red Hat Ansible Engine 2.9 RPMs for RHEL 8 Server x86_64"
       product: "Red Hat Ansible Engine"
-    - name: "Red Hat Virtualization Host 7 RPMs x86_64"
-      product: "Red Hat Virtualization Host"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs 8"
+      product: "Red Hat Enterprise Linux for x86_64"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs 8"
+      product: "Red Hat Enterprise Linux for x86_64"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs 8"
+      product: "Red Hat Enterprise Linux for x86_64"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.5"
+      product: "Red Hat Enterprise Linux for x86_64"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.5"
+      product: "Red Hat Enterprise Linux for x86_64"
+    - name: "Red Hat Satellite Tools 6.10 for RHEL 8 x86_64 RPMs"
+      product: "Red Hat Enterprise Linux Server"
     filters:
-    - name: "IncludePackagesNoErrata"
+    - name: "IncludeAllPackagesNoErrata"
       type: "rpm"
       inclusion: "true"
-      desc: "Include all packages with no errata for all repositories"
-      originalpackages: "true"
-      repositories: "all"
+      description: "Include all packages with no errata for all repositories"
+      original_packages: true
+      repositories: "[]"
+    - name: "IncludeAllStreamsNoErrata"
+      type: "modulemd"
+      inclusion: "true"
+      description: "Include all packages with no errata for all repositories"
+      original_packages: true
+      repositories: "[]"
     - name: "IncludeErrataByDate"
       type: "erratum"
       inclusion: "true"
-      desc: "Include all errata updated as of the 1st of the month"
-      repositories: "all"
+      description: "Include all errata updated as of {{ filter_enddate }}"
+      repositories: "[]"
       rules:
-      - name: "errata-by-date-{{ errata_end_date }}"
-        enddate: "{{ errata_end_date }}"
-        datetype: "issued"
+      - name: "errata-by-date-{{ filter_enddate }}"
+        end_date: "{{ filter_enddate }}"
+        date_type: "updated"
         types:
         - "enhancement"
         - "bugfix"
         - "security"
+    - name: "ExcludeFireFox"
+      type: "rpm"
+      inclusion: "false"
+      description: "Do not provide Firefox to servers"
+      original_packages: true
+      repositories: "[]"
+      rules:
+      - name: "firefox*"
+        basearch: "x86_64"
+    date_filter_name: "IncludeErrataByDate"
+    environments:
+    - "Dev"
+    - "QA"
+    - "Prod"
 
-  - name: "RHVM"
-    desc: "Our Current RHEV Manager Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    repositories:
-    - name: "JBoss Enterprise Application Platform 7 RHEL 7 Server RPMs x86_64 7Server"
-      product: "JBoss Enterprise Application Platform"
-    - name: "Red Hat Virtualization Manager v4.3 RHEL 7 Server RPMs x86_64"
-      product: "Red Hat Virtualization Manager"
-    - name: "Red Hat Virtualization Host 7 Build RPMs x86_64"
-      product: "Red Hat Virtualization Host"
-    - name: "Red Hat Virtualization Manager 4 Tools RHEL 7 Server RPMs x86_64"
-      product: "Red Hat Virtualization Manager"
-    filters:
-    - name: "IncludePackagesNoErrata"
-      type: "rpm"
-      inclusion: "true"
-      desc: "Include all packages with no errata for all repositories"
-      originalpackages: "true"
-      repositories: "all"
-    - name: "IncludeErrataByDate"
-      type: "erratum"
-      inclusion: "true"
-      desc: "Include all errata updated as of the 1st of the month"
-      repositories: "all"
-      rules:
-      - name: "errata-by-date-{{ errata_end_date }}"
-        enddate: "{{ errata_end_date }}"
-        datetype: "issued"
-        types:
-        - "enhancement"
-        - "bugfix"
-        - "security"
 
 cvs_optional:
   - name: "MSSQLServer"
@@ -552,6 +444,9 @@ cvs_optional:
         - "enhancement"
         - "bugfix"
         - "security"
+    date_filter_name: "IncludeErrataByDate"
+    environments:
+    - "Dev"
 
   - name: "Fedora"
     desc: "Fedora Content - {{ builder_run_tag }}"
@@ -579,47 +474,21 @@ cvs_optional:
         - "enhancement"
         - "bugfix"
         - "security"
+    date_filter_name: "IncludeErrataByDate"
+    environments:
+    - "Dev"
 
 
 ccvs_mandatory:
-  - name: "SOE_OCP"
-    desc: "Our Current OpenShift Standard Operating Environment Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    components:
-    - "SOE_RHEL"
-    - "OCP4"
-    - "RHS_Gluster"
-
-  - name: "SOE_RHVM"
-    desc: "Our Current RHV Manager Standard Operating Environment Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    components:
-    - "SOE_RHEL"
-    - "RHVM"
-    - "RHS_Gluster"
-
-  - name: "SOE_RHVH_HC"
-    desc: "Our Current RHV Hyperconverged Infrastructure Standard Operating Environment Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    components:
-    - "RHVH"
-    - "RHS_Gluster"
+# place mandatory composite content rules here
 
 ccvs_optional:
-# TODO: Add the MSSQL content view and component
   - name: "SOE_MSSQL"
     desc: "Our Current MSSQL on Linux Standard Operating Environment Content - {{ builder_run_tag }}"
     org: "{{ foreman_initial_organization }}"
     components:
     - "SOE_RHEL"
     - "MSSQLServer"
-  - name: "DEV_Fedora"
-    desc: "Developer Environment for Fedora - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
-    components:
-    - "SOE_RHEL"
-    - "MSSQLServer"
-
 
 setup_sync_plans: "true"
 sync_plans_mandatory:
