@@ -7,3 +7,4 @@ vars/encrypted_password.yml
 library/
 images/
 *.private
+buildimage/apitest/test_api.sh
