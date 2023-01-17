@@ -1,0 +1,56 @@
+{
+  "image_name": "{{ builder_image_name }}",
+  "distribution": "{{ builder_distribution }}",
+  "customizations": {
+    "packages": [
+      "git-all"
+    ],
+    "filesystem": [
+      {
+        "min_size": {{ slash_size }},
+        "mountpoint": "/"
+      },
+      {
+        "min_size": {{ home_size }},
+        "mountpoint": "/home"
+      },
+      {
+        "min_size": {{ tmp_size }},
+        "mountpoint": "/tmp"
+      },
+      {
+        "min_size": {{ var_size }},
+        "mountpoint": "/var"
+      },
+      {
+        "min_size": {{ var_tmp_size }},
+        "mountpoint": "/var/tmp"
+      },
+      {
+        "min_size": {{ var_log_size }},
+        "mountpoint": "/var/log"
+      },
+      {
+        "min_size": {{ var_log_audit_size }},
+        "mountpoint": "/var/log/audit"
+      }
+    ],
+    "subscription": {
+      "base-url": "https://cdn.redhat.com/",
+      "insights": false,
+      "server-url": "subscription.rhsm.redhat.com",
+      "organization": {{ org_number }},
+      "activation-key": "{{ activation_key }}"
+    },
+  },
+  "image_requests": [
+    {
+      "image_type": "{{ imagebuilder_image_type }}",
+      "architecture": "x86_64",
+      "upload_request": {
+        "type": "aws.s3",
+        "options": {}
+      }
+    }
+  ]
+}

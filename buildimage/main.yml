@@ -1,0 +1,24 @@
+---
+- name: "buildimage"
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - vars/builder_vars.yml
+    - vars/builder_vault.yml
+    - vars/vmware_vars.yml
+    - vars/vmware_vault.yml
+    - vars/idm_vars.yml
+    - vars/sat_vars.yml
+
+  tasks:
+    - name: "Get the imagebuilder image"
+      ansible.builtin.include_tasks: tasks/buildimage.yml
+
+    - name: "Configure image on vCenter"
+      ansible.builtin.include_tasks: tasks/load_image_vcenter.yml
+
+    - name: "Initialize primary identity management server"
+      ansible.builtin.include_tasks: tasks/initialize_idm_primary.yml
+
+    - name: "Initialize satellite server"
+      ansible.builtin.include_tasks: tasks/initialize_sat_primary.yml

@@ -1,0 +1,21 @@
+---
+# Create you idm_metadata.yml and idm_userdata.yml files to configure your vm via cloud-init
+# There are bugs that we work around - see the sample files
+# The commands below will inject the appropriate values into the end of this file.
+# Make sure to comment out or delete the existing ones first.
+# echo 'sat_cloud_init_metadata: "'$(gzip -c9 < sat_metadata.yml | base64)'"' >> sat_vars.yml
+# echo 'sat_cloud_init_userdata: "'$(gzip -c9 < sat_userdata.yml | base64)'"' >> sat_vars.yml
+
+sat_ip: "192.168.254.12"
+sat_fqdn: "sat.example.ca"
+
+sat_cpu_cores_per_socket: 1
+sat_cpu_sockets: 2
+sat_memory_mb: 24576
+sat_network_device_type: "vmxnet3"
+sat_network_config_type: "static"
+sat_hot_cpu_add: true
+sat_hot_memory_add: true
+
+sat_cloud_init_metadata: "H4sIAG/... a big long string ...kTAQAA"
+sat_cloud_init_userdata: "H4sIAH... a big long string ...YEAAA="
