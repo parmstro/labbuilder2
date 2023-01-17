@@ -6,3 +6,4 @@ playbooks/locks/
 vars/encrypted_password.yml
 library/
 images/
+*.private
