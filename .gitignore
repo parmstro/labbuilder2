@@ -1,10 +1,7 @@
 # On branch master
 #	.gitignore
-playbooks/bootstrap_config
-playbooks/inventory
-playbooks/locks/
-vars/encrypted_password.yml
 library/
 images/
 *.private
-buildimage/apitest/test_api.sh
+*.sh
+*_vault.yml
