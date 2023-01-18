@@ -1,85 +1,73 @@
 ---
 # Restrict developers to logging in to only the jump server and the ocpmaster servers
 - name: "Create the admin_allow_all rule for Realm and Satellite Administrators"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: admin_allow_all
     description: "Realm Admin accesses all hosts"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     hostcategory: all
     servicecategory: all
-    usergroup: 
+    group: 
     - admins
     - satgroup-administrator
 
 - name: "Create an OCP POC users HBAC rule"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: ocp-poc-users
     description: "Restrict access to OpenShift Control Nodes"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     hostgroup:
     - ocp-controllers
     - util-servers
     servicecategory: all
-    usergroup:
+    group:
     - ocpgroup-developer
     - ocpgroup-proj_administrator
 
 - name: "Create an OCP Admins HBAC rule"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: ocp-admins
     description: "OCP Admins can access to ocp controllers, nodes, routers, load balancers and utility servers"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     hostgroup:
     - ocp-controllers
     - ocp-servers
     - util-servers
     servicecategory: all
-    usergroup:
+    group:
     - ocpgroup-operator
     - ocpgroup-cluster_administrator
 
 - name: "Create a Sat Operators HBAC rule"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: sat-operators
     description: "Satellite Operators can access the Satellite and Capsule Servers"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     hostgroup:
     - sat-servers
     servicecategory: all
-    usergroup:
-    - satgroup-operators
+    group:
+    - satgroup-operator
 
 - name: "Create a AAP Operators HBAC rule"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: aap-operators
     description: "Ansible Automation Platform Operators can access AAP Servers"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     hostgroup:
     - aap-servers
     servicecategory: all
-    usergroup:
+    group:
     - aapgroup-administrator
     - aapgroup-operator
 
 - name: "Disable the allow_all rule"
-  community.general.ipa_hbacrule:
+  redhat.rhel_idm.ipahbacrule:
     name: allow_all
     state: disabled
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"

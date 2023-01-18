@@ -1,68 +1,64 @@
 ---
 # add standard users in a POC
-# 
-
 - name: "Add basic POC admin and developer users"
-  community.general.ipa_user:
+  redhat.rhel_idm.ipauser:
     name: "{{ item.login }}"
     givenname: "{{ item.first }}"
     sn: "{{ item.last }}"
+    city: "{{ item.city }}"
+    displayname: "{{ item.first }} {{ item.last }}"
+    departmentnumber: "{{ item.departmentnumber }}"
+    email: "{{ item.email }}"
+    employeenumber: "{{ item.employeenumber }}"
+    employeetype: "{{ item.employeetype }}"
+    title: "{{ item.title }}"
+    userstate: "{{ item.userstate }}"
     password: "{{ default_password }}"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
   loop:
-    - { login: "poc_admin", first: "POC", last: "Admin" }
-    - { login: "developer1", first: "Developer", last: "One" }
-    - { login: "developer2", first: "Developer", last: "Two" }
-    - { login: "developer3", first: "Developer", last: "Three" }
+    - { login: "poc_admin", first: "POC", last: "Admin", city: "Waterloo", userstate: "Ontario", departmentnumber: "42", email: "poc_admin@example.ca", employeenumber: "13", employeetype: "full-time", title: "POC Administrator" }
+    - { login: "developer1", first: "Developer", last: "One", city: "Raliegh", userstate: "North Carolina", departmentnumber: "53", email: "developer1@example.ca", employeenumber: "29", employeetype: "full-time", title: "Senior Developer" }
+    - { login: "developer2", first: "Developer", last: "Two", city: "Ottawa", userstate: "Ontario", departmentnumber: "53", email: "developer2@example.ca", employeenumber: "20", employeetype: "full-time", title: "Senior Developer" }
+    - { login: "developer3", first: "Developer", last: "Three", city: "Montreal", userstate: "Quebec", departmentnumber: "53", email: "developer3@example.ca", employeenumber: "1", employeetype: "full-time", title: "Principal Data Scientist" }
 
 - name: "Add any additional users required"
-  community.general.ipa_user:
+  redhat.rhel_idm.ipauser:
     name: "{{ item.login }}"
     givenname: "{{ item.first }}"
     sn: "{{ item.last }}"
     password: "{{ default_password }}"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
   loop: "{{ additional_users }}"
   when: "additional_users is defined"
 
 - name: "Add basic POC members to groups"
-  community.general.ipa_group:
+  redhat.rhel_idm.ipagroup:
     name: "{{ item.group }}"
     user: "{{ item.user }}"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
   loop:
-    - { group: "admins", user: "admin", "poc_admin" }
-    - { group: "ocpgroup-developer", user: "developer1", "developer2", "developer3" }
+    - { group: "admins", user: ["admin", "poc_admin"] }
+    - { group: "ocpgroup-developer", user: ["developer1", "developer2", "developer3"] }
 
 - name: "Add basic POC groups to groups"
-  community.general.ipa_group:
+  redhat.rhel_idm.ipagroup:
     name: "{{ item.group }}"
     group: "{{ item.value }}"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
   loop:
     - { group: "satgroup-administrator", value: "admins" }
     - { group: "aapgroup-administrator", value: "admins" }
     - { group: "ocpgroup-cluster_administrator", value: "admins" }
 
 - name: "Add any additional users to groups"
-  community.general.ipa_group:
+  redhat.rhel_idm.ipagroup:
     name: "{{ item.group }}"
     user: "{{ item.user }}"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
   loop: "{{ additional_group_users }}"
   when: "additional_group_users is defined"

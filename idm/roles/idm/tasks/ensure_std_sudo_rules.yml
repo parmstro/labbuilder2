@@ -1,35 +1,27 @@
 ---
 # Add standard sudo rules for the POC
-# We will only give sudo capability to admins for now
-# We will manage developer access to systems using HBAC
-#
-
 - name: "Add the realm-admin sudo rule"
-  community.general.ipa_sudorule:
+  redhat.rhel_idm.ipasudorule:
     name: "realm-admin"
     description: "Control sudo access on all servers for admins"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     cmdcategory: all
     hostcategory: all
-    usergroup:
+    group:
     - admins
  
 
 - name: "Add the sat-admin sudo rule"
-  community.general.ipa_sudorule:
+  redhat.rhel_idm.ipasudorule:
     name: "sat-admin"
     description: "Control sudo access on Satellite Servers and Capsules"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     cmdcategory: all
     hostgroup:
     - sat-servers
-    usergroup:
+    group:
     - satgroup-administrator
     - satgroup-org-administrator
     - satgroup-site-administrator
@@ -37,31 +29,27 @@
 
 
 - name: "Add the ocp-admin sudo rule"
-  community.general.ipa_sudorule:
+  redhat.rhel_idm.ipasudorule:
     name: "ocp-admin"
     description: "Control sudo access on OCP Servers"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     cmdcategory: all
     hostgroup:
     - ocp-servers
-    usergroup:
+    group:
     - ocpgroup-cluster_administrator
     - ocpgroup-operator
 
 - name: "Add the aap-admin sudo rule"
-  community.general.ipa_sudorule:
+  redhat.rhel_idm.ipasudorule:
     name: "aap-admin"
     description: "Control sudo access on Ansible Tower Servers"
     state: present
-    ipa_host: "{{ ansible_fqdn }}"
-    ipa_user: "admin"
-    ipa_pass: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipaadmin_password }}"
     cmdcategory: all
     hostgroup:
     - aap-servers
-    usergroup:
+    group:
     - aapgroup-administrator
     - aapgroup-operator
