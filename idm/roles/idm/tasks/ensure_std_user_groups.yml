@@ -1,0 +1,64 @@
+---
+# standard user groups in a POC
+- name: Add the standard groups for controlling Satellite Access
+  community.general.ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ ipaadmin_password }}"
+  loop:
+    - { name: "satgroup-administrator", desc: "Satellite Server Administrators" }
+    - { name: "satgroup-org-administrator", desc: "Satellite Default Org Administrators - Manager Role" }
+    - { name: "satgroup-site-administrator", desc: "Satellite Default Org Administrators - Manager Role for a Location" }
+    - { name: "satgroup-compliance-manager", desc: "Satellite Systems Compliance Managers - Full control compliance content" }
+    - { name: "satgroup-compliance-auditor", desc: "Satellite Systems Compliance Auditor - Read only control compliance content" }
+    - { name: "satgroup-operator", desc: "Satellite Server Operators - Full control on hosts and content hosts" }
+    - { name: "satgroup-sub-manager", desc: "Satellite Subscription Manager - manage all subsc:riptions" }
+    - { name: "satgroup-content-manager", desc: "Satellite Content Manager - manage all content" }
+
+- name: Add the standard groups for controlling Ansible Tower Access
+  community.general.ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ ipaadmin_password }}"
+  loop:
+    - { name: "aapgroup-administrator", desc: "Ansible Automation Platform Administrators" }
+    - { name: "aapgroup-auditor", desc: "Ansible Automation Platform Auditors" }
+    - { name: "aapgroup-operator", desc: "Ansible Automation Platform Server Operators" }
+    - { name: "aapgroup-proj_manager", desc: "Ansible Automation Platform Project Manager" }
+    - { name: "aapgroup-template_manager", desc: "Ansible Automation Platform Template Manager" }
+    - { name: "aapgroup-user", desc: "Ansible Automation Platform User - can run basic Templates and Workflows" }
+
+- name: Add the standard groups for controlling OpenShift Container Platform Access
+  community.general.ipa_group:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ ipaadmin_password }}"
+  loop:
+    - { name: "ocpgroup-cluster_administrator", desc: "OpenShift Container Platform Cluster Administrators" }
+    - { name: "ocpgroup-operator", desc: "OpenShift Container Platform Cluster Operators" }
+    - { name: "ocpgroup-proj_administrator", desc: "OpenShift Container Platform Project Administrator" }
+    - { name: "ocpgroup-developer", desc: "OpenShift Container Platform Developer" }
+
+- name: Add the standard host groups for controlling sudo and HBAC access
+  community.general.ipa_hostgroup:
+    name: "{{ item.name }}"
+    description: "{{ item.desc }}"
+    state: present
+    ipa_host: "{{ ansible_fqdn }}"
+    ipa_user: "admin"
+    ipa_pass: "{{ ipaadmin_password }}"
+  loop:
+    - { name: "ocp-servers", desc: "OpenShift Container Platform Nodes, Routers and Load Balancers" }
+    - { name: "ocp-controllers", desc: "OpenShift Container Platform Controller Servers" }
+    - { name: "sat-servers", desc: "Satellite Servers and Capsules" }
+    - { name: "aap-servers", desc: "Ansible Automation Platform Servers" }
+    - { name: "util-servers", desc: "Utility Servers for General Purpose work" }

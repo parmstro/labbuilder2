@@ -1,0 +1,19 @@
+---
+- name: "Ensure prerequisites are applied"
+  ansible.builtin.include_tasks: ensure_prerequisites.yml
+
+- name: "Apply the ipaserver role"
+  ansible.builtin.include_role:
+    name: redhat.rhel_idm.ipaserver
+
+- name: "Ensure standard lab user groups exist"
+  ansible.builtin.include_tasks: ensure_std_user_groups.yml
+
+- name: "Ensure standard lab users exist"
+  ansible.builtin.include_tasks: ensure_std_users.yml
+
+- name: "Ensure standard lab sudo rules exist"
+  ansible.builtin.include_tasks: ensure_std_sudo_rules.yml
+
+- name: "Ensure standard lab hbac rules exist"
+  ansible.builtin.include_tasks: ensure_std_hbac_rules.yml

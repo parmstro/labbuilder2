@@ -1,0 +1,22 @@
+---
+# the redhat role installs the proper packages and firewalld configuration
+# just make sure we have the proper repos and are up to date
+- name: "Ensure the proper repositories are enabled"
+  community.general.rhsm_repository: 
+    name: "{{ repository_ids }}"
+    state: enabled
+    purge: true
+
+- name: "Ensure the system is updated"
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+
+- name: "Reset the idm module state"
+  ansible.builtin.command: "dnf -y module reset idm"
+
+- name: "Enable the idm module"
+  ansible.builtin.command: "dnf -y module enable idm:DL1"
+
+- name: "Install the server modules"
+  ansible.builtin.shell: "dnf -y module install idm:DL1/{client,common,server,dns,adtrust}"
