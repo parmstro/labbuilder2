@@ -1,0 +1,11 @@
+---
+# This playbook configures the optional discovery rules 
+# 
+#
+- name: Create the optional discovery rules 
+  include_tasks: create_discovery_rule.yml
+  loop: "{{ drules_optional }}"
+  loop_control:
+    loop_var: drule
+  when: "drules_optional is defined"
+

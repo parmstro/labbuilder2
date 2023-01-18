@@ -1,0 +1,13 @@
+---
+# This play updates the system and installs the Satellite binaries only
+#
+
+- name: Update the system
+  yum:
+    name: '*'
+    state: latest
+
+- name: Install the Satellite RPM packages
+  yum:
+    name: satellite
+    state: latest

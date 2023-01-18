@@ -1,0 +1,18 @@
+---
+# This playbook configures the mandatory repositories outlined in the
+# sat_vars.yml file
+#
+# NOTE: mandatory repository sets are those that are required to build out an entire lab
+#       You probably don't want to modify them unless you are significantly changing the 
+#       lab configuration. Use the repos_optional section to add content to your lab.
+#
+# NOTE: you are responsible for ensuring that any required repositories
+#       outlined in your variable file are also enabled by the manifest
+#       specified in the variable file. If not, this play will fail on missing repos
+
+- name: "Enable the mandatory repository sets"
+  include_tasks: enable_repository.yml
+  loop: "{{ repos_mandatory }}"
+  loop_control:
+    loop_var: repo
+  when: "repos_mandatory is defined"

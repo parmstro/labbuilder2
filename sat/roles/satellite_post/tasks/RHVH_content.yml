@@ -1,0 +1,41 @@
+---
+# This is a media content specific task called dynamically based
+# on a media definition in {{ playbook_dir }}/vars/sat_vars.yml
+#
+
+# Ensure that the local path for the RHVH content exists
+# Download the content from Red Hat for the latest RHVH install
+#
+- name: Create the directory for hosting the media image
+  file: 
+    state: directory
+    path: "/var/www/pub/rhvh"
+    mode: 755
+    owner: apache
+    group: apache
+
+# Download the content from source
+# Satellite does not provide a RHVH kickstart
+# Following the Advanced Installation notes in the RHV Installation guide...
+# We have included the extracted hypervisor ISO image for the latest RHVH 
+# on the bootstrap disk. Once the hypervisor is up, it can
+# perform its own updates of the hypervisors.
+
+# ALL OF THESE DIRECTORIES ARE STATICALLY SPECIFIED BASED ON
+# INSTALLATION REQUIREMENTS
+#
+- name: Copy the RHVH content to the target directory
+  copy: 
+    src: /root/rhvh/media/ 
+    dest: /var/www/pub/rhvh/
+
+- name: Copy the boot files - vmlinuz - to tftp directory
+  copy:
+    src: /root/rhvh/vmlinuz
+    dest: /var/lib/tftpboot/boot/rhvh-4.3-x86_64-vmlinuz
+
+- name: Copy the boot files - initrd.img - to tftp directory
+  copy:
+    src: /root/rhvh/initrd.img
+    dest: /var/lib/tftpboot/boot/rhvh-4.3-x86_64-initrd.img
+

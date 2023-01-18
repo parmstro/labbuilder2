@@ -1,0 +1,7 @@
+- name: Configure the specified optional activation_keys.
+  include_tasks: create_ak.yml
+  loop: "{{ aks_optional }}"
+  loop_control:
+    loop_var: ak
+  when: "aks_optional is defined"
+ 

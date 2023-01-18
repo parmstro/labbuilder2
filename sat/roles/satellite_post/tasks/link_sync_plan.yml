@@ -1,0 +1,8 @@
+---
+# This task links a specified product with a specified sync plan 
+# It that simple
+#
+
+- name: Linking synchronization plan {{ pp.plan }} to the product {{ pp.name }}
+  command: "hammer product update --name={{ pp.name | quote }} --organization={{ pp.organization | quote }} --sync-plan={{ pp.plan }}"
+

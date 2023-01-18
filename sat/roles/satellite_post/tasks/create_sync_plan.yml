@@ -1,0 +1,16 @@
+---
+# This play will create the defined sync plans
+# NOTE: These are created before the products they are attached to
+# Once you have created them, you can refer to them by name or 
+# variable later throughout the configuration
+# If this is run later in the process we have issues on multiple runs
+# as unhooking has to happen before destroying Products..
+
+- name: Delete the previous sync plan definition if it exists
+  command: "hammer sync-plan delete --name={{ sp.name | quote }} --organization={{ sp.organization | quote }}"
+  ignore_errors: true
+
+- name: Create the sync plan {{ sp.name }}
+  command: "hammer sync-plan create --name={{ sp.name | quote }} --organization={{ sp.organization | quote }} --description={{ sp.desc | quote }} --enabled={{ sp.enabled | quote }} --interval={{ sp.interval | quote }} --sync-date={{ sp.sync_date | quote }}"
+
+

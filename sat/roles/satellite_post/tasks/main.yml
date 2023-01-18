@@ -1,0 +1,270 @@
+---
+# This is the entry point for the foreman_post role tasks
+# As this is a role for the configuration of a complex single system, this is a necessarily long and involved file.
+# Please take the time to read the documentation especially around the variables that you should set (and those you might wish to leave alone!)
+# For the Satellite Server to be prepared to support the deployment of a complex lab, there are many steps.
+# NOTE: You will find below and in the varialbe files required and optional configuration components. 
+#    This allows for easy addition of technology to the configuration without altering the base configuration that the larger lab relies on
+#    while reducing the risk of things breaking.
+#
+# NOTE: most of the tasks below have nested sub tasks, I have used ansible loop controls exclusively rather than mix in list processing, this may offend some. 
+# I may change this after some testing or some suggestions...
+#
+# Overview
+# - the installation and initial configuration of the Satellite was performed by the Foreman role. Please see that role and the Satellite installation guide for details.
+# Content Configuration
+# - download and install a Red Hat manifest to access content.
+# - configure the required and optional Red Hat repositories.
+# - configure any custom products not created above e.g. MSSQL Server
+# - synchronize the content
+# - create the life cycle environments
+# - create the required and optional content views
+# - create the required and optional composite content views
+# - create the required and optional sync plans
+# - attach the sync plans to content
+# Provisioning Configuration
+# - configure mandatory and optional OS media
+# - configure mandatory and optional partition tables
+# - configure mandatory and optional provisioning templates
+# - configure the "special" RHEL OS - that is the one auto created during Satellite installation
+# - configure mandatory and optional OSs
+# - configure mandatory and optional Activation Keys
+# - confugure mandatory and optional Network Domains
+# - configure mandatory and optional Kerberos REALMs
+# - configure mandatory and optional Subnets
+# - configure PXE provisioning defaults for baremetal discovery
+# - configure mandatory and optional hostgroups
+# - confugure mandatory and optional discovery rules
+# 
+# We are now ready to power on the remaining physical systems in the lab so Satellite can discover them and we can provision
+# - power on message
+# (The controlling play should now wait and monitor for systems to come up and for any automated discovery rules
+# to activate and provision the systems.)
+#
+#
+
+
+- import_tasks: "{{ role_path }}/tasks/setup_hammer.yml"
+  tags:
+    - content_config
+    - setup_hammer
+
+- import_tasks: "{{ role_path }}/tasks/create_manifest.yml"
+  tags:
+    - content_config
+    - manifest
+
+- import_tasks: "{{ role_path }}/tasks/fetch_manifest.yml"
+  tags:
+    - content_config
+    - manifest
+
+- import_tasks: "{{ role_path }}/tasks/upload_manifest.yml"
+  tags:
+    - content_config
+    - manifest
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_repositories.yml "
+  tags:
+    - content_config
+    - repositories
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_repositories.yml"
+  tags:
+    - content_config
+    - repositories
+
+- import_tasks: "{{ role_path }}/tasks/configure_custom_products.yml"
+  tags:
+    - content_config
+    - repositories
+
+- import_tasks: "{{ role_path }}/tasks/start_synchronization.yml "
+  tags:
+    - content_config
+    - synch
+
+- import_tasks: "{{ role_path }}/tasks/configure_lifecycle_environments.yml"
+  tags:
+    - content_config
+    - lifecycle
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_cvs.yml"
+  tags:
+    - content_config
+    - content_views
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_cvs.yml"
+  tags:
+    - content_config
+    - content_views
+
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_ccvs.yml"
+  tags:
+    - content_config
+    - content_views
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_sync_plans.yml"
+  tags:
+    - content_config
+    - content_views
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_sync_plans.yml"
+  tags:
+    - content_config
+    - synch_plans
+
+- import_tasks: "{{ role_path }}/tasks/attach_sync_plans.yml"
+  tags:
+    - content_config
+    - synch_plans
+
+# Configure the Provisioning Components
+#
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_media.yml"
+  tags:
+    - provisioning_config
+    - media
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_media.yml"
+  when: "setup_optional_media == true"
+  tags:
+    - provisioning_config
+    - media
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_ptables.yml"
+  tags:
+    - provisioning_config
+    - ptables
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_ptables.yml"
+  tags:
+    - provisioning_config
+    - ptables
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_prov_templates.yml"
+  tags:
+    - provisioning_config
+    - prov_templates
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_prov_templates.yml"
+  tags:
+    - provisioning_config
+    - prov_templates
+
+# Ready for OS creation
+# NOTE: RHEL OS is "special" - it is created by Satellite, you must include the version specific kickstart
+# as a synchronized repository to get the deployment to work with base components
+# Personally, I am of the opinion that this should happen in the background or don't include the OS..
+# Work completely when you sync 7Server only. No half measures. #OffSoapBox
+#
+- import_tasks: "{{ role_path }}/tasks/configure_special_oss.yml"
+  tags:
+    - provisioning_config
+    - os
+
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_oss.yml"
+  tags:
+    - provisioning_config
+    - os
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_oss.yml"
+  tags:
+    - provisioning_config
+    - os
+
+# * ActivationKeys
+# Again, mandatory (to meet base config), optional (to add to the config - also failing will not stop build till the end of the phase)
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_aks.yml"
+  tags:
+    - provisioning_config
+    - ak
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_aks.yml"
+  tags:
+    - provisioning_config
+    - ak
+
+# * Domains
+# Ditto
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_domains.yml"
+  tags:
+    - provisioning_config
+    - network
+    - domains
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_domains.yml"
+  tags:
+    - provisioning_config
+    - network
+    - domains
+
+# * Realms
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_realms.yml"
+  tags:
+    - provisioning_config
+    - network
+    - realms
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_realms.yml"
+  tags:
+    - provisioning_config
+    - network
+    - realms
+
+# * Subnets
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_subnets.yml"
+  tags:
+    - provisioning_config
+    - network
+    - subnets
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_subnets.yml"
+  tags:
+    - provisioning_config
+    - network
+    - subnets
+
+# * Discovery - boot to discovery image on timeout
+- import_tasks: "{{ role_path }}/tasks/build_pxe_defaults.yml"
+  tags:
+    - provisioning_config
+    - discovery
+
+
+# * Create Host Groups - we need these to attach to the discovery rules
+#
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_host_groups.yml"
+  tags:
+    - provisioning_config
+    - host_groups
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_host_groups.yml"
+  tags:
+    - provisioning_config
+    - host_groups
+
+# Note you may define any additional discovery rules here that are required for your
+# implementation in Phase 3 Infrastructure
+# For others baremetal systems that may part of your platform deployment
+# include discovery rules in your Phase 4 configuration
+#
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_discovery_rules.yml"
+  tags:
+    - provisioning_config
+    - discovery
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_discovery_rules.yml"
+  tags:
+    - provisioning_config
+    - discovery
+
+- import_tasks: "{{ role_path }}/tasks/poweron.yml"
+  tags:
+    - provisioning_config
+    - power_on
+
+
+            

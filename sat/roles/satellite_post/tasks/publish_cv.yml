@@ -1,0 +1,7 @@
+---
+# This play publishes a content view
+# It expects to be called in a loop with a loop variable cv
+
+- name: "Publishng content view {{ cv.name }} to the Library"
+  command: "hammer content-view publish --name={{ cv.name | quote }} --organization={{ cv.org | quote }}"
+

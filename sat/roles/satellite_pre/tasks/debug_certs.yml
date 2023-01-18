@@ -1,0 +1,52 @@
+---
+- name: Generate a private key
+  openssl_privatekey:
+    path: "{{ ipa_server_pem_file }}"
+    passphrase: "{{ ipa_rsa_key_pass }}"
+    cipher: "DES3"
+    mode: 0744
+    force: yes
+
+- name: Get an external use key
+  command: "openssl rsa -in {{ ipa_server_pem_file }} -out {{ ipa_server_key_file }} -passin pass:{{ ipa_rsa_key_pass }}"
+
+- name: Generate the CSR with subjectAltNames set
+  command: "openssl req -new -key {{ ipa_server_key_file }} -out {{ ipa_server_csr_file }} -subj '/C={{ ipa_country_name }}/ST={{ ipa_prov_name }}/L={{ ipa_locality_name }}/O={{ ipa_organization_name }}/OU={{ ipa_ou_name }}/CN={{ ansible_fqdn }}/subjectAltName={{ ansible_fqdn }}'"
+
+- name: Initialize the admin user
+  shell: echo "{{ idm_admin }}" | kinit admin
+  check_mode: no
+  changed_when: "1 != 1"
+  register: results
+
+- debug:
+    msg: "{{ results.stdout }}"
+
+- name: klist
+  command: "klist"
+
+- name: Determine if the service exists
+  command: "ipa service-show {{ ipa_service_type }}/{{ ansible_fqdn }}"
+  register: result
+  ignore_errors: true
+
+- set_fact:
+    service_exists: "{{ result.stderr | regex_search('(service not found)') }}"
+
+- name: Add the service to IdM/FreeIPA
+  command: "ipa service-add {{ ipa_service_type }}/{{ ansible_fqdn }}"
+  when: service_exists != ""
+
+- name: Request the certificate
+  command: "ipa cert-request --add --principal={{ ipa_service_type }}/{{ ansible_fqdn }} {{ ipa_server_csr_file }}"
+  register: result
+
+- name: Get the certificate serial number
+  set_fact: 
+    serial_number: "{{ result.stdout_lines.7 | regex_replace('^.*: ', '') }}"
+
+- debug:
+    msg: "{{ serial_number }}"
+
+- name: Retrieve the certificate
+  command: "ipa cert-show --certificate-out={{ ipa_server_crt_file }} {{ serial_number }}"

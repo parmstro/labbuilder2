@@ -1,0 +1,38 @@
+---
+# Ensure all repos synchronize 
+# By default, this operation is synchronous. 
+# Also by default, the actual content sync of a repository is On Demand
+# Satellite will fetch the files the first time a system requests them.
+# If you want to get faster initial builds, consider using the setting
+# foreman_settings_default_download_policy: immediate
+# OR foreman_settings_default_download_policy: background
+# in the sat_vars.yml file
+
+- name: "Get the unique list of mandatory products"
+  set_fact:
+    products_to_sync: "{{ repos_mandatory | map(attribute='product') | list | unique }}"
+
+- name: "Sync the mandatory products with the CDN"
+  katello_sync:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    product: "{{ item.name }}"
+  loop: "{{ products_to_sync }}"
+
+- name: "Get the unique list of optional products"
+  set_fact:
+    products_to_sync: "{{ repos_optional | map(attribute='product') | list | unique }}"
+
+- name: "Sync the optional products with the CDN"
+  katello_sync:
+    username: "{{ foreman_admin_username }}"
+    password: "{{ foreman_admin_password }}"
+    server_url: "{{ foreman_server_url }}"
+    organization: "{{ foreman_initial_organization }}"
+    validate_certs: "{{ foreman_validate_certs }}"
+    product: "{{ item.name }}"
+  loop: "{{ products_to_sync }}"
+

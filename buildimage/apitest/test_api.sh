@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # setup offline token
-OFFLINE_TOKEN=<add offline token here>
+OFFLINE_TOKEN="<enter_offline_token"
 export OFFLINE_TOKEN
-echo $OFFLINE_TOKEN
 
 # get access token
 access_token=$(curl --silent \
@@ -15,27 +14,29 @@ access_token=$(curl --silent \
               | jq -r .access_token)
 
 distributions=$(curl --silent \
-                --request POST \
+                --request GET \
                 --header "Authorization: Bearer $access_token" \
                 --header "Content-Type: application/json" \
-                https://console.redhat.com/api/image-builder/v1/Distributions
-                  | jq -r .compose_id)
+                https://console.redhat.com/api/image-builder/v1/distributions \
+                | jq -r .[].name | sort)
 
-compose_id=$(curl --silent \
-                  --request POST \
-                  --header "Authorization: Bearer $access_token" \
-                  --header "Content-Type: application/json" \
-                  --data @request-base-image.json \
-                  https://console.redhat.com/api/image-builder/v1/compose
-                  | jq -r .id); echo $compose_id
+#compose_id=$(curl --silent \
+#                  --request POST \
+#                  --header "Authorization: Bearer $access_token" \
+#                  --header "Content-Type: application/json" \
+#                  --data @request-base-image.json \
+#                  https://console.redhat.com/api/image-builder/v1/compose
+#                  | jq -r .id); echo $compose_id
 
-status=$(curl --silent \
-              --header "Authorization: Bearer $access_token" \
-              "https://console.redhat.com/api/image-builder/v1/composes/$compose_id" \
-              | jq .image_status.status)
+#status=$(curl --silent \
+#              --header "Authorization: Bearer $access_token" \
+#              "https://console.redhat.com/api/image-builder/v1/composes/$compose_id" \
+#              | jq .image_status.status)
 
-url=$(curl --silent      --header "Authorization: Bearer $access_token"      "https://console.redhat.com/api/image-builder/v1/composes/$compose_id" | jq -r .image_status.upload_status.options.url)
+#url=$(curl --silent      --header "Authorization: Bearer $access_token"      "https://console.redhat.com/api/image-builder/v1/composes/$compose_id" | jq -r .image_status.upload_status.options.url)
 
-image_name="image_$RANDOM.vmdk"
+#image_name="image_$RANDOM.vmdk"
 
-curl --location --output $image_name $url
+#curl --location --output $image_name $url
+
+echo $distributions
