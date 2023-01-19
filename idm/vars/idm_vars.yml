@@ -5,6 +5,8 @@ repository_ids:
   - rhel-8-for-x86_64-supplementary-rpms
   - satellite-client-6-for-rhel-8-x86_64-rpms
 
+timeserver1: "192.168.252.8"
+timeserver2: "192.168.252.7"
 
 # idm configuration
 ipadm_password: "{{ ipadm_password_vault }}"

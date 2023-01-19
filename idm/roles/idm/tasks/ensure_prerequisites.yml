@@ -1,6 +1,4 @@
 ---
-# the redhat role installs the proper packages and firewalld configuration
-# just make sure we have the proper repos and are up to date
 - name: "Ensure the proper repositories are enabled"
   community.general.rhsm_repository: 
     name: "{{ repository_ids }}"
@@ -12,16 +10,20 @@
     name: "*"
     state: latest
 
-# Ensure that chronyd is installed and that time is synchronized.
 - name: "Install chrony for accurate time keeping"
   ansible.builtin.dnf:
     name: chrony
     state: present
 
+- name: "Configure 2 time servers"
+  ansible.builtin.template:
+    src: "chrony.j2"
+    dest: "/etc/chrony.conf"
+
 - name: "Start the chronyd service with default settings"
   ansible.builtin.service:
     name: chronyd
-    state: started
+    state: restarted
     enabled: true
 
 - name: "Ensure the time is synchronized"
