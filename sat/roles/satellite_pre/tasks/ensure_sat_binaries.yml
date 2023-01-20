@@ -1,13 +1,17 @@
 ---
-# This play updates the system and installs the Satellite binaries only
-#
-
-- name: Update the system
-  yum:
+- name: "Update the system"
+  ansible.builtin.dnf:
     name: '*'
     state: latest
 
-- name: Install the Satellite RPM packages
-  yum:
+- name: "Reset the Satellite module"
+  ansible.builtin.command: "dnf -y module reset satellite:el8"  
+
+- name: "Enable the Satellite module"
+  ansible.builtin.command: "dnf -y module enable satellite:el8"
+
+- name: "Install the Satellite RPM packages"
+  ansible.builtin.dnf:
     name: satellite
-    state: latest
+    state: present
+

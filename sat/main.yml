@@ -4,22 +4,29 @@
   remote_user: ansiblerunner
   become: true
   gather_facts: true
+  vars_files:
+    - vars/sat_vault.yml
+    - vars/sat_vars.yml
+    - vars/satellite_pre_vars.yml
+    - vars/satellite_vars.yml
+    - vars/satellite_post_vars.yml
+
   tasks:
 
     - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
       ansible.builtin.include_role:
         name: satellite_pre
 
-    - name: "Apply role of satellite to {{ ansible_fqdn }}"
-      ansible.builtin.include_role:
-        name: satellite
+#    - name: "Apply role of satellite to {{ ansible_fqdn }}"
+#      ansible.builtin.include_role:
+#        name: satellite
 
-    - name: "Apply role of satellite_post to {{ ansible_fqdn }}"
-      ansible.builtin.include_role:
-        name: satellite_post
+#    - name: "Apply role of satellite_post to {{ ansible_fqdn }}"
+#      ansible.builtin.include_role:
+#        name: satellite_post
 
-    - name: "Waiting {{ pause_minutes }} minutes for Discovery"
-      ansible.builtin.pause:
-        minutes: "{{ pause_minutes }}"
-        prompt: "Press Ctrl+C then - press c to continue early OR press a to abort"
+#    - name: "Waiting {{ pause_minutes }} minutes for Discovery"
+#      ansible.builtin.pause:
+#        minutes: "{{ pause_minutes }}"
+#        prompt: "Press Ctrl+C then - press c to continue early OR press a to abort"
 

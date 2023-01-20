@@ -1,66 +1,93 @@
 ---
-# This set of tasks generates the IdM certs for the host using IdM
-# The host is required to be an IdM client first
-#
+# currently neither the freeipa.ansible_freeipa collection nor the community collection support certificate management with ansible. 
+# we either resort to the IPA API and a URI object or command line for this functionality
+# community certficate commands are not working even with pyOpenSSL > 16.0
+# This task assumes the ipa client is installed and configured.
 
-- set_fact:
-    rsa_key_pass: "{{ foreman_admin_password  }}"
-
-- name: Create the directory to contain the certificates
-  file:
+- name: "Create a secure directory"
+  ansible.builtin.file:
+    path: "{{ sat_ssl_certs_dir }}"
     state: directory
-    path: /etc/ipa/private/
+    owner: root
+    group: root
+    mode: 0600
 
-- name: Re-initialize the key space
-  command: "rm -f /etc/ipa/private/*"
-
-- name: Generate a private key
-  openssl_privatekey:
-    path: "{{ ipa_server_pem_file }}"
-    passphrase: "{{ rsa_key_pass }}"
-    cipher: "DES3"
-    force: yes
-
-- name: Generate the CSR with subjectAltNames set
-  openssl_csr:
-    path: "{{ ipa_server_csr_file }}"
-    privatekey_path: "{{ ipa_server_prv_file }}"
-    privatekey_passphrase: "{{ ipa_rsa_key_pass }}"
-    state: present
-    common_name: "{{ ansible_fqdn }}"
-    subject_alt_name: "DNS:{{ ansible_fqdn }}"
-    organization_name: "{{ ipa_organization_name }}"
-    organizational_unit_name: "{{ ipa_ou_name }}"
-    locality_name: "{{ ipa_locality_name }}"
-    state_or_province_name: "{{ ipa_prov_name }}"
-    country_name: "{{ ipa_country_name }}"
-    email_address: "{{ ipa_email_address }}"
-
-- name: Initialize the admin user
-  shell: echo "{{ idm_admin }}" | kinit admin
-  check_mode: no
-  changed_when: "1 != 1"
-
-- name: Determine if the service exists
-  command: "ipa service-show {{ ipa_service_type }}/{{ ansible_fqdn }}"
-  register: result
-  ignore_errors: true
-
-- set_fact:
-    service_exists: "{{ result.stderr | regex_search('(service not found)') }}"
-
-- name: Add the service to IdM/FreeIPA
-  command: "ipa service-add {{ ipa_service_type }}/{{ ansible_fqdn }}"
-  when: service_exists != ""
-
-- name: Request the certificate
-  command: "ipa cert-request --add --principal={{ ipa_service_type }}/{{ ansible_fqdn }} {{ ipa_server_csr_file }}"
-  register: result
-
-- name: Get the certificate serial number
+- name: "Set target service name"
   set_fact: 
-    serial_number: "{{ result.stdout_lines.7 | regex_replace('^.*: ', '') }}"
+    target_service: "{{ crt_service_type }}/{{ ansible_fqdn }}"
 
-- name: Retrieve the certificate
-  command: "ipa cert-show --certificate-out={{ ipa_server_crt_file }} {{ serial_number }}"
+- name: "Ensure target service is present"
+  community.general.ipa_service:
+    name: "{{ target_service }}"
+    state: present
+    ipa_host: "{{ ipaserver_fqdn }}"
+    ipa_user: "{{ ipaadmin_principal }}"
+    ipa_pass: "{{ ipaadmin_password }}"
 
+- name: "Check for an existing certificate file"
+  ansible.builtin.stat:
+    path: "{{ sat_ssl_crt_path }}"
+  register: cert_exists
+
+- name: "Cert exists and regen requested - stop tracking and clean up"
+  block:
+
+  - name: "Read existing cert"
+    ansible.builtin.shell: "sed -n 2,$(expr $(wc -l < {{ sat_ssl_crt_path }}) - 1)p {{ sat_ssl_crt_path }}"
+    register: cert
+
+  - name: "Get cert serial number"
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa cert-find --certificate='{{ cert.stdout }}' | grep 'Serial number:' | cut -c18-"
+    register: serial_num
+
+  - name: "Stop tracking cert with certmonger"
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa-getcert stop-tracking -k {{ sat_ssl_key_path }} -f {{ sat_ssl_crt_path }} -i {{ ansible_fqdn }}"
+    ignore_errors: true
+
+  - name: "Remove the old cert from the service"
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa service-remove-cert {{ target_service }} --certificate='{{ cert.stdout }}'"
+    ignore_errors: true
+
+  - name: "Revoke the old cert with reason 6 - certificateHold - an admin can completely revoke it later"
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa cert-revoke {{ serial_num.stdout_lines.1 }} --revocation-reason=6"
+    ignore_errors: true
+    
+  - name: "Cert exists, rename old cert .revoked"
+    ansible.builtin.copy:
+      src: "{{ sat_ssl_crt_path }}"
+      dest: "{{ sat_ssl_crt_path }}.revoked"
+      remote_src: yes
+  
+  when: cert_exists.stat.exists and crt_force_regen
+
+- name: Generating New Certificate
+  block:
+
+  - name: Generate configuration files
+    ansible.builtin.lineinfile: 
+      path: "{{ passfile }}"
+      state: present
+      create: true
+      line: "{{ sat_ssl_rsa_key_pass }}"
+      owner: root
+      mode: 0740
+
+  - ansible.builtin.command: "openssl genrsa -{{ ssl_private_key_cipher }} -out {{ ssl_private_key_pem_path }} -passout file:/{{ passfile }} {{ ssl_private_key_size }}"
+
+  - ansible.builtin.command: "openssl rsa -in {{ ssl_private_key_pem_path }} -out {{ sat_ssl_key_path }} -passin file:/{{ passfile }}"
+
+  - name: Create request
+    ansible.builtin.command: "openssl req -new -key {{ sat_ssl_key_path }} -out {{ sat_ssl_csr_path }} -subj \"/C={{ csr_countryName }}/ST={{ csr_stateOrProvinceName }}/L={{ csr_localityName }}/O={{ csr_organizationName }}/OU={{ csr_organizationUnitName }}/CN={{ ansible_fqdn }}/subjectAltName=DNS.1={{ ansible_fqdn }}\""
+
+  - name: Generate the certificate for the service
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa cert-request --add --principal={{ target_service }} {{ sat_ssl_csr_path }} --certificate-out={{ sat_ssl_crt_path }}"
+
+  - name: Ensure that certmonger starts-tracking the new certificate for autorenewals
+    ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; ipa-getcert start-tracking -k {{ sat_ssl_key_path }} -f {{ sat_ssl_crt_path }} -I {{ ansible_fqdn }}"
+
+  when: cert_exists.stat.exists == false or crt_force_regen == true
+
+- name: Cleanup
+  ansible.builtin.file:
+    path: "{{ passfile }}"
+    state: absent
