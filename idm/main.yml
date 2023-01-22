@@ -14,4 +14,3 @@
     - name: "Apply role idm"
       ansible.builtin.include_role:
         name: idm
-
