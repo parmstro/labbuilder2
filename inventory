@@ -1,3 +1,6 @@
+[build_control]
+localhost
+
 [idm_primary]
 idm.example.ca
 
