@@ -75,3 +75,11 @@
   delegate_to: localhost
   register: deploy
 
+- name: "Wait for system to allow ssh"
+  ansible.builtin.wait_for:
+    port: 22
+    host: "{{ guest_fqdn }}"
+    search_regex: OpenSSH
+    sleep: 5
+    delay: 180
+

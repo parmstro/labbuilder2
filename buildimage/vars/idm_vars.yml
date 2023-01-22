@@ -1,10 +1,5 @@
 ---
 # Create you idm_metadata.yml and idm_userdata.yml files to configure your vm via cloud-init
-# There are bugs that we work around - see the sample files
-# The commands below will inject the appropriate values into the end of this file.
-# Make sure to comment out or delete the existing ones first.
-# echo 'idm_cloud_init_metadata: "'$(gzip -c9 < idm_metadata.yml | base64)'"' >> idm_vars.yml
-# echo 'idm_cloud_init_userdata: "'$(gzip -c9 < idm_userdata.yml | base64)'"' >> idm_vars.yml
 
 # NOTE: Copying to the target folder takes time as the system flatens the image by default
 # Some enterprising individual will figure out a way to speed this up, but as we intend to use this process only once, we aren't worrying about it
@@ -20,5 +15,5 @@ idm_network_config_type: "static"
 idm_hot_cpu_add: true
 idm_hot_memory_add: true
 
-idm_cloud_init_metadata: "H4sIAG/... a big long string ...kTAQAA"
-idm_cloud_init_userdata: "H4sIAH... a big long string ...YEAAA="
+idm_cloud_init_metadata: "{{ idm_cloud_init_metadata_vault }}"
+idm_cloud_init_userdata: "{{ idm_cloud_init_userdata_vault }}"
