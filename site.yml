@@ -10,7 +10,7 @@
   ansible.builtin.import_playbook: ./idm/main.yml
 
 - name: "Phase 3 - bootstrap satellite"
-  ansible.builtin.import_playbook: ./idm/main.yml
+  ansible.builtin.import_playbook: ./sat/main.yml
 
-- name: "Phase 4 - bootstrap ansible controller"
-  ansible.builtin.import_playbook: ./aap/main.yml
+#- name: "Phase 4 - bootstrap ansible controller"
+#  ansible.builtin.import_playbook: ./aap/main.yml
