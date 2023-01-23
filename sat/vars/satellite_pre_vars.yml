@@ -19,6 +19,7 @@ ipaclient_domain: "example.ca"
 ipaclient_configure_dns_resolver: true
 ipaclient_dns_servers: "192.168.254.5"
 ipaclient_mkhomedir: true
+idm_dns_reverse_zone: "168.192.in-addr.arpa"
 
 # Satellite specific vars used with IdM
 ipa_generate_certs: true

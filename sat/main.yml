@@ -17,9 +17,9 @@
       ansible.builtin.include_role:
         name: satellite_pre
 
-#    - name: "Apply role of satellite to {{ ansible_fqdn }}"
-#      ansible.builtin.include_role:
-#        name: satellite
+    - name: "Apply role of satellite to {{ ansible_fqdn }}"
+      ansible.builtin.include_role:
+        name: satellite
 
 #    - name: "Apply role of satellite_post to {{ ansible_fqdn }}"
 #      ansible.builtin.include_role:
