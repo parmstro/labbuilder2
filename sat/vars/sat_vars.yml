@@ -1,15 +1,4 @@
-
-# used for installing the Satellite Server
-# See template file in ../roles/satellite/templates/satellite-answers.yml
-# used in post installation configuration
-foreman_validate_certs: true  # Validate the certs against the foreman server
-foreman_server_url: "{{ foreman_foreman_url }}"   #this is set during install 
-
-# What defines a repo is its organization, product, repository set name, architecture and release version
-# These are needed to synch. See README.md for more information on determining these values
-setup_hammer: "true"
-
-upload_manifest: "true"
+---
 manifest_name: "sat66.labbuilder.ca"
 manifest_path: "/root/bootstrap_manifest.zip"
 manifest_portal_url: "https://subscription.rhsm.redhat.com"
@@ -34,136 +23,32 @@ manifest_subs:
     qty: 2
 
 setup_repositories: "true"
-repos_mandatory:
-
-#RHEL7
-   - name: "Red Hat Enterprise Linux 7 Server RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat Enterprise Linux 7 Server - RH Common RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux 7 Server - Supplementary RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7.9"
-
-   - name: "Red Hat Insights 3 for RHEL 7 Server RPMs x86_64"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
-     product: "Red Hat Ansible Engine"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat Satellite Tools 6.10 for RHEL 7 Server RPMs x86_64"
-     product: "Red Hat Enterprise Linux Server"
-     basearch: "x86_64"
-     releasever: "7Server"
 
 
-#RHEL8
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs x86_64 8"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs x86_64 8"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs x86_64 8"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8.5"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8.5"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8.5"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8.5"
-
-   - name: "Red Hat Ansible Engine 2.9 for RHEL 8 x86_64 RPMs x86_64"
-     product: "Red Hat Ansible Engine"
-     basearch: "x86_64"
-     releasever: ""
-
-   - name: "Red Hat Satellite Tools 6.6 for RHEL 8 x86_64 RPMs x86_64"
-     product: "Red Hat Enterprise Linux for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-
-repos_optional:
-   - name: "Red Hat Enterprise Linux High Availability for RHEL 7 Server RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux High Availability for x86_64"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux Resilient Storage for RHEL 7 Server RPMs x86_64 7Server"
-     product: "Red Hat Enterprise Linux Resilient Storage for x86_64"
-     basearch: "x86_64"
-     releasever: "7Server"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability RPMs x86_64 8"
-     product: "Red Hat Enterprise Linux High Availability for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
-
-   - name: "Red Hat Enterprise Linux 8 for x86_64 - Resilient Storage RPMs x86_64 8"
-     product: "Red Hat Enterprise Linux Resilient Storage for x86_64"
-     basearch: "x86_64"
-     releasever: "8"
 
 lifecycle_environments:
    - name: "Dev"
      label: "Dev"
      desc: "Our Development Servers - {{ builder_run_tag }}"
-     org: "{{ foreman_initial_organization }}"
+     org: "{{ satellite_initial_organization }}"
      prior: "Library"
 
    - name: "QA"
      label: "QA"
      desc: "Our Quality Assurance Servers - {{ builder_run_tag }}"
-     org: "{{ foreman_initial_organization }}"
+     org: "{{ satellite_initial_organization }}"
      prior: "Dev"
 
    - name: "Prod"
      label: "Prod"
      desc: "Our Production Servers - {{ builder_run_tag }}"
-     org: "{{ foreman_initial_organization }}"
+     org: "{{ satellite_initial_organization }}"
      prior: "QA"
 
    - name: "Retired"
      label: "Retired"
      desc: "Our Retired Servers - {{ builder_run_tag }}"
-     org: "{{ foreman_initial_organization }}"
+     org: "{{ satellite_initial_organization }}"
      prior: "Prod"
 
 setup_base_soe_cv: "true"
@@ -171,7 +56,7 @@ errata_end_date: "{{ ansible_date_time.date }}"
 cvs_mandatory:
   - name: "SOE_RHEL7"
     desc: "Our Red Hat Enterprise Linux 7 Standard Operating Environment Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     repositories:
     - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
       product: "Red Hat Ansible Engine"
@@ -224,7 +109,7 @@ cvs_mandatory:
   
   - name: "SOE_RHEL8"
     desc: "Red Hat Enterprise Linux 8 Standard Operating Environment Content"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     repositories:
     - name: "Red Hat Ansible Engine 2.9 RPMs for RHEL 8 Server x86_64"
       product: "Red Hat Ansible Engine"
@@ -285,7 +170,7 @@ cvs_mandatory:
 cvs_optional:
   - name: "MSSQLServer"
     desc: "Microsoft SQL Server for Linux 2019 content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     repositories:
     - "packages-microsoft-com-mssql-server-2019-7server"
     - "msql-tools-2019-7server"
@@ -315,7 +200,7 @@ cvs_optional:
 
   - name: "Fedora"
     desc: "Fedora Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     repositories:
     - "fedora31"
     - "fedora31-updates"
@@ -350,7 +235,7 @@ ccvs_mandatory:
 ccvs_optional:
   - name: "SOE_MSSQL"
     desc: "Our Current MSSQL on Linux Standard Operating Environment Content - {{ builder_run_tag }}"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     components:
     - "SOE_RHEL"
     - "MSSQLServer"
@@ -362,21 +247,21 @@ sync_plans_mandatory:
     interval: "daily"
     sync_date: "{{ ansible_date_time.date }} 00:30:00"
     enabled: true
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: nightly_infra
     desc: "Nightly non-OS repo sync - 02:30 {{ builder_run_tag }}"
     interval: "daily"
     sync_date: "{{ ansible_date_time.date }} 02:30:00"
     enabled: "true"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: nightly_third_party
     desc: "Nightly non-OS repo sync - 03:30 {{ builder_run_tag }}"
     interval: "daily"
     sync_date: "{{ ansible_date_time.date }} 03:30:00"
     enabled: "true"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 
@@ -384,7 +269,7 @@ setup_products: true
 custom_products:
   - name: "Fedora"
     desc: "Fedora from Red Hat"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     label: fedora
     repository_name:
     - name: fedora31
@@ -401,7 +286,7 @@ custom_products:
       password: ""
   - name: "Red Hat SCAP OVAL Files"
     desc: "SCAP Content for Red Hat Products managed by Red Hat"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     label: rh_scap_content
     repository_name:
     - name: RedHatSCAPContent
@@ -412,7 +297,7 @@ custom_products:
       password: ""
   - name: "Microsoft SQL Server for Linux 2019"
     desc: "Microsoft SQL Server for Linux 2019 installation and tools"
-    org: "{{ foreman_initial_organization }}"
+    org: "{{ satellite_initial_organization }}"
     label: mmsqlserver_2019
     repository_name:
     - name: packages-microsoft-com-mssql-server-2019-7server
@@ -433,28 +318,28 @@ setup_attach_plan_to_product: "true"
 product_plan:
   - name: "Red Hat Ansible Engine"          
     plan: "nightly_infra"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Red Hat Enterprise Linux Server"
     plan: "nightly_os"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Red Hat Gluster Storage Server for On-premise"
     plan: "nightly_infra"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Red Hat OpenShift Container Platform"
     plan: "nightly_infra"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Red Hat Virtualization"
     plan: "nightly_infra"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Red Hat Virtualization Manager"
     plan: "nightly_infra"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Fedora"
     plan: "nightly_third_party"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   - name: "Microsoft SQL Server for Linux"
     plan: "nightly_third_party"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
   
 setup_general_settings: "false"
 
@@ -475,8 +360,8 @@ setup_mandatory_media: "true"
 media_mandatory:
   - name: RHEL7Server
     os_family: Redhat
-    path: "http://{{ ansible_fqdn }}/pulp/repos/{{ foreman_initial_organization | replace(' ', '_') }}/Library/content/dist/rhel/server/7/$major.$minor/$arch/kickstart/"
-    organization: "{{ foreman_initial_organization }}"
+    path: "http://{{ ansible_fqdn }}/pulp/repos/{{ satellite_initial_organization | replace(' ', '_') }}/Library/content/dist/rhel/server/7/$major.$minor/$arch/kickstart/"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: RHVH
     os_family: Redhat
@@ -484,7 +369,7 @@ media_mandatory:
     create_path: true
     fetch_content: true
     content_play: "{{ role_path }}/RHVH_content.yml"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 
@@ -493,8 +378,8 @@ setup_optional_media: "true"
 media_optional:
   - name: Fedora31 
     os_family: Redhat
-    path: "http://{{ ansible_fqdn }}/pulp/repos/{{ foreman_initial_organization | replace(' ', '_') }}/Library/custom/Fedora/Fedora31/"
-    organization: "{{ foreman_initial_organization }}"
+    path: "http://{{ ansible_fqdn }}/pulp/repos/{{ satellite_initial_organization | replace(' ', '_') }}/Library/custom/Fedora/Fedora31/"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
  
 
@@ -506,31 +391,31 @@ ptables_mandatory:
     os_family: "Redhat"
     path: "ptable_rhel_soe.j2"
     audit_comment: "Lab Builder Base RHEL SOE Partition Table - {{ builder_run_tag }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "cpgpc"
     os_family: "Redhat"
     path: "ptable_cpgpc.j2"
     audit_comment: "Lab Builder Common Profile for General Purpose Computing Partition Table - {{ builder_run_tag }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "ocp_soe"
     os_family: "Redhat"
     path: "ptable_ocp.j2"
     audit_comment: "Lab Builder OpenShift Container Platform SOE Partition Table - {{ builder_run_tag }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "ocp_soe_encrypted"
     os_family: "Redhat"
     path: "ptable_ocp_encrypted.j2" 
     audit_comment: "Lab Builder OpenShift Container Platform SOE Partition Table - {{ builder_run_tag }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "rhvh_43"
     os_family: "Redhat"
     path: "ptable_rhvh_43.j2"
     audit_comment: "Lab Builder OpenShift Container Platform SOE Partition Table - {{ builder_run_tag }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 
@@ -552,14 +437,14 @@ prov_templates_mandatory:
     locked: false
     audit_comment: "Lab Builder Kickstart Default - {{ builder_run_tag }}"
     path: "prov_template_lab_kickstart_default.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_rhvh"
     type: "provision"
     locked: false
     audit_comment: "Lab Builder Kickstart RHVH - {{ builder_run_tag }}"
     path: "prov_template_lab_rhvh.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 #pxelinux
@@ -568,7 +453,7 @@ prov_templates_mandatory:
     locked: false
     audit_comment: "Lab Builder PXE RHVH PXELinux - {{ builder_run_tag }}"
     path: "prov_template_pxe_lab_rhvh_pxelinux.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 #snippet
@@ -577,56 +462,56 @@ prov_templates_mandatory:
     locked: false
     audit_comment: "Lab Builder Anisble Callback Snippet - {{ builder_run_tag }}"
     path: "prov_template_snippet_rhc_ansible_provisioning_callback.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_epel"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder EPEL Snippet - {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_epel.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_freeipa_register"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet for FreeIPA/IdM registration - {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_freeipa_register.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_kickstart_networking_setup"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet kickstart networking setup - {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_kickstart_networking_setup.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_redhat_register"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet subscription-manager registration - {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_redhat_register.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_remote_execution_ssh_keys"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet for remote execution setup - {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_remote_execution_ssh_keys.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_rhv_specific"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet for RHV clients- {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_rhv_specific.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
   - name: "lab_vmware_specific"
     type: "snippet"
     locked: false
     audit_comment: "Lab Builder Snippet for VMware clients- {{ builder_run_tag }}"
     path: "prov_template_snippet_lab_vmware_specific.j2"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 setup_oss: "true"
@@ -638,7 +523,7 @@ oss_special:
     description: "Red Hat Base OS created by synchronization - {{ builder_run_tag }}"
     family: "Redhat"
     password_hash: "SHA256"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
     architectures:
       - "x86_64"
@@ -665,7 +550,7 @@ oss_mandatory:
     description: "Red Hat Virtualization Hypervisor - {{ builder_run_tag }}"
     family: "Redhat"
     password_hash: "SHA256"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
     architectures:
       - "x86_64"
@@ -695,12 +580,12 @@ oss_mandatory:
 setup_activation_keys: true
 aks_mandatory:
   - name: "RHEL_SOE"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     unlimited_hosts: true
     auto_attach: true
 
   - name: "RHVH"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     unlimited_hosts: true
     auto_attach: true
 
@@ -708,13 +593,13 @@ setup_domains: "true"
 domains_mandatory:
   - name: "{{ ansible_domain }}"
     description: "root domain for the installation"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 setup_realms: "true"
 realms_mandatory:
   - name: "{{ ansible_domain | upper }}"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
     realm_type: "Red Hat Identity Management"
     capsule: "{{ ansible_fqdn }}"
@@ -744,7 +629,7 @@ subnets_mandatory:
     locations:
       - "{{ foreman_initial_location }}"
     organizations: 
-      - "{{ foreman_initial_organization }}"
+      - "{{ satellite_initial_organization }}"
 
   - name: "ProvMgtMig"
     boot_mode: "Static"
@@ -762,7 +647,7 @@ subnets_mandatory:
     locations: 
       - "{{ foreman_initial_location }}"
     organizations: 
-      - "{{ foreman_initial_organization }}"
+      - "{{ satellite_initial_organization }}"
 
   - name: "Storage"
     boot_mode: "Static"
@@ -778,7 +663,7 @@ subnets_mandatory:
     locations: 
       - "{{ foreman_initial_location }}"
     organizations: 
-      - "{{ foreman_initial_organization }}"
+      - "{{ satellite_initial_organization }}"
 
 
 #TODO: set up Ansible Roles in foreman
@@ -794,7 +679,7 @@ hostgroups_baremetal:
     content_source: "{{ ansible_fqdn }}"
     domain: "{{ ansible_domain }}"
     lifecycle_environment: "Library"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
     os_title: "RHEL Server 7.7"
     medium: "RHEL7Server"
@@ -809,7 +694,7 @@ hostgroups_baremetal:
     description: "Use to deploy RHEV hypervisors"
     domain: "{{ ansible_domain }}"
     lifecycle_environment: "Library"
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
     os_title: "RHVH"
     medium: "RHVH" 
@@ -827,7 +712,7 @@ hostgroups_baremetal:
 setup_discovery: "true"
 discovery_rules:
   - name: rhvh_node
-    organization: "{{ foreman_initial_organization }}"
+    organization: "{{ satellite_initial_organization }}"
     location: "{{ foreman_initial_location }}"
 
 setup_infrastructure: "false"

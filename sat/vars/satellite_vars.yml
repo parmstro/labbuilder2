@@ -1,12 +1,23 @@
 ---
+satellite_hostname: "sat.example.ca"
+satellite_url: "https://sat.example.ca"
+satellite_initial_organization: "example"
+satellite_initial_location: "lab"
+satellite_admin_username: "{{ sat_inital_admin_username_vault }}"
+satellite_admin_password: "{{ sat_inital_admin_password_vault }}"
+satellite_validate_certs: false
+
+satellite_admin_email: "admin@example.ca"
+
+
 sat_installer_options:
-  - '--foreman-initial-organization "example"'
-  - '--foreman-initial-location "lab"'
-  - '--foreman-initial-admin-username "{{ sat_inital_admin_username_vault }}"'
-  - '--foreman-initial-admin-password "{{ sat_inital_admin_password_vault }}"'
-  - '--foreman-initial-admin-email "sat_admin@example.ca"'
-  - '--foreman-initial-admin-first-name  "Sat"'
-  - '--foreman-initial-admin-last-name  "Admin"'
+  - '--foreman-initial-organization "{{ satellite_initial_organization }}"'
+  - '--foreman-initial-location "{{ satellite_initial_location }}"'
+  - '--foreman-initial-admin-username "{{ satellite_admin_username }}"'
+  - '--foreman-initial-admin-password "{{ satellite_admin_password }}"'
+  - '--foreman-initial-admin-email "{{ satellite_admin_email }}"'
+  - '--foreman-initial-admin-first-name  "Satellite"'
+  - '--foreman-initial-admin-last-name  "Administrator"'
   - '--foreman-ipa-authentication true'
   - '--certs-server-ca-cert "/etc/ipa/ca.crt"'
   - '--certs-server-cert "/etc/ipa/private/{{ ansible_fqdn }}/{{ ansible_fqdn }}.crt"'
@@ -55,3 +66,149 @@ sat_installer_options:
 #  - '--foreman-proxy-dhcp-pxeserver: "{{ ansible_fqdn }}"'
 #  - '--foreman-proxy-dhcp-network: "192.168.248.0"'
 #  - '--foreman-proxy-dhcp-netmask: "255.255.252.0"'
+
+# Satellite Configuration Variables
+manifest_name: "sat.example.ca"
+manifest_path: "/root/bootstrap_manifest.zip"
+manifest_portal_url: "https://subscription.rhsm.redhat.com"
+manifest_validate_certs: true 
+manifest_cdn_username: "{{ cdn_username_vault }}"
+manifest_cdn_password: "{{ cdn_password_vault }}"
+manifest_subs:
+  - name: "Base"
+    pool_id: "8a85f99c7ed94239017faf33fdb95d94"
+    qty: 100
+  - name: "Ansible"
+    pool_id: "8a85f9a17f69ca57017faf348b657a80"
+    qty: 30
+  - name: "SatCapsule"
+    pool_id: "8a85f9a17f69ca57017faf3480377a7e"
+    qty: 1
+  - name: "NonRHEL"
+    pool_id: "8a82c58b80de32d60180fc0436c61580"
+    qty: 100
+
+# Repositories 
+# - mandatory: make demos work - this pattern is used throughout
+# - optional: let's *you* do stuff - this pattern is used throughout
+repos_mandatory:
+   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7Server"
+
+   - name: "Red Hat Enterprise Linux 7 Server - Extras (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: ""
+
+   - name: "Red Hat Enterprise Linux 7 Server - RH Common (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7Server"
+
+   - name: "Red Hat Enterprise Linux 7 Server - Optional (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7Server"
+
+   - name: "Red Hat Enterprise Linux 7 Server - Supplementary (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7Server"
+
+   - name: "Red Hat Enterprise Linux 7 Server Kickstart 7.9"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7.9"
+
+   - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server"
+     product: "Red Hat Ansible Engine"
+     basearch: "x86_64"
+     releasever: ""
+
+   - name: "Red Hat Satellite Client 6 for RHEL 7 Server (RPMs)"
+     product: "Red Hat Enterprise Linux Server"
+     basearch: "x86_64"
+     releasever: "7Server"
+
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8.7"
+
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.7"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8.7"
+
+   - name: "Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.1"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9.1"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream Kickstart 9.1"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9.1"
+
+   - name: "Red Hat Satellite Client 6 for RHEL 9 (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "9"
+
+   - name: "Red Hat Satellite Maintenance 6.12 for RHEL 8 (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Satellite Utils 6.12 for RHEL 8 (RPMs)"
+     product: "Red Hat Enterprise Linux for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+repos_optional:
+   - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs)"
+     product: "Red Hat Enterprise Linux High Availability for x86_64"
+     basearch: "x86_64"
+     releasever: "8"
+
+   - name: "Red Hat Enterprise Linux 9 for x86_64 - High Availability (RPMs)"
+     product: "Red Hat Enterprise Linux High Availability for x86_64"
+     basearch: "x86_64"
+     releasever: "9"
