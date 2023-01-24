@@ -3,7 +3,6 @@
 library/
 images/
 *.private
-*.sh
 *_vault.yml
 buildimage/request-base-image.json
 buildimage/builder_main.vmdk
