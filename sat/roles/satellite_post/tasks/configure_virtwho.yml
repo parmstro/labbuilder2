@@ -15,7 +15,7 @@
   set_fact: cr_controller_encrypted_password = {{ result.stdout_lines.1 }}
 
 - name: Create the encrypted password for the Satellite admin
-  command: "virt-who-password --password={{ foreman_admin_password }}"
+  command: "virt-who-password --password={{ satellite_admin_password }}"
   register: result
 
 - name: Set the encrypted password

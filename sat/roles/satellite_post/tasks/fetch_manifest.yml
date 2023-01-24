@@ -2,7 +2,7 @@
 # Download the specified manifest from the portal
 #
 - name: Download the specified manifest
-  redhat_manifest:
+  redhat.satellite.redhat_manifest:
     portal: "{{ manifest_portal_url }}"
     username: "{{ manifest_cdn_username }}"
     password: "{{ manifest_cdn_password }}"

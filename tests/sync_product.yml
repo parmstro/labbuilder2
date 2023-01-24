@@ -3,10 +3,10 @@
 #
 - name: "Sync the mandatory products with the CDN"
   katello_sync:
-    username: "{{ foreman_admin_username }}"
-    password: "{{ foreman_admin_password }}"
-    server_url: "{{ foreman_server_url }}"
-    organization: "{{ foreman_initial_organization }}"
-    validate_certs: "{{ foreman_validate_certs }}"
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    organization: "{{ satellite_initial_organization }}"
+    validate_certs: "{{ satellite_validate_certs }}"
     product: "{{ product_name }}"
 

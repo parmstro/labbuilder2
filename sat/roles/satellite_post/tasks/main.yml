@@ -2,69 +2,63 @@
 # This is the entry point for the foreman_post role tasks
 # As this is a role for the configuration of a complex single system, this is a necessarily long and involved file.
 # Please take the time to read the documentation especially around the variables that you should set (and those you might wish to leave alone!)
-# For the Satellite Server to be prepared to support the deployment of a complex lab, there are many steps.
-# NOTE: You will find below and in the varialbe files required and optional configuration components. 
-#    This allows for easy addition of technology to the configuration without altering the base configuration that the larger lab relies on
-#    while reducing the risk of things breaking.
-#
-# NOTE: most of the tasks below have nested sub tasks, I have used ansible loop controls exclusively rather than mix in list processing, this may offend some. 
-# I may change this after some testing or some suggestions...
-#
-# Overview
-# - the installation and initial configuration of the Satellite was performed by the Foreman role. Please see that role and the Satellite installation guide for details.
 # Content Configuration
+# - configure hammer
 # - download and install a Red Hat manifest to access content.
-# - configure the required and optional Red Hat repositories.
-# - configure any custom products not created above e.g. MSSQL Server
+# - configure Red Hat repositories.
+# - configure content credentials
+# - configure any custom products e.g. MSSQL Server
 # - synchronize the content
 # - create the life cycle environments
-# - create the required and optional content views
-# - create the required and optional composite content views
-# - create the required and optional sync plans
+# - create the content views
+# - create the composite content views
+# - create the sync plans
 # - attach the sync plans to content
+# - configure Activation Keys
 # Provisioning Configuration
-# - configure mandatory and optional OS media
-# - configure mandatory and optional partition tables
-# - configure mandatory and optional provisioning templates
-# - configure the "special" RHEL OS - that is the one auto created during Satellite installation
-# - configure mandatory and optional OSs
-# - configure mandatory and optional Activation Keys
-# - confugure mandatory and optional Network Domains
-# - configure mandatory and optional Kerberos REALMs
-# - configure mandatory and optional Subnets
+# - configure OS media
+# - configure partition tables templates
+# - configure job templates
+# - configure provisioning templates
+# - configure template synchronization
+# - configure OSs
+# - download ansible roles for SCAP
+# - configure OSCAP content
+# - configure OSCAP tailoring files
+# - configure OSCAP policy
+# - configure Network Domains
+# - configure Kerberos REALMs
+# - configure Subnets
 # - configure PXE provisioning defaults for baremetal discovery
-# - configure mandatory and optional hostgroups
-# - confugure mandatory and optional discovery rules
-# 
-# We are now ready to power on the remaining physical systems in the lab so Satellite can discover them and we can provision
-# - power on message
-# (The controlling play should now wait and monitor for systems to come up and for any automated discovery rules
-# to activate and provision the systems.)
-#
-#
+# - configure discovery rules
+# - configure schedules
+# - configure global parameters
+# - configure anything else
+# - configure hostgroups
+# - add admin users - cloud connector, ansible
 
 
-- import_tasks: "{{ role_path }}/tasks/setup_hammer.yml"
+- import_tasks: "{{ role_path }}/tasks/configure_hammer.yml"
   tags:
-    - content_config
-    - setup_hammer
+    - basic_config
+    - configure_hammer
 
 - import_tasks: "{{ role_path }}/tasks/create_manifest.yml"
   tags:
-    - content_config
+    - basic_config
     - manifest
 
 - import_tasks: "{{ role_path }}/tasks/fetch_manifest.yml"
   tags:
-    - content_config
+    - basic_config
     - manifest
 
 - import_tasks: "{{ role_path }}/tasks/upload_manifest.yml"
   tags:
-    - content_config
+    - basic_config
     - manifest
 
-- import_tasks: "{{ role_path }}/tasks/configure_mandatory_repositories.yml "
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_repositories.yml"
   tags:
     - content_config
     - repositories
@@ -79,7 +73,7 @@
     - content_config
     - repositories
 
-- import_tasks: "{{ role_path }}/tasks/start_synchronization.yml "
+- import_tasks: "{{ role_path }}/tasks/start_synchronization.yml"
   tags:
     - content_config
     - synch
@@ -98,7 +92,6 @@
   tags:
     - content_config
     - content_views
-
 
 - import_tasks: "{{ role_path }}/tasks/configure_optional_ccvs.yml"
   tags:
@@ -121,7 +114,6 @@
     - synch_plans
 
 # Configure the Provisioning Components
-#
 
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_media.yml"
   tags:
@@ -227,21 +219,18 @@
     - network
     - subnets
 
-# * Discovery - boot to discovery image on timeout
 - import_tasks: "{{ role_path }}/tasks/build_pxe_defaults.yml"
   tags:
     - provisioning_config
     - discovery
 
 
-# * Create Host Groups - we need these to attach to the discovery rules
-#
-- import_tasks: "{{ role_path }}/tasks/configure_mandatory_host_groups.yml"
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_hostgroups.yml"
   tags:
     - provisioning_config
     - host_groups
 
-- import_tasks: "{{ role_path }}/tasks/configure_optional_host_groups.yml"
+- import_tasks: "{{ role_path }}/tasks/configure_optional_hostgroups.yml"
   tags:
     - provisioning_config
     - host_groups

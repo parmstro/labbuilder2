@@ -1,36 +1,12 @@
 ---
-# This task copies the manifest from the ansible control host
-# and uploads it to the satellite to enable content
-#
-# manifest_path is the location on the control host to which the role will have downloaded the manifest 
+# Use the redhat.satellite.manifest role
 
-- name: "Remove any existing manifest"
-  katello_manifest:
-    username: "{{ foreman_admin_username }}"
-    password: "{{ foreman_admin_password }}"
-    server_url: "{{ foreman_server_url }}"
-    organization: "{{ foreman_initial_organization }}"
-    validate_certs: "{{ foreman_validate_certs }}"
-    manifest_path: "{{ manifest_path }}"
-    state: absent
-
-- name: "Upload the specified manifest"
-  katello_manifest:
-    username: "{{ foreman_admin_username }}"
-    password: "{{ foreman_admin_password }}"
-    server_url: "{{ foreman_server_url }}"
-    organization: "{{ foreman_initial_organization }}"
-    validate_certs: "{{ foreman_validate_certs }}"
-    manifest_path: "{{ manifest_path }}"
-    state: present
-
-- name: "Tell Satellite to refresh the manifest with the CDN"
-  katello_manifest:
-    username: "{{ foreman_admin_username }}"
-    password: "{{ foreman_admin_password }}"
-    server_url: "{{ foreman_server_url }}"
-    organization: "{{ foreman_initial_organization }}"
-    validate_certs: "{{ foreman_validate_certs }}"
-    manifest_path: "{{ manifest_path }}"
-    state: refreshed
-
+- name: "Upload the manifest"
+  ansible.builtin.include_role:
+    name: redhat.satellite.manifest
+  vars:
+    satellite_server_url: "{{ satellite_url }}"
+    satellite_username: "{{ satellite_admin_username }}"
+    satellite_password: "{{ satellite_admin_password }}"
+    satellite_organization: "{{ satellite_initial_organization }}"
+    satellite_manifest_path: "{{ manifest_path }}"

@@ -9,21 +9,22 @@
     - vars/sat_vars.yml
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
-    - vars/satellite_post_vars.yml
 
   tasks:
 
-    - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
-      ansible.builtin.include_role:
-        name: satellite_pre
-
-    - name: "Apply role of satellite to {{ ansible_fqdn }}"
-      ansible.builtin.include_role:
-        name: satellite
-
-#    - name: "Apply role of satellite_post to {{ ansible_fqdn }}"
+#    - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
 #      ansible.builtin.include_role:
-#        name: satellite_post
+#        name: satellite_pre
+
+#    - name: "Apply role of satellite to {{ ansible_fqdn }}"
+#      ansible.builtin.include_role:
+#        name: satellite
+
+    - name: "Apply satellite_post role to target"
+      ansible.builtin.include_role:
+        name: satellite_post
+      tags: [ configure_hammer ]
+
 
 #    - name: "Waiting {{ pause_minutes }} minutes for Discovery"
 #      ansible.builtin.pause:
