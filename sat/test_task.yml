@@ -10,12 +10,6 @@
     - vars/satellite_vars.yml
 
   tasks:
-    - import_tasks: "roles/satellite_post/tasks/configure_mandatory_aks.yml"
-    - import_tasks: "roles/satellite_post/tasks/configure_optional_aks.yml"
-    - import_tasks: "roles/satellite_post/tasks/configure_mandatory_domains.yml"
-    - import_tasks: "roles/satellite_post/tasks/configure_optional_domains.yml"
-    - import_tasks: "roles/satellite_post/tasks/configure_mandatory_realms.yml"
-    - import_tasks: "roles/satellite_post/tasks/configure_optional_realms.yml"
     - import_tasks: "roles/satellite_post/tasks/configure_mandatory_subnets.yml"
     - import_tasks: "roles/satellite_post/tasks/configure_optional_subnets.yml"
     - import_tasks: "roles/satellite_post/tasks/configure_mandatory_compute_resources.yml"

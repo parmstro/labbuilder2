@@ -9,5 +9,5 @@
     locations: "{{ realm.locations }}"
     name: "{{ realm.name | upper }}"
     realm_type: "{{ realm.realm_type }}"
-    realm_proxy: "{{ realm.capsule }}"
+    realm_proxy: "{{ realm.realm_capsule }}"
     state: "{{ realm.state | default(omit) }}"

@@ -6,7 +6,7 @@
     server_url: "{{ satellite_url }}"
     organization: "{{ ak.organization }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    state: "{{ ak.state }}"
+    state: "present"
     name: "{{ ak.name }}"
     description: "{{ ak.description | default(omit) }}"
     lifecycle_environment: "{{ ak.lifecycle_environment }}"
@@ -17,8 +17,7 @@
     max_hosts: "{{ ak.max_hosts | default(omit) }}"
     unlimited_hosts: "{{ ak.unlimited_hosts | default(omit) }}"
     purpose_role: "{{ ak.purpose_role | default(omit) }}"
-    purpose_usage: "{{ ak.purpose_usage | default(omit)"
+    purpose_usage: "{{ ak.purpose_usage | default(omit) }}"
     release_version: "{{ ak.release_version | default(omit) }}"
     service_level: "{{ ak.service_level | default(omit) }}"
     host_collections: "{{ ak.host_collections | default(omit) }}"
-    

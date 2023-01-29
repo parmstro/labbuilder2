@@ -35,6 +35,9 @@ sat_installer_options:
   - '--enable-foreman-plugin-openscap'
   - '--enable-foreman-plugin-webhooks'
   - '--enable-foreman-proxy-plugin-discovery'
+  - '--foreman-proxy-registration true'
+  - '--foreman-proxy-templates true'
+  - '--foreman-proxy-tftp true'
   - '--foreman-proxy-dns true'
   - '--foreman-proxy-dns-managed false'
   - '--foreman-proxy-dns-provider "nsupdate_gss"'
@@ -1261,22 +1264,26 @@ oss_optional:
 
 aks_mandatory:
   - name: "SOE_RHEL7"
-    state: "present_with_defaults"
+    state: "present"
     description: "Activate a RHEL 7 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
+    subscriptions:
+      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
     content_overrides:
-      - label: "satellite-client-6-for-rhel-7-x86_64-rpms"
+      - label: "rhel-7-server-satellite-client-6-rpms"
         override: "enabled"
     content_view: "SOE_RHEL7"
     lifecycle_environment: "Development"
     unlimited_hosts: true
 
   - name: "SOE_RHEL8"
-    state: "present_with_defaults"
+    state: "present"
     description: "Activate a RHEL 8 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
+    subscriptions:
+      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
     content_overrides:
       - label: "satellite-client-6-for-rhel-8-x86_64-rpms"
         override: "enabled"
@@ -1285,10 +1292,12 @@ aks_mandatory:
     unlimited_hosts: true
 
   - name: "SOE_RHEL9"
-    state: "present_with_defaults"
+    state: "present"
     description: "Activate a RHEL 9 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
+    subscriptions:
+      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
     content_overrides:
       - label: "satellite-client-6-for-rhel-9-x86_64-rpms"
         override: "enabled"
@@ -1298,22 +1307,26 @@ aks_mandatory:
 
 aks_optional:
   - name: "LEAPP_7_2_8"
-    state: "present_with_defaults"
+    state: "present"
     description: "Migrate a RHEL 7 system to RHEL 8"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
+    subscriptions:
+      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
     content_overrides:
-      - label: "rhel-7-server-extras-rpm"
+      - label: "rhel-7-server-extras-rpms"
         override: "enabled"
     content_view: "LEAPP_7_2_8"
     lifecycle_environment: "Development"
     unlimited_hosts: true
 
   - name: "LEAPP_8_2_9"
-    state: "present_with_defaults"    
+    state: "present"    
     description: "Migrate a RHEL 8 system to RHEL 9"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
+    subscriptions:
+      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
     content_overrides:
       - label: "rhel-8-for-x86_64-supplementary-rpms"
         override: "disabled"
@@ -1333,8 +1346,8 @@ domains_mandatory:
 
 realms_mandatory:
   - name: "{{ ansible_domain | upper }}"
-    organization: "{{ satellite_initial_organization }}"
-    location: "{{ satellite_initial_location }}"
+    organizations: "{{ satellite_initial_organization }}"
+    locations: "{{ satellite_initial_location }}"
     realm_type: "Red Hat Identity Management"
     realm_capsule: "{{ ansible_fqdn }}"
 
@@ -1426,7 +1439,7 @@ hostgroups_baremetal:
     subnet: "Public"
     root_pass: "{{ satellite_admin_password }}"
 
-# SCAP policies
+# SCAP
 
 # general_settings
 # users
