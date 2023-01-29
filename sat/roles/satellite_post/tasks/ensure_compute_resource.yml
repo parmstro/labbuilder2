@@ -1,0 +1,13 @@
+- name: "Create the compute resource"
+  redhat.satellite.compute_resource:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    name: "{{ cr.name }}"
+    locations: "{{ cr.locations }}"
+    organizations: "{{ cr.organizations }}"
+    provider: "{{ cr.provider }}"
+    provider_params: "{{ cr.provider_params }}"
+    state: present
+

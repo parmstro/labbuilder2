@@ -1,0 +1,35 @@
+---
+# Create and deploy a virtwho configuration
+# using the foreman_virtwho_config api
+- set_fact:
+    json_data: "{{ vw | to_json }}"
+
+- name: "Create the configuration in Satellite"
+  ansible.builtin.uri:
+    url: "https://{{ ansible_fqdn }}/foreman_virt_who_configure/api/v2/configs"
+    method: "POST"
+    body_format: "json"
+    user: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    force_basic_auth: "true"
+    body: "{{ json_data }}" 
+    status_code: 201
+  register: result
+
+- ansible.builtin.set_fact:
+    config_id: "{{ result.json.id }}"
+
+- name: "Create the configuration in Satellite"
+  ansible.builtin.uri:
+    url: "https://{{ ansible_fqdn }}/foreman_virt_who_configure/api/v2/configs/{{ config_id }}/deploy_script/"
+    method: "GET"
+    user: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    force_basic_auth: "true"
+  register: result
+
+- ansible.builtin.shell: "{{ result.json.virt_who_config_script }}"
+  register: result
+
+- debug:
+    var: result

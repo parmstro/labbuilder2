@@ -1,14 +1,13 @@
 ---
-# Create the specified domain
-#
-- name: Delete the domain if it already exists
-  command: "hammer domain delete --organization={{ domain.organization | quote }} --location={{ domain.location | quote }} --name={{ domain.name | quote }}"
-  ignore_errors: true
-
-- name: Create the specified domain
-  command: "hammer domain create --organization={{ domain.organization | quote }} --location={{ domain.location | quote }} --name={{ domain.name | quote }}"
-
-- name: Update the description if defined
-  command: "hammer domain update --organization={{ domain.organization | quote }} --location={{ domain.location | quote }} --name={{ domain.name | quote }} --description={{ domain.description | quote }}"
-  when: "domain.description is defined"
-
+- name: "Create the domain"
+  redhat.satellite.domain:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    organizations: "{{ domain.organizations }}"
+    locations: "{{ domain.locations }}"
+    name: "{{ domain.name }}"
+    dns_proxy: "{{ domain.capsule }}"
+    description: "{{ domain.description | default(omit) }}"
+    parameters: "{{ domain.parameters | default(omit) }}"

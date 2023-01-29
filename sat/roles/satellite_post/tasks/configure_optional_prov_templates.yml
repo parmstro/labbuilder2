@@ -1,20 +1,12 @@
 ---
 # This playbook configures the optional configuration templates 
-#
-# NOTE: the files referenced in the sat_vars.yml file
-# for optional configuration templates are located in the template directory
-# of the foreman_post role. Optional configuration template files may be 
-# placed in the same directory or a custom path may be provided.
-# Also, if no variables are present, the file will simply
-# be loaded to foreman/satellite as is
-# 
 # NOTE: If you are providing templates that will be used with
 # ansible downstream, ensure the downstream ansible is properly 
 # encapsulated. This also applies to any foreman templating 
 # that may be incompatible with anisble template parsing,
-# however, I think this should be rare.
-#
-- name: Create the optional configuration templates defined
+# these occurences should be rare
+
+- name: Create the optional configuration templates
   include_tasks: create_prov_template.yml
   loop: "{{ prov_templates_optional }}"
   loop_control:

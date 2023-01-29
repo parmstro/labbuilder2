@@ -1,176 +1,37 @@
 ---
-# Create the subnet defined
-
-- name: Delete the subnet if it already exists
-  command: "hammer subnet delete --name={{ subnet.name | quote }} --organization={{ subnet.organization | quote }} --location={{ subnet.location }}"
-  ignore_errors: true
-
-- name: Create the base subnet command
-  set_fact:
-    hammer_command: "hammer subnet create --name={{ subnet.name | quote }}"
-
-- name: Build the command - boot-mode
-  set_fact:
-    hammer_command: "{{ hammer_command }} --boot-mode={{ subnet.boot_mode | quote }}"
-  when: "subnet.boot_mode is defined"
-
-- name: Build the command - description
-  set_fact:
-    hammer_command: "{{ hammer_command }} --description={{ subnet.description | quote }}"
-  when: "subnet.description is defined"
-
-
-# The ID of the capsule supporting DHCP services - we are using hardware
-- name: Get the DHCP Capsule ID
-  command: "hammer --output=json capsule info --name={{ subnet.dhcp_capsule | quote }}"
-  register: hammer_out
-  when: "subnet.dhcp_capsule is defined"
-
-- set_fact:
-    dhcp_capsule_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-  when: "subnet.dhcp_capsule is defined"
-
-- name: Build the command - dhcp-id
-  set_fact:
-    hammer_command: "{{ hammer_command }} --dhcp-id={{ dhcp_capsule_id }}"
-  when: "subnet.dhcp_capsule is defined"
-
-
-# The ID of the capsule supporting Discovery services - our satellite is
-- name: Get the Discovery Capsule ID
-  command: "hammer --output=json capsule info --name={{ subnet.discovery_capsule | quote }}"
-  register: hammer_out
-  when: "subnet.discovery_capsule is defined"
-
-- set_fact:
-    discovery_capsule_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-  when: "subnet.discovery_capsule is defined"
-
-- name: Build the command - discovery-id
-  set_fact:
-    hammer_command: "{{ hammer_command }} --discovery-id={{ discovery_capsule_id }}"
-  when: "subnet.discovery_capsule is defined"
-
-
-- name: Get the TFTP Capsule ID
-  command: "hammer --output=json capsule info --name={{ subnet.tftp_capsule | quote }}"
-  register: hammer_out
-  when: "subnet.tftp_capsule is defined"
-
-- set_fact:
-    tftp_capsule_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-  when: "subnet.tftp_capsule is defined"
-
-- name: Build the command - tftp-id
-  set_fact:
-    hammer_command: "{{ hammer_command }} --tftp-id={{ tftp_capsule_id }}"
-  when: "subnet.tftp_capsule is defined"
-
-
-- name: Get the Template Capsule ID
-  command: "hammer --output=json capsule info --name={{ subnet.template_capsule | quote }}"
-  register: hammer_out
-  when: "subnet.template_capsule is defined"
-
-- set_fact:
-    template_capsule_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-  when: "subnet.template_capsule is defined"
-
-- name: Build the command - template-id
-  set_fact:
-    hammer_command: "{{ hammer_command }} --template-id={{ template_capsule_id }}"
-  when: "subnet.template_capsule is defined"
-
-
-# The ID of the capsule supporting DNS services - our satellite is - through REALM
-# This will update the DNS managed by IdM
-- name: Get the DNS Capsule ID
-  command: "hammer --output=json capsule info --name={{ subnet.dns_capsule | quote }}"
-  register: hammer_out
-  when: "subnet.dns_capsule is defined"
-
-- set_fact:
-    dns_capsule_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-  when: "subnet.dns_capsule is defined"
-
-- name: Build the command - dns-id
-  set_fact:
-    hammer_command: "{{ hammer_command }} --dns-id={{ dns_capsule_id }}"
-  when: "subnet.dns_capsule is defined"
-
-
-- name: Build the command - domains
-  set_fact:
-    hammer_command: "{{ hammer_command }} --domains={{ subnet.domains | join(',') | quote }}"
-  when: 
-    - "subnet.domains is defined"
-    - "(subnet.domains | length) > 0"
-
-- name: Build the command - subnet starting ip - from
-  set_fact:
-    hammer_command: "{{ hammer_command }} --from={{ subnet.from | quote }}"
-  when: "subnet.from is defined"
-
-- name: Build the command - subnet ending ip - to
-  set_fact:
-    hammer_command: "{{ hammer_command }} --to={{ subnet.to | quote }}"
-  when: "subnet.to is defined"
-
-- name: Build the command - VLANID
-  set_fact:
-    hammer_command: "{{ hammer_command }} --vlanid={{ subnet.vlanid | quote }}"
-  when: "subnet.vlanid is defined"
-
-- name: Build the command - subnet netmask
-  set_fact:
-    hammer_command: "{{ hammer_command }} --mask={{ subnet.mask | quote }}"
-  when: "subnet.mask is defined"
-
-- name: Build the command - subnet network prefix 
-  set_fact:
-    hammer_command: "{{ hammer_command }} --network={{ subnet.network | quote }}"
-  when: "subnet.network is defined"
-
-- name: Build the command - subnet gateway
-  set_fact:
-    hammer_command: "{{ hammer_command }} --gateway={{ subnet.gateway | quote }}"
-  when: "subnet.gateway is defined"
-
-- name: Build the command - DNS primary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --dns-primary={{ subnet.dns_primary | quote }}"
-  when: "subnet.dns_primary is defined"
-
-- name: Build the command - DNS secondary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --dns-secondary={{ subnet.dns_secondary | quote }}"
-  when: "subnet.dns_secondary is defined"
-
-- name: Build the command - network type (IPV4 or IPV6)
-  set_fact:
-    hammer_command: "{{ hammer_command }} --network-type={{ subnet.network_type | quote }}"
-  when: "subnet.network_type is defined"
-
-- name: Build the command - IPAM (DHCP,InternalDB, None)
-  set_fact:
-    hammer_command: "{{ hammer_command }} --ipam={{ subnet.ipam | quote }}"
-  when: "subnet.ipam is defined"
-
-- name: Build the command - locations
-  set_fact:
-    hammer_command: "{{ hammer_command }} --locations={{ subnet.locations | join(',') | quote }}"
-  when: 
-    - "subnet.locations is defined"
-    - "(subnet.locations | length) > 0"
-
-- name: Build the command - organizations
-  set_fact:
-    hammer_command: "{{ hammer_command }} --organizations={{ subnet.organizations | join(',') | quote }}"
-  when:
-    - "subnet.organizations is defined"
-    - "(subnet.organizations | length) > 0"
-
-- name: Create the Subnet - execute the hammer command
-  command: "{{ hammer_command }}"
-
-
+- name: "Create the subnet"
+  redhat.satellite.subnet:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    organizations: "{{ subnet.organizations }}"
+    locations: "{{ subnet.locations }}"
+    domains: "{{ subnet.domains | default(omit) }}"
+    parameters: "{{ subnet.parameters | default(omit) }}"
+    remote_execution_proxies: "{{ subnet.remote_execution_capsules | default(omit) }}"
+    name: "{{ subnet.name }}"
+    description: "{{ subnet.description | default(omit) }}"
+    network_type: "{{ subnet.network_type | default(omit) }}"
+    network: "{{ subnet.network }}"
+    cidr: "{{ subnet.prefix | default(omit) }}"
+    mask: "{{ subnet.mask | default(omit) }}"
+    gateway: "{{ subnet.gateway | default(omit) }}"
+    dns_primary: "{{ subnet.dns_primary | default(omit) }}"
+    dns_secondary: "{{ subnet.dns_secondary | default(omit) }}"
+    ipam: "{{ subnet.ipam | default(omit) }}"
+    externalipam_group: "{{ subnet.externalipam_group | default(omit) }}"
+    from_ip: "{{ subnet.from_ip | default(omit) }}"
+    to_ip: "{{ subnet.to_ip | default(omit) }}"
+    vlanid: "{{ subnet.vlanid | default(omit) }}"
+    mtu: "{{ subnet.mtu | default(omit) }}"
+    boot_mode: "{{ subnet.boot_mode | default(omit) }}"
+    bmc_proxy: "{{ subnet.bmc_capsule | default(omit) }}"
+    dhcp_proxy: "{{ subnet.dhcp_capsule | default(omit) }}"
+    discovery_proxy: "{{ subnet.discovery_capsule | default(omit) }}"
+    dns_proxy: "{{ subnet.dns_capsule | default(omit) }}"
+    externalipam_proxy: "{{ subnet.externalipam_capsule | default(omit) }}"
+    http_bootproxy: "{{ subnet.httpboot_capsule | default(omit) }}"
+    template_proxy: "{{ subnet.template_capsule | default(omit) }}"
+    tftp_proxy: "{{ subnet.tftp_capsule | default(omit) }}"
+    state: "{{ subnet.state | default(omit) }}"

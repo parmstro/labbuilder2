@@ -1,22 +1,7 @@
 ---
 # This play creates an individual content view from specified paramters
-# Call this with a dictionary defining the content-view.
-#
-# Specify the list as cvs_mandatory or cvs_optional in the vars file
-#
-# We ARE NOT using auto-publish for composites as we will control that 
-# through the monthly content configuration with Tower
-#
-# Creating the content view is many layered: 
-# - create the view
-# - add the repositories
-# - add the filters
-# - add any ansible content
-#
-# This is one reason why I decided on looping in task calls defined in other files...
- 
 - name: "Create the content view"
-  katello_content_view:
+  redhat.satellite.content_view:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"
     server_url: "{{ satellite_url }}"
@@ -25,7 +10,7 @@
     name: "{{ cv.name }}"
     description: "{{ cv.desc }}"
     repositories: "{{ cv.repositories }}"
-
+    state: "{{ cv.state | default(omit) }}"
 
 # Add the filters
 - name: "Add the filters to the Content View"
@@ -33,4 +18,3 @@
   loop: "{{ cv.filters }}"
   loop_control:
     loop_var: cvf
-

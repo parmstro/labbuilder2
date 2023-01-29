@@ -8,4 +8,4 @@
   loop: "{{ media_mandatory }}"
   loop_control:
     loop_var: md
-
+  when: media_mandatory is defined

@@ -1,32 +1,33 @@
 ---
 # This task creates an individual provisioning template from specified paramters
 # Call this task with loop_var: pt
-#
-# Specify the list as prov_template_mandatory or prov_template_optional in the vars file
-#
-# 
-- name: Create temporary file
-  tempfile:
-    state: file
-    suffix: temp
-  register: output
-
-# NOTE: Jinja2 and Foreman templating seem to be exclusive and can co-exist in the same file.
 - name: Apply any ansible templating defined in the configuration template
-  template:
+  ansible.builtin.template:
     src: "{{ pt.path }}"
-    dest: "{{ output.path }}"
+    dest: "{{ playbook_dir }}/{{ pt.path }}.out"
+  delegate_to: localhost
 
-- name: Delete the existing instance of the configuration template
-  command: "hammer template delete --name={{ pt.name | quote }} --organization={{ pt.organization | quote }} --location={{ pt.location | quote }}"
-  ignore_errors: true
+- name: "Copy the file to the target satellite"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/{{ pt.path }}.out"
+    dest: "provisioning_template.tmp"
+    remote_src: false
+  
+- name: "Create the Provisioning Template from file"
+  redhat.satellite.provisioning_template:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    file_name: "provisioning_template.tmp"
+    state: present
+    organizations:
+      - "{{ satellite_initial_organization }}"
+    locations:
+      - "{{ satellite_initial_location }}"
 
-# Attach to operating system later. During OS Congfig as many to many. Let the OS take from what's available.
-# The only fly in the ointment is the partially configured OS we have right now
-# this is likely from not including the RHEL 7.6 repository as part of the sync or its a bug... 
-# it will add some processing time, but I will try it to see the result.
-# Depending, this may necessitate a matching effort like we did with sync plans (kind of Satellite specific as we auto create some things...)
-#
-- name: Create configuration template definition as new initial version
-  command: "hammer template create --name={{ pt.name | quote }} --organization={{ pt.organization | quote }} --location={{ pt.location | quote }} --file={{ output.path | quote }} --type={{ pt.type | quote }} --locked={{ pt.locked | quote }} --audit-comment={{ pt.audit_comment | quote }}"
-
+- name: "Remove the temporary file"
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/{{ pt.path }}.out"
+    state: absent
+  delegate_to: localhost

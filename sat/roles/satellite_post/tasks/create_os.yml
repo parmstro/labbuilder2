@@ -1,61 +1,28 @@
 ---
-# Determine if the OS already exists.
-# If it doesn't we will create it with basic info
-# If it does, we will simply update == re-write it. 
-# update will 
-#
-# Call with loop variable os
-#
-- name: "Determine if the OS exists - {{ os.name }}"
-  command: "hammer os info --organization={{ os.organization | quote }} --location={{ os.location | quote }} --title={{ os.title | quote }}"
-  register: os_exists
-  ignore_errors: true
+# This task ensures the OS state
 
-- name: Create the OS if it does not exist
-  command: "hammer os create --organization={{ os.organization | quote }} --location={{ os.location | quote }} --name={{ os.name | quote }} --family={{os.family | quote }} --major={{ os.major | quote }} --minor={{ os.minor | quote }}"
-  when: "os_exists.stdout ==''"
+- name: "Ensure existence of an Operating System"
+  redhat.satellite.operatingsystem:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    name: "{{ os.name }}"
+    description: "{{ os.description }}"
+    family: "{{ os.family }}"
+    major: "{{ os.major }}"
+    minor: "{{ os.minor }}"
+    media: "{{ os.media | default(omit) }}"
+    password_hash: "{{ os.password_hash }}"
+    parameters: "{{ os.parameters | default(omit) }}"
+    provisioning_templates: "{{ os.provisioning_templates | default(omit) }}"
+    ptables: "{{ os.ptables | default(omit) }}"
+    release_name: "{{ os.release_name | default(omit) }}"
+    state: "{{ os.state | default(omit) }}"
 
-
-- name: Build the base hammer os update command
-  set_fact:
-    hammer_command: "hammer os update --organization={{ os.organization | quote }} --location={{ os.location | quote }} --name={{ os.name | quote }} --title={{ os.title | quote }}"
-
-- name: add Architectures if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --architectures={{ os.architectures | join(',') | quote }}"
-  when: "os.architectures is defined"
-
-- name: add Configuration Templates if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --config-templates={{ os.config_templates | join(',') | quote }}"
-  when: "os.config_templates is defined"
-
-- name: add Description if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --description={{ os.description | quote }}"
-  when: "os.description is defined"
-
-- name: add Partition Tables if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --partition-tables={{ os.ptables | join(',') | quote }}"
-  when: "os.ptables is defined"
-
-- name: add Password Hash if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --password-hash={{os.password_hash | quote }}"
-  when: "os.password_hash is defined"
-
-- name: add Provisioning Templates if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --provisioning-templates={{ os.ptemplates | join(',') | quote }}"
-  when: "os.ptemplates is defined"
-
-- name: Add the release name if necessary
-  set_fact:
-    hammer_command: "{{ hammer_command }} --release-name={{ os.release_name | quote }}"
-  when: "os.release_name is defined"
-
-- name: Execute the command to update the OS
-  command: "{{ hammer_command }}"
-
-
+- name: "Set the default tempplates"
+  ansible.builtin.include_tasks: "set_os_default_template.yml"
+  loop: "{{ os.default_templates }}"
+  loop_control:
+    loop_var: "dt"
+  when: "os.default_templates is defined"

@@ -1,71 +1,24 @@
 ---
-# Create the activation key specified
-# expects ak dictionary
-#
-- name: Delete the activation key if it already exists
-  command: "hammer activation-key delete --organization={{ ak.organization | quote }} --name={{ ak.name | quote }}"
-  register: hammer_out
-  ignore_errors: true
-
-- name: Creating the base activation key.
-  command: "hammer activation-key create --organization={{ ak.organization | quote }} --name={{ ak.name }}"
-
-- name: Generating the update command for the activation key
-  set_fact:
-    hammer_command: "hammer activation-key update --organization={{ ak.organization | quote }} --name={{ ak.name | quote }}"
-
-- name: Building Command - auto-attach
-  set_fact:
-    hammer_command: "{{ hammer_command }} --auto-attach={{ ak.auto_attach | quote }}"
-  when: "ak.auto_attach is defined"
-
-- name: Building Command - content-view
-  set_fact:
-    hammer_command: "{{ hammer_command }} --content-view={{ ak.content_view | quote }}"
-  when: "ak.content_view is defined"
-
-- name: Building Command - lifecycle-environment
-  set_fact:
-    hammer_command: "{{ hammer_command }} --lifecycle_environment={{ ak.lc_environment | quote }}"
-  when: "ak.lc_environment is defined"
-
-- name: Building Command - max-hosts
-  set_fact:
-    hammer_command: "{{ hammer_command }} --max-hosts={{ ak.max_hosts | quote }}"
-  when: 
-    - "ak.max_hosts is defined"
-    - "ak.unlimited_hosts is not defined"
-
-- name: Building Command - unlimited-hosts
-  set_fact:
-    hammer_command: "{{ hammer_command }} --unlimited-hosts"
-  when: 
-    - "ak.max_hosts is not defined"
-    - "ak.unlimited_hosts is defined"
-
-# Red Hat does not use this field so you won't see it in Satellite
-- name: Building Command - release-version
-  set_fact:
-    hammer_command: "{{ hammer_command }} --release-version={{ ak.release_version | quote }}"
-  when: 
-    - "ak.release_version is defined"
-
-- name: Building Command - service-level
-  set_fact:
-    hammer_command: "{{ hammer_command }} --service-level={{ ak.service_level | quote }}"
-  when: 
-    - "ak.service_level is defined"
-
-- name: Updating the activation key
-  command: "{{ hammer_command }}"
-
-# Now attach the subscriptions
-
-- name: Attach the subscriptions if required
-  include_tasks: attach_subscription_to_ak.yml    
-  when: "ak.subscriptions is defined"
-
-
-# Now perform the content overrides
-# Host Collections is looooowwww on the list
-
+- name: "Create the activation key"
+  redhat.satellite.activation_key:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    organization: "{{ ak.organization }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    state: "{{ ak.state }}"
+    name: "{{ ak.name }}"
+    description: "{{ ak.description | default(omit) }}"
+    lifecycle_environment: "{{ ak.lifecycle_environment }}"
+    content_view: "{{ ak.content_view }}"
+    content_overrides: "{{ ak.content_overrides | default(omit) }}"
+    auto_attach: "{{ ak.auto_attach | default(omit) }}"
+    subscriptions: "{{ ak.subscriptions | default(omit) }}"
+    max_hosts: "{{ ak.max_hosts | default(omit) }}"
+    unlimited_hosts: "{{ ak.unlimited_hosts | default(omit) }}"
+    purpose_role: "{{ ak.purpose_role | default(omit) }}"
+    purpose_usage: "{{ ak.purpose_usage | default(omit)"
+    release_version: "{{ ak.release_version | default(omit) }}"
+    service_level: "{{ ak.service_level | default(omit) }}"
+    host_collections: "{{ ak.host_collections | default(omit) }}"
+    

@@ -2,7 +2,7 @@
 # This play creates an individual lifecycle environment.
 
 - name: "Create the lifecycle environment"
-  katello_lifecycle_environment:
+  redhat.satellite.lifecycle_environment:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"
     server_url: "{{ satellite_url }}"

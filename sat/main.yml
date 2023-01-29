@@ -5,8 +5,7 @@
   become: true
   gather_facts: true
   vars_files:
-    - vars/sat_vault.yml
-    - vars/sat_vars.yml
+    - vars/satellite_vault.yml
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
 
@@ -23,9 +22,11 @@
     - name: "Apply satellite_post role to target"
       ansible.builtin.include_role:
         name: satellite_post
-      tags: [ configure_hammer ]
-
-
+        apply:
+          tags:
+            - repositories
+      tags:
+        - always
 #    - name: "Waiting {{ pause_minutes }} minutes for Discovery"
 #      ansible.builtin.pause:
 #        minutes: "{{ pause_minutes }}"

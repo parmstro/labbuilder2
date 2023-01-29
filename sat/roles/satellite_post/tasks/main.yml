@@ -83,21 +83,6 @@
     - content_config
     - lifecycle
 
-- import_tasks: "{{ role_path }}/tasks/configure_mandatory_cvs.yml"
-  tags:
-    - content_config
-    - content_views
-
-- import_tasks: "{{ role_path }}/tasks/configure_optional_cvs.yml"
-  tags:
-    - content_config
-    - content_views
-
-- import_tasks: "{{ role_path }}/tasks/configure_optional_ccvs.yml"
-  tags:
-    - content_config
-    - content_views
-
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_sync_plans.yml"
   tags:
     - content_config
@@ -113,8 +98,23 @@
     - content_config
     - synch_plans
 
-# Configure the Provisioning Components
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_cvs.yml"
+  tags:
+    - content_config
+    - content_views
 
+- import_tasks: "{{ role_path }}/tasks/configure_optional_cvs.yml"
+  tags:
+    - content_config
+    - content_views
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_ccvs.yml"
+  tags:
+    - content_config
+    - content_views
+
+# Configure the Provisioning Components
+# most media is created and included in content views now
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_media.yml"
   tags:
     - provisioning_config

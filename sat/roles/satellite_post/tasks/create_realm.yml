@@ -1,27 +1,13 @@
 ---
-- name: Delete the realm if it already exists
-  command: "hammer realm delete --organization={{ realm.organization | quote }} --location={{ realm.location | quote }} --name={{ realm.name | quote }}"
-  ignore_errors: true
-
-# blow up here if the capsule doesn't exist, because it means
-# the config is messed up
-- name: Get the capsule id for the specified capsule
-  command: "hammer --output=json capsule info --name={{ realm.capsule | quote }}"
-  register: hammer_out
-
-- debug:
-    msg: "{{ hammer_out.stdout | from_json | json_query('Id') }}"
-  when: "debug_output == true"
-
-- set_fact:
-    realm_proxy_id: "{{  hammer_out.stdout | from_json | json_query('Id')}}"
-
-- debug:
-    msg: "{{ realm_proxy_id }}"
-  when: "debug_output == true"
-
-- name: Create the specified REALM
-  command: "hammer realm create --organization={{ realm.organization | quote }} --location={{ realm.location | quote }} --name={{ realm.name | upper | quote }} --realm-type={{ realm.realm_type | quote }} --realm-proxy-id={{ realm_proxy_id }}"
-
-
-
+- name: "Create the realm"
+  redhat.satellite.realm:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    organizations: "{{ realm.organizations }}"
+    locations: "{{ realm.locations }}"
+    name: "{{ realm.name | upper }}"
+    realm_type: "{{ realm.realm_type }}"
+    realm_proxy: "{{ realm.capsule }}"
+    state: "{{ realm.state | default(omit) }}"

@@ -3,19 +3,19 @@
 #
  
 - name: "Create custom product {{ cp.name }}"
-  katello_product:
+  redhat.satellite.product:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"
     server_url: "{{ satellite_url }}"
     organization: "{{ satellite_initial_organization }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    name: "cp.name"
+    name: "{{ cp.name }}"
     state: present
 
 
 - name: "Create the Repositories required for the custom product."
   include_tasks: add_custom_product_repo.yml
-  loop: "{{ cp.repos }}"
+  loop: "{{ cp.repositories }}"
   loop_control: 
     loop_var: cpr
-  when: "cp.repos is defined"
+  when: "cp.repositories is defined"

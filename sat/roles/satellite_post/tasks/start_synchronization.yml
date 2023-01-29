@@ -4,6 +4,9 @@
   set_fact:
     products_to_sync: "{{ repos_mandatory | map(attribute='product') | list | unique }}"
 
+- debug:
+    var: products_to_sync
+
 - name: "Sync the mandatory products with the CDN"
   redhat.satellite.repository_sync:
     username: "{{ satellite_admin_username }}"
@@ -11,7 +14,7 @@
     server_url: "{{ satellite_url }}"
     organization: "{{ satellite_initial_organization }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    product: "{{ item.name }}"
+    product: "{{ item }}"
   loop: "{{ products_to_sync }}"
 
 - name: "Get the unique list of optional products"
@@ -25,6 +28,20 @@
     server_url: "{{ satellite_url }}"
     organization: "{{ satellite_initial_organization }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    product: "{{ item.name }}"
+    product: "{{ item }}"
+  loop: "{{ products_to_sync }}"
+
+- name: "Get the unique list of custom products"
+  set_fact:
+    products_to_sync: "{{ custom_products | map(attribute='name') | list | unique }}"
+
+- name: "Sync the optional products"
+  redhat.satellite.repository_sync:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    organization: "{{ satellite_initial_organization }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    product: "{{ item }}"
   loop: "{{ products_to_sync }}"
 
