@@ -22,7 +22,7 @@
     architecture: "{{ cvfr.architecture | default(omit) }}"
     date_type: "{{ cvfr.date_type | default(omit) }}"
     start_date: "{{ cvfr.start_date | default(omit) }}"
-    end_date: "{{ cvfr.end_type | default(omit) }}"
+    end_date: "{{ cvfr.end_date | default(omit) }}"
     rule_name: "{{ cvfr.rule_name | default(omit) }}"  # name alias
     module_name: "{{ cvfr.module_name | default(omit) }}"  # name alias
     package_name: "{{ cvfr.package_name | default(omit) }}"  # name alias
