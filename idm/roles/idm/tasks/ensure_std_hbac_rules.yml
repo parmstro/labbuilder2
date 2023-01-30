@@ -5,7 +5,7 @@
     name: admin_allow_all
     description: "Realm Admin accesses all hosts"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     hostcategory: all
     servicecategory: all
     group: 
@@ -17,7 +17,7 @@
     name: ocp-poc-users
     description: "Restrict access to OpenShift Control Nodes"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     hostgroup:
     - ocp-controllers
     - util-servers
@@ -31,7 +31,7 @@
     name: ocp-admins
     description: "OCP Admins can access to ocp controllers, nodes, routers, load balancers and utility servers"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     hostgroup:
     - ocp-controllers
     - ocp-servers
@@ -46,7 +46,7 @@
     name: sat-operators
     description: "Satellite Operators can access the Satellite and Capsule Servers"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     hostgroup:
     - sat-servers
     servicecategory: all
@@ -58,7 +58,7 @@
     name: aap-operators
     description: "Ansible Automation Platform Operators can access AAP Servers"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     hostgroup:
     - aap-servers
     servicecategory: all
@@ -70,4 +70,4 @@
   redhat.rhel_idm.ipahbacrule:
     name: allow_all
     state: disabled
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"

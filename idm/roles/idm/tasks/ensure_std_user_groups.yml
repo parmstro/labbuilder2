@@ -5,7 +5,7 @@
     name: "{{ item.name }}"
     description: "{{ item.desc }}"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
   loop:
     - { name: "satgroup-administrator", desc: "Satellite Server Administrators" }
     - { name: "satgroup-org-administrator", desc: "Satellite Default Org Administrators - Manager Role" }
@@ -21,7 +21,7 @@
     name: "{{ item.name }}"
     description: "{{ item.desc }}"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
   loop:
     - { name: "aapgroup-administrator", desc: "Ansible Automation Platform Administrators" }
     - { name: "aapgroup-auditor", desc: "Ansible Automation Platform Auditors" }
@@ -35,7 +35,7 @@
     name: "{{ item.name }}"
     description: "{{ item.desc }}"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
   loop:
     - { name: "ocpgroup-cluster_administrator", desc: "OpenShift Container Platform Cluster Administrators" }
     - { name: "ocpgroup-operator", desc: "OpenShift Container Platform Cluster Operators" }
@@ -47,7 +47,7 @@
     name: "{{ item.name }}"
     description: "{{ item.desc }}"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
   loop:
     - { name: "ocp-servers", desc: "OpenShift Container Platform Nodes, Routers and Load Balancers" }
     - { name: "ocp-controllers", desc: "OpenShift Container Platform Controller Servers" }

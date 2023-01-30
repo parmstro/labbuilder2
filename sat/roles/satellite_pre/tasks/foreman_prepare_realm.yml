@@ -8,7 +8,7 @@
     - "freeipa.keytab"
 
 - name: "Setup satellite realm user"
-  ansible.builtin.shell: "echo '{{ ipaadmin_password }}' | kinit {{ ipaadmin_principal }}; echo '{{ ipaadmin_password }}' | /usr/sbin/foreman-prepare-realm admin {{ foreman_proxy_realm_principal }}"
+  ansible.builtin.shell: "echo '{{ ipa_admin_password }}' | kinit {{ ipa_admin_principal }}; echo '{{ ipa_admin_password }}' | /usr/sbin/foreman-prepare-realm admin {{ foreman_proxy_realm_principal }}"
   register: result
 
 - name: "Wait for keytab generation and retrieval"
@@ -52,3 +52,17 @@
 
 - name: update the trust
   ansible.builtin.command: "update-ca-trust"
+
+- name: "Set up IdM forward lookup zone to allow foreman proxy to update DNS"
+  redhat.rhel_idm.ipadnszone:
+    ipaadmin_principal: "{{ ipa_admin_principal }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
+    name: "{{ ipa_dns_forward_zone }}"
+    update_policy: "{{ foreman_proxy_BIND_update_policy }}"
+
+- name: "Set up IdM reverse lookup zone to allow foreman proxy to update DNS"
+  redhat.rhel_idm.ipadnszone:
+    ipaadmin_principal: "{{ ipa_admin_principal }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
+    name: "{{ ipa_dns_reverse_zone }}"
+    update_policy: "{{ foreman_proxy_BIND_update_policy }}"

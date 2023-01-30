@@ -5,7 +5,7 @@
     name: "realm-admin"
     description: "Control sudo access on all servers for admins"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     cmdcategory: all
     hostcategory: all
     group:
@@ -17,7 +17,7 @@
     name: "sat-admin"
     description: "Control sudo access on Satellite Servers and Capsules"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     cmdcategory: all
     hostgroup:
     - sat-servers
@@ -33,7 +33,7 @@
     name: "ocp-admin"
     description: "Control sudo access on OCP Servers"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     cmdcategory: all
     hostgroup:
     - ocp-servers
@@ -46,7 +46,7 @@
     name: "aap-admin"
     description: "Control sudo access on Ansible Tower Servers"
     state: present
-    ipaadmin_password: "{{ ipaadmin_password }}"
+    ipaadmin_password: "{{ ipa_admin_password }}"
     cmdcategory: all
     hostgroup:
     - aap-servers

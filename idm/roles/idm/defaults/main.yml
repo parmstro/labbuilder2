@@ -8,11 +8,10 @@ repository_ids:
 
 
 # idm configuration
-ipadm_password: "{{ ipadm_password_vault }}"
-ipaadmin_password: "{{ ipaadmin_password_vault }}"
+ipa_admin_password: "{{ ipa_admin_password_vault }}"
 ipaserver_ip_addresses: "192.168.254.5"
-ipaserver_domain: "example.ca"
-ipaserver_realm: "EXAMPLE.CA"
+ipa_server_domain: "example.ca"
+ipa_server_realm: "EXAMPLE.CA"
 ipaserver_hostname: "idm.example.ca"
 ipaserver_no_host_dns: true
 ipaserver_mem_check: false
