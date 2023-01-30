@@ -18,7 +18,7 @@
     version: "{{ cvfr.version | default(omit) }}"
     errata_id: "{{ cvfr.errata_id | default(omit) }}"
     stream: "{{ cvfr.stream | default(omit) }}"
-    context: "{{ cvfr.contect | default(omit) }}"
+    context: "{{ cvfr.context | default(omit) }}"
     architecture: "{{ cvfr.architecture | default(omit) }}"
     date_type: "{{ cvfr.date_type | default(omit) }}"
     start_date: "{{ cvfr.start_date | default(omit) }}"
