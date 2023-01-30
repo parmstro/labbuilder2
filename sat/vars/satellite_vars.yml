@@ -9,8 +9,8 @@ satellite_validate_certs: false
 
 satellite_admin_email: "admin@example.ca"
 
-
 sat_installer_options:
+  - '--skip-checks-i-know-better'
   - '--foreman-initial-organization "{{ satellite_initial_organization }}"'
   - '--foreman-initial-location "{{ satellite_initial_location }}"'
   - '--foreman-initial-admin-username "{{ satellite_admin_username }}"'
@@ -44,7 +44,7 @@ sat_installer_options:
   - '--foreman-proxy-dns-server "{{ ipa_server_fqdn }}"'
   - '--foreman-proxy-dns-reverse "{{ ipa_dns_reverse_zone }}"'
   - '--foreman-proxy-dns-tsig-keytab "/etc/foreman-proxy/freeipa.keytab"'
-  - '--foreman-proxy-dns-tsig-principal "realm-capsule@{{ ipa_client_domain}}"'
+  - '--foreman-proxy-dns-tsig-principal "{{ foreman_proxy_realm_principal }}@{{ ipa_client_domain}}"'
   - '--foreman-proxy-realm true'
   - '--foreman-proxy-realm-keytab "/etc/foreman-proxy/freeipa.keytab"'
   - '--foreman-proxy-realm-principal "{{ foreman_proxy_realm_principal }}@{{ ipa_client_domain | upper }}"'
