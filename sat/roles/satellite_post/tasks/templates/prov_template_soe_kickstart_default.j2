@@ -259,8 +259,6 @@ chrony
 <% if rhel_compatible && os_major < 9 -%>
 wget
 <% end -%>
-vim-enhanced
-git
 @Core
 <% if host_param_true?('fips_enabled') -%>
 <%=   snippet 'fips_packages' %>
