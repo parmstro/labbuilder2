@@ -61,7 +61,8 @@ sat_installer_options:
 #  Currently this must be false - no plugin shipped in repos
 #  - '--foreman-proxy-content-enable-ostree false'
 
-#  - '--foreman-proxy-dhcp: "false"'
+# when we are using Satellite as the dhcp server
+#  - '--foreman-proxy-dhcp: false'
 #  - '--foreman-proxy-dhcp-interface: "{{ ansible_facts.interfaces | select('match', '^(e)+') | list | first }}"'
 #  - '--foreman-proxy-dhcp-range: "192.168.250.1 192.168.250.254"'
 #  - '--foreman-proxy-dhcp-gateway: "192.168.248.1"'
@@ -310,7 +311,7 @@ sync_plans_mandatory:
     desc: "Nightly non-OS repo sync - 02:30"
     interval: "daily"
     sync_date: "{{ ansible_date_time.date }} 02:30:00"
-    enabled: "true"
+    enabled: true
     organization: "{{ satellite_initial_organization }}"
     location: "{{ satellite_initial_location }}"
   
@@ -318,7 +319,7 @@ sync_plans_mandatory:
     desc: "Nightly non-OS repo sync - 03:30"
     interval: "daily"
     sync_date: "{{ ansible_date_time.date }} 03:30:00"
-    enabled: "true"
+    enabled: true
     organization: "{{ satellite_initial_organization }}"
     location: "{{ satellite_initial_location }}"
 
@@ -351,6 +352,7 @@ product_plan:
     plan: "nightly_third_party"
     organization: "{{ satellite_initial_organization }}"
 
+
 errata_end_date: "{{ ansible_date_time.date }}"
 cvs_mandatory:
   - name: "SOE_RHEL7"
@@ -374,13 +376,13 @@ cvs_mandatory:
     filters:
     - name: "Include_All_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all packages with no errata for all repositories"
       original_packages: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of the 1st of the month"
       repositories: "[]"
       rules:
@@ -393,7 +395,7 @@ cvs_mandatory:
         - "security"
     - name: "Exclude_FireFox"
       type: "rpm"
-      inclusion: "false"
+      inclusion: false
       description: "Do not provide Firefox to servers"
       repositories: "[]"
       rules:
@@ -425,19 +427,19 @@ cvs_mandatory:
     filters:
     - name: "Include_All_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
       original_packages: true
       repositories: "[]"
     - name: "Include_All_Streams_No_Errata"
       type: "modulemd"
-      inclusion: "true"
+      inclusion: true
       description: "Include all module streams with no errata for all repositories"
       original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of {{ errata_end_date }}"
       repositories: "[]"
       rules:
@@ -450,7 +452,7 @@ cvs_mandatory:
         - "security"
     - name: "Exclude_FireFox"
       type: "rpm"
-      inclusion: "false"
+      inclusion: false
       description: "Do not provide Firefox to servers"
       repositories: "[]"
       rules:
@@ -478,19 +480,19 @@ cvs_mandatory:
     filters:
     - name: "Include_All_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
       original_packages: true
       repositories: "[]"
     - name: "Include_All_Streams_No_Errata"
       type: "modulemd"
-      inclusion: "true"
+      inclusion: true
       description: "Include all module streams with no errata for all repositories"
       original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of {{ errata_end_date }}"
       repositories: "[]"
       rules:
@@ -503,7 +505,7 @@ cvs_mandatory:
         - "security"
     - name: "Exclude_FireFox"
       type: "rpm"
-      inclusion: "false"
+      inclusion: false
       description: "Do not provide Firefox to servers"
       repositories: "[]"
       rules:
@@ -532,19 +534,19 @@ cvs_mandatory:
     filters:
     - name: "Include_All_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
       original_packages: true
       repositories: "[]"
     - name: "Include_All_Streams_No_Errata"
       type: "modulemd"
-      inclusion: "true"
+      inclusion: true
       description: "Include all module streams with no errata for all repositories"
       original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of {{ errata_end_date }}"
       repositories: "[]"
       rules:
@@ -557,7 +559,7 @@ cvs_mandatory:
         - "security"
     - name: "Exclude_FireFox"
       type: "rpm"
-      inclusion: "false"
+      inclusion: false
       description: "Do not provide Firefox to servers"
       repositories: "[]"
       rules:
@@ -585,19 +587,19 @@ cvs_mandatory:
     filters:
     - name: "Include_All_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
       original_packages: true
       repositories: "[]"
     - name: "Include_All_Streams_No_Errata"
       type: "modulemd"
-      inclusion: "true"
+      inclusion: true
       description: "Include all module streams with no errata for all repositories"
       original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of {{ errata_end_date }}"
       repositories: "[]"
       rules:
@@ -611,7 +613,7 @@ cvs_mandatory:
         state: "present"
     - name: "Exclude_FireFox"
       type: "rpm"
-      inclusion: "false"
+      inclusion: false
       description: "Do not provide Firefox to servers"
       repositories: "[]"
       rules:
@@ -633,7 +635,7 @@ cvs_optional:
     filters:
     - name: "Include_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
       original_packages: true
       repositories: "[]"
@@ -677,7 +679,7 @@ cvs_optional:
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of the 1st of the month"
       repositories: "[]"
       rules:
@@ -739,25 +741,25 @@ global_parameters_mandatory:
     value: "50f79524-5415-462b-b5d3-2eeebc65aaac"
     parameter_type: "string"
     hidden_value: false
-    state: "present_with_defaults"
+    state: "present"
 
   - name: "ansible_job_template_id"
     value: 11
     parameter_type:	"integer"
     hidden_value: false
-    state: "present_with_defaults"
+    state: "present"
 
   - name: "ansible_roles_check_mode"
     value: false
     parameter_type: "boolean"
     hidden_value: false
-    state: "present_with_defaults"
+    state: "present"
 
   - name: "ansible_tower_fqdn"
     value: "aap.example.ca"
     parameter_type: "string"
     hidden_value: false
-    state: "present_with_defaults"
+    state: "present"
 
   - name: "ansible_tower_provisioning"
     value: false
@@ -1008,7 +1010,6 @@ ptables_mandatory:
 
 # Although the OSs are create automatically when we include a kickstart
 # we still need to update some of the configurations, notably templates and partition tables
-# Normally you would only specify changes and use present_with_defaults, we are specifying all for demo purposes
 oss_mandatory:
   - name: "RedHat"
     major: 7
