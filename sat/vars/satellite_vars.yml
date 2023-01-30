@@ -39,11 +39,12 @@ sat_installer_options:
   - '--foreman-proxy-templates true'
   - '--foreman-proxy-tftp true'
   - '--foreman-proxy-dns true'
-  - '--foreman-proxy-dns-managed false'
+  - '--foreman-proxy-dns-managed true'
   - '--foreman-proxy-dns-provider "nsupdate_gss"'
   - '--foreman-proxy-dns-server "{{ ipaserver_fqdn }}"'
+  - '--foreman-proxy-dns-reverse "{{ idm_dns_reverse_zone }}"'
   - '--foreman-proxy-dns-tsig-keytab "/etc/foreman-proxy/freeipa.keytab"'
-  - '--foreman-proxy-dns-tsig-principal "capsule/{{ ansible_fqdn }}@{{ ipaclient_domain}}"'
+  - '--foreman-proxy-dns-tsig-principal "realm-capsule@{{ ipaclient_domain}}"'
   - '--foreman-proxy-realm true'
   - '--foreman-proxy-realm-keytab "/etc/foreman-proxy/freeipa.keytab"'
   - '--foreman-proxy-realm-principal "{{ foreman_proxy_realm_principal }}@{{ ipaclient_domain | upper }}"'
@@ -776,8 +777,12 @@ global_parameters_mandatory:
     value: false
     parameter_type:	"boolean"
 
+  - name: "encrypt_grub"
+    value: false
+    parameter_type:	"boolean"
+
   - name: "grubmenu_pass"
-    value: "redacted"
+    value: "grub.pbkdf2.sha512.10000.513EB658A14D5090C45943245F4A77F1FC0220BE9931E1A7986AAC5A6E02EDFF8E7091B4BE33AE0FF2324D28FF92C58A4AFB7AAB8A39A61AE5197B2F96280062.3D80CE311344A666AED1E3882E41F4455EA8567FA75D9CF70313D0A7F5A6AB0CEB269491ECA20DCCC653A111C3E6BF59F49E0FDE9E62EED9AA75C168A10A2C18"
     parameter_type:	"string"
     hidden_value: true
 
