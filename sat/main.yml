@@ -11,13 +11,13 @@
 
   tasks:
 
-#    - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
-#      ansible.builtin.include_role:
-#        name: satellite_pre
+    - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
+      ansible.builtin.include_role:
+        name: satellite_pre
 
-#    - name: "Apply role of satellite to {{ ansible_fqdn }}"
-#      ansible.builtin.include_role:
-#        name: satellite
+    - name: "Apply role of satellite to {{ ansible_fqdn }}"
+      ansible.builtin.include_role:
+        name: satellite
 
     - name: "Apply satellite_post role to target"
       ansible.builtin.include_role:
@@ -27,6 +27,7 @@
             - repositories
       tags:
         - always
+
 #    - name: "Waiting {{ pause_minutes }} minutes for Discovery"
 #      ansible.builtin.pause:
 #        minutes: "{{ pause_minutes }}"
