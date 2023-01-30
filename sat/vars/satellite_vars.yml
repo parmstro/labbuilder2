@@ -394,7 +394,6 @@ cvs_mandatory:
       type: "rpm"
       inclusion: "false"
       description: "Do not provide Firefox to servers"
-      original_packages: true
       repositories: "[]"
       rules:
       - name: "firefox*"
@@ -433,7 +432,7 @@ cvs_mandatory:
       type: "modulemd"
       inclusion: "true"
       description: "Include all module streams with no errata for all repositories"
-      original_packages: true
+      original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
@@ -452,7 +451,6 @@ cvs_mandatory:
       type: "rpm"
       inclusion: "false"
       description: "Do not provide Firefox to servers"
-      original_packages: true
       repositories: "[]"
       rules:
       - name: "firefox*"
@@ -487,7 +485,7 @@ cvs_mandatory:
       type: "modulemd"
       inclusion: "true"
       description: "Include all module streams with no errata for all repositories"
-      original_packages: true
+      original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
@@ -506,7 +504,6 @@ cvs_mandatory:
       type: "rpm"
       inclusion: "false"
       description: "Do not provide Firefox to servers"
-      original_packages: true
       repositories: "[]"
       rules:
       - name: "firefox*"
@@ -542,7 +539,7 @@ cvs_mandatory:
       type: "modulemd"
       inclusion: "true"
       description: "Include all module streams with no errata for all repositories"
-      original_packages: true
+      original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
@@ -561,7 +558,6 @@ cvs_mandatory:
       type: "rpm"
       inclusion: "false"
       description: "Do not provide Firefox to servers"
-      original_packages: true
       repositories: "[]"
       rules:
       - name: "firefox*"
@@ -596,7 +592,7 @@ cvs_mandatory:
       type: "modulemd"
       inclusion: "true"
       description: "Include all module streams with no errata for all repositories"
-      original_packages: true
+      original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
@@ -616,7 +612,6 @@ cvs_mandatory:
       type: "rpm"
       inclusion: "false"
       description: "Do not provide Firefox to servers"
-      original_packages: true
       repositories: "[]"
       rules:
       - name: "firefox*"
@@ -639,11 +634,11 @@ cvs_optional:
       type: "rpm"
       inclusion: "true"
       description: "Include all rpms with no errata for all repositories"
-      originalpackages: "true"
+      original_packages: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
-      inclusion: "true"
+      inclusion: true
       description: "Include all errata updated as of the 1st of the month"
       repositories: "[]"
       rules:
@@ -669,15 +664,15 @@ cvs_optional:
     filters:
     - name: "Include_Packages_No_Errata"
       type: "rpm"
-      inclusion: "true"
+      inclusion: true
       description: "Include all rpms with no errata for all repositories"
-      originalpackages: "true"
+      original_packages: true
       repositories: "[]"
     - name: "Include_All_Streams_No_Errata"
       type: "modulemd"
-      inclusion: "true"
+      inclusion: true
       description: "Include all module streams with no errata for all repositories"
-      original_packages: true
+      original_module_streams: true
       repositories: "[]"
     - name: "Include_Errata_By_Date"
       type: "erratum"
@@ -1369,7 +1364,6 @@ subnets_mandatory:
     tftp_capsule: "{{ ansible_fqdn }}"
     dns_capsule: "{{ ansible_fqdn }}"
     template_capsule: "{{ ansible_fqdn }}"
-    dhcp_capsule: "{{ ansible_fqdn }}"
     domains: 
       - "{{ ansible_domain }}"
     locations:
@@ -1378,6 +1372,9 @@ subnets_mandatory:
       - "{{ satellite_initial_organization }}"
 
 # subnets_optional:
+
+vcenter_service_username: "{{ vcenter_service_username_vault }}"
+vcenter_service_password: "{{ vcenter_service_password_vault }}"
 
 compute_resources_mandatory:
   - name: "VMware"
@@ -1391,7 +1388,7 @@ compute_resources_mandatory:
       url: "192.168.252.30"
       user: "{{ vcenter_service_username }}"
       password: "{{ vcenter_service_password }}"
-      ssl_verify_peer: false
+
     
 # compute_resources_optional:
 
