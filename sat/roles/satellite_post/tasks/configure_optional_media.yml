@@ -1,12 +1,7 @@
 ---
-# This playbook configures the mandatory media defined in the
-# {{ playbook_dir }}/vars/sat_vars.yml file
-#
-
-- name: Configure the specified optional media.
+- name: "Configure the optional media"
   include_tasks: create_media.yml
   loop: "{{ media_optional }}"
   loop_control:
     loop_var: md
-  when: "media_optional is defined"
-
+  when: media_optional is defined
