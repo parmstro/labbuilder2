@@ -1,0 +1,10 @@
+---
+- name: "Ensure the scap content is loaded"
+  redhat.satellite.scap_content:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    title: "Red Hat firefox default content"
+    scap_file: "/home/user/Downloads/ssg-firefox-ds.xml"
+    original_filename: "ssg-firefox-ds.xml"
