@@ -1,107 +1,37 @@
 ---
-# This task creates the defined host groups from sat_vars.yml
+# Creates the host group
 #
-
-- name: delete the hostgroup if it already exists
-  command: "hammer hostgroup delete --name={{ hg.name | quote }} --organization={{ hg.organization | quote }} --location={{ hg.location | quote }}"
-
-- name: Create the base hostgroup command
-  set_fact:
-    hammer_command: "hammer hostgroup create --name={{ hg.name | quote }}"
-
-- name: Build the command - description
-  set_fact:
-    hammer_command: "{{ hammer_command }} --description={{ hg.description | quote }}"
-  when: "hg.description is defined"
-
-- name: Build the command - architecture
-  set_fact:
-    hammer_command: "{{ hammer_command }} --architecture={{ hg.architecture | quote }}"
-  when: "hg.architecture is defined"
-
-- name: Build the command - ask-root-password
-  set_fact:
-    hammer_command: "{{ hammer_command }} --ask-root-password={{ hg.ask_root_password | quote }}"
-  when: "hg.ask_root_password is defined"
-
-- name: Build the command - content-source
-  set_fact:
-    hammer_command: "{{ hammer_command }} --content-source={{ hg.content_source | quote }}"
-  when: "hg.content_source is defined"
-
-- name: Build the command - content-view
-  set_fact:
-    hammer_command: "{{ hammer_command }} --content-view={{ hg.content_view | quote }}"
-  when: "hg.content_view is defined"
-
-- name: Build the command - domain
-  set_fact:
-    hammer_command: "{{ hammer_command }} --domain={{ hg.domain | quote }}"
-  when: "hg.domain is defined"
-
-- name: Build the command - lifecycle-environment
-  set_fact:
-    hammer_command: "{{ hammer_command }} --lifecycle-environment={{ hg.lifecycle_environment | quote }}"
-  when: "hg.lifecycle_environment is defined"
-
-- name: Build the command - location
-  set_fact:
-    hammer_command: "{{ hammer_command }} --location={{ hg.location | quote }}"
-  when: "hg.location is defined"
-
-- name: Build the command - operating system title
-  set_fact:
-    hammer_command: "{{ hammer_command }} --operatingsystem={{ hg.os_title | quote }}"
-  when: "hg.os_title is defined"
-
-- name: Build the command - medium
-  set_fact:
-    hammer_command: "{{ hammer_command }} --medium={{ hg.medium | quote }}"
-  when: "hg.medium is defined"
-
-- name: Build the command - organization
-  set_fact:
-    hammer_command: "{{ hammer_command }} --organization={{ hg.organization | quote }}"
-  when: "hg.organization is defined"
-
-- name: Build the command - partiton-table
-  set_fact:
-    hammer_command: "{{ hammer_command }} --partition-table={{ hg.partition_table | quote }}"
-  when: "hg.partition_table is defined"
-
-- name: Build the command - pxe-loader
-  set_fact:
-    hammer_command: "{{ hammer_command }} --pxe-loader={{ hg.pxe_loader | quote }}"
-  when: "hg.pxe_loader is defined"
-
-- name: Build the command - realm 
-  set_fact:
-    hammer_command: "{{ hammer_command }} --realm={{ hg.realm | to_upper | quote }}"
-  when: "hg.realm is defined"
-
-- name: Build the command - root-pass
-  set_fact:
-    hammer_command: "{{ hammer_command }} --root-pass={{ hg.root_pass | quote }}"
-  when: "hg.root_pass is defined"
-
-- name: Build the command - subnet name
-  set_fact:
-    hammer_command: "{{ hammer_command }} --subnet={{ hg.subnet | quote }}"
-  when: "hg.subnet is defined"
-
-
-- name: create the parameter array
-  set_fact:
-    parameter_array: "name={{ item.name }},\ value={{ item.value }}"
-  with_dict: hg.parameters
-  when: "hg.parameters is defined"
-
-- name: Build the command - group-parameters-attributes
-  set_fact:
-    hammer_command: "{{ hammer_command }} --group-parameters-attributes={{ parameter_array | quote }}"
-  when: "hg.parameters is defined"
-
-- name: Create the HostGroup - execute the hammer command
-  command: "{{ hammer_command }}"
-
-
+- name: "Create the host group"
+  redhat.satellite.hostgroup:
+    username: "{{ satellite_admin_username }}"
+    password: "{{ satellite_admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_validate_certs }}"
+    state: "{{ hg.state | default(omit) }}"
+    parent: "{{ hg.parent | default(omit) }}" 
+    name: "{{ hg.name }}"
+    description: "{{ hg.description | default(omit) }}"
+    activation_keys: "{{ hg.activation_keys | default(omit) }}"
+    ansible_roles: "{{ hg.ansible_roles }} | default(omit) }}"
+    architecture: "{{ hg.archictecture | default(omit) }}"
+    compute_profile: "{{ hg.compute_profile | default(omit) }}"
+    compute_resource: "{{ hg.compute_resource | default(omit) }}"
+    config_groups: "{{ hg.config_groups | default(omit) }}"
+    content_source: "{{ hg.content_source | default(omit) }}"
+    content_view: "{{ hg.content_view | default(omit) }}"
+    domain: "{{ hg.domain | default(omit) }}"
+    kickstart_repository: "{{ hg.kickstart_repository | default(omit)  }}"
+    lifecycle_environment: "{{ hg.lifecycle_environment | default(omit) }}"
+    locations: "{{ hg.locations | default(omit) }}"
+    medium: "{{ hg.medium | default(omit) }}"
+    openscap_proxy: "{{ hg.openscap_capsule | default(omit) }}"
+    operatingsystem: "{{ hg.operatingsystem | default(omit) }}"
+    organizations: "{{ hg.organizations | default(omit) }}"
+    parameters: "{{ hg.parameters | default(omit) }}"
+    ptable: "{{ hg.ptable | default(omit) }}"
+    pxe_loader: "{{ hg.pxe_loader | default(omit) }}"
+    realm: "{{ hg.realm | default(omit) }}"
+    root_pass: "{{ hg.root_pass | default(omit) }}"
+    subnet: "{{ hg.subnet | default(omit) }}"
+    subnet6: "{{ hg.subnet6 | default(omit) }}"
+    updated_name: "{{ hg.updated_name | default(omit) }}"
