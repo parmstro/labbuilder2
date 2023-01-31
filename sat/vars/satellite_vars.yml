@@ -1,13 +1,17 @@
 ---
-satellite_hostname: "sat.example.ca"
-satellite_url: "https://sat.example.ca"
+satellite_hostname: "{{ ansible_domain }}"
+satellite_fqdn: "{{ ansible_fqdn }}"
+satellite_domain: "{{ ansible_domain }}"
+
+
+satellite_url: "https://{{ satellite_fqdn }}"
 satellite_initial_organization: "example"
 satellite_initial_location: "lab"
 satellite_admin_username: "{{ sat_inital_admin_username_vault }}"
 satellite_admin_password: "{{ sat_inital_admin_password_vault }}"
 satellite_validate_certs: false
 
-satellite_admin_email: "admin@example.ca"
+satellite_admin_email: "{{ satellite_admin_username}}@{{ satellite_domain }}"
 
 sat_installer_options:
   - '--skip-checks-i-know-better'
@@ -20,8 +24,8 @@ sat_installer_options:
   - '--foreman-initial-admin-last-name  "Administrator"'
   - '--foreman-ipa-authentication true'
   - '--certs-server-ca-cert "/etc/ipa/ca.crt"'
-  - '--certs-server-cert "/etc/ipa/private/{{ ansible_fqdn }}/{{ ansible_fqdn }}.crt"'
-  - '--certs-server-key "/etc/ipa/private/{{ ansible_fqdn }}/{{ ansible_fqdn }}.key"'
+  - '--certs-server-cert "/etc/ipa/private/{{ satellite_fqdn }}/{{ satellite_fqdn }}.crt"'
+  - '--certs-server-key "/etc/ipa/private/{{ satellite_fqdn }}/{{ satellite_fqdn }}.key"'
   - '--enable-foreman-cli-webhooks'
   - '--enable-foreman-compute-ec2'
   - '--enable-foreman-compute-gce'
@@ -67,8 +71,8 @@ sat_installer_options:
 #  - '--foreman-proxy-dhcp-range: "192.168.250.1 192.168.250.254"'
 #  - '--foreman-proxy-dhcp-gateway: "192.168.248.1"'
 #  - '--foreman-proxy-dhcp-nameservers: "192.168.248.10"'
-#  - '--foreman-proxy-dhcp-option-domain: "[{{ ansible_domain }}]"'
-#  - '--foreman-proxy-dhcp-pxeserver: "{{ ansible_fqdn }}"'
+#  - '--foreman-proxy-dhcp-option-domain: "[{{ satellite_domain }}]"'
+#  - '--foreman-proxy-dhcp-pxeserver: "{{ satellite_fqdn }}"'
 #  - '--foreman-proxy-dhcp-network: "192.168.248.0"'
 #  - '--foreman-proxy-dhcp-netmask: "255.255.252.0"'
 
@@ -854,7 +858,7 @@ global_parameters_optional:
 # media_mandatory:
 #  - name: RHEL7Server
 #    os_family: Redhat
-#    path: "http://{{ ansible_fqdn }}/pulp/repos/{{ satellite_initial_organization | replace(' ', '_') }}/Library/content/dist/rhel/server/7/$major.$minor/$arch/kickstart/"
+#    path: "http://{{ satellite_fqdn }}/pulp/repos/{{ satellite_initial_organization | replace(' ', '_') }}/Library/content/dist/rhel/server/7/$major.$minor/$arch/kickstart/"
 #    organization: "{{ satellite_initial_organization }}"
 #    location: "{{ satellite_initial_location }}"
 
@@ -1337,20 +1341,20 @@ aks_optional:
 
 
 domains_mandatory:
-  - name: "{{ ansible_domain }}"
+  - name: "{{ satellite_domain }}"
     description: "root domain for the installation"
-    dns_capsule: "{{ ansible_fqdn }}"
+    dns_capsule: "{{ satellite_fqdn }}"
     organizations: 
       - "{{ satellite_initial_organization }}"
     locations: 
       - "{{ satellite_initial_location }}"
 
 realms_mandatory:
-  - name: "{{ ansible_domain | upper }}"
+  - name: "{{ satellite_domain | upper }}"
     organizations: "{{ satellite_initial_organization }}"
     locations: "{{ satellite_initial_location }}"
     realm_type: "Red Hat Identity Management"
-    realm_capsule: "{{ ansible_fqdn }}"
+    realm_capsule: "{{ satellite_fqdn }}"
 
 subnets_mandatory:
   - name: "Public"
@@ -1366,12 +1370,12 @@ subnets_mandatory:
     from_ip: 192.168.254.101
     to_ip: 192.168.254.254
     boot_mode: "Static"
-    discovery_capsule: "{{ ansible_fqdn }}"
-    tftp_capsule: "{{ ansible_fqdn }}"
-    dns_capsule: "{{ ansible_fqdn }}"
-    template_capsule: "{{ ansible_fqdn }}"
+    discovery_capsule: "{{ satellite_fqdn }}"
+    tftp_capsule: "{{ satellite_fqdn }}"
+    dns_capsule: "{{ satellite_fqdn }}"
+    template_capsule: "{{ satellite_fqdn }}"
     domains: 
-      - "{{ ansible_domain }}"
+      - "{{ satellite_domain }}"
     locations:
       - "{{ satellite_initial_location }}"
     organizations: 
@@ -1383,7 +1387,7 @@ vcenter_service_username: "{{ vcenter_service_username_vault }}"
 vcenter_service_password: "{{ vcenter_service_password_vault }}"
 
 compute_resources_mandatory:
-  - name: "VMware"
+  - name: "VMware_Lab"
     provider: "vmware"
     description: "Lab VCenter Server"
     locations: "{{ satellite_initial_location }}"
@@ -1418,6 +1422,112 @@ virtwho_configs_mandatory:
       organization_id: 1
 
 # compute_profiles
+compute_profiles_mandatory:
+  - name: "1-Small"
+    updated_name: "SOE_Small"
+    compute_attributes:
+      compute_resource: "VMware_Lab"
+      vm_attributes:
+        cpus: 1
+        corespersocket: 1
+        memory_mb: 4096
+        cluster: "NUCLab"
+        resource_pool: "Resources"
+        path: "/Datacenters/parmstrong.ca/vm"
+        guest_id: "rhel8_64Guest"
+        hardware_version: "Default"
+        memoryHotAddEnabled: true
+        cpuHotAddEnabled: true
+        add_cdrom: false
+        boot_order:
+          - "network"
+          - "disk"
+        scsi_controllers:
+          - type: ParaVirtualSCSIController
+            key: 1000
+        volume_attributes:
+          0:
+            thin: true
+            name: "Hard disk"
+            mode: "persistent"
+            controller_key: 1000
+            datastore: "SYN_VMS"
+            size_gb: 65
+        interfaces_attributes:
+          0:
+            type: "VirtualVmxnet3"
+            network: "VM Network"
+
+  - name: "2-Medium"
+    updated_name: "SOE_Medium"
+    compute_attributes:
+      compute_resource: "VMware_Lab"
+      vm_attributes:
+        cpus: 2
+        corespersocket: 1
+        memory_mb: 8192
+        cluster: "NUCLab"
+        resource_pool: "Resources"
+        path: "/Datacenters/parmstrong.ca/vm"
+        guest_id: "rhel8_64Guest"
+        hardware_version: "Default"
+        memoryHotAddEnabled: true
+        cpuHotAddEnabled: true
+        add_cdrom: false
+        boot_order:
+          - "network"
+          - "disk"
+        scsi_controllers:
+          - type: ParaVirtualSCSIController
+            key: 1000
+        volume_attributes:
+          0:
+            thin: true
+            name: "Hard disk"
+            mode: "persistent"
+            controller_key: 1000
+            datastore: "SYN_VMS"
+            size_gb: 100
+        interfaces_attributes:
+          0:
+            type: "VirtualVmxnet3"
+            network: "VM Network"
+
+  - name: "3-Large"
+    updated_name: "SOE_Large"
+    compute_attributes:
+      compute_resource: "VMware_Lab"
+      vm_attributes:
+        cpus: 4
+        corespersocket: 2
+        memory_mb: 8192
+        cluster: "NUCLab"
+        resource_pool: "Resources"
+        path: "/Datacenters/parmstrong.ca/vm"
+        guest_id: "rhel8_64Guest"
+        hardware_version: "Default"
+        memoryHotAddEnabled: true
+        cpuHotAddEnabled: true
+        add_cdrom: false
+        boot_order:
+          - "network"
+          - "disk"
+        scsi_controllers:
+          - type: ParaVirtualSCSIController
+            key: 1000
+        volume_attributes:
+          0:
+            thin: true
+            name: "Hard disk"
+            mode: "persistent"
+            controller_key: 1000
+            datastore: "SYN_VMS"
+            size_gb: 100
+        interfaces_attributes:
+          0:
+            type: "VirtualVmxnet3"
+            network: "VM Network"
+
 # ansible role sources
 # ansible roles
 # ansible variables
@@ -1425,22 +1535,73 @@ virtwho_configs_mandatory:
 # SCAP tailoring files
 
 # hostgroups
-hostgroups_baremetal:
-  - name: "BareMetal"
-    arch: "x86_64"
-    ask_root_password: false
+hostgroups:
+  - name: "RHEL8base"
+    description: "RHEL 8 SOE base hostgroup"
+    activation_keys: "SOE_RHEL8"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    architecture: "x86_64"
+    compute_profile: "SOE_Medium"
+    compute_resource: "VMware_Lab"
+    content_source: "{{ satellite_fqdn }}"
     content_view: "SOE_RHEL8"
-    description: "Use to deploy basic bare metal RHEL systems e.g. IdM Servers, etc.."
-    content_source: "{{ ansible_fqdn }}"
-    domain: "{{ ansible_domain }}"
+    domain: "{{ satellite_domain }}"
     lifecycle_environment: "Development"
-    organization: "{{ satellite_initial_organization }}"
-    location: "{{ satellite_initial_location }}"
-    os_title: "RHEL 8.7"
+    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+    locations: 
+      - "{{ satellite_initial_location }}"
+    organizations: 
+      - "{{ satellite_initial_organization }}"
+    openscap_capsule: "{{ satellite_fqdn }}"
+    operatingsystem: "RHEL 8.7"
+    ptable: "RHEL_Server_CIS1"
     pxe_loader: "PXELinux BIOS"
-    realm: "{{ ansible_domain | upper }}"
+    realm: "{{ satellite_domain | upper }}"
     subnet: "Public"
     root_pass: "{{ satellite_admin_password }}"
+    
+  - name: "RHEL9base"
+    description: "RHEL 9 SOE base hostgroup"
+    activation_keys: "SOE_RHEL9"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    architecture: "x86_64"
+    compute_profile: "SOE_Medium"
+    compute_resource: "VMware_Lab"
+    content_source: "{{ satellite_fqdn }}"
+    content_view: "SOE_RHEL9"
+    domain: "{{ satellite_domain }}"
+    lifecycle_environment: "Development"
+    kickstart_repository: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.1"
+    locations: 
+      - "{{ satellite_initial_location }}"
+    organizations: 
+      - "{{ satellite_initial_organization }}"
+    openscap_capsule: "{{ satellite_fqdn }}"
+    operatingsystem: "RHEL 9.1"
+    ptable: "RHEL_Server_CIS1"
+    pxe_loader: "PXELinux BIOS"
+    realm: "{{ satellite_domain | upper }}"
+    subnet: "Public"
+    root_pass: "{{ satellite_admin_password }}"
+
+  - name: "RHEL8_CIS2"
+    parent: "RHEL8base"
+    description: "RHEL 8 SOE for CIS Server 2 compliance template"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+      - ansible-role-rhel8-cis
+    ptable: "RHEL_Server_Compliance"
+
+  - name: "RHEL9_CIS2"
+    parent: "RHEL9base"
+    description: "RHEL 9 SOE for CIS Server 2 compliance template"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+      - ansible-role-rhel9-cis
+    ptable: "RHEL_Server_Compliance"
+
 
 # SCAP
 
