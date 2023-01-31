@@ -113,15 +113,12 @@
     - content_config
     - content_views
 
-# Configure the Provisioning Components
-# most media is created and included in content views now
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_media.yml"
   tags:
     - provisioning_config
     - media
 
 - import_tasks: "{{ role_path }}/tasks/configure_optional_media.yml"
-  when: "setup_optional_media == true"
   tags:
     - provisioning_config
     - media
