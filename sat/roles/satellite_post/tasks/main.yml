@@ -146,16 +146,6 @@
     - provisioning_config
     - prov_templates
 
-# Ready for OS creation
-# NOTE: RHEL OS is "special" - it is created by Satellite, you must include the version specific kickstart
-# as a synchronized repository to get the deployment to work with base components
-# Personally, I am of the opinion that this should happen in the background or don't include the OS..
-# Work completely when you sync 7Server only. No half measures. #OffSoapBox
-#
-- import_tasks: "{{ role_path }}/tasks/configure_special_oss.yml"
-  tags:
-    - provisioning_config
-    - os
 
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_oss.yml"
   tags:
@@ -235,11 +225,6 @@
     - provisioning_config
     - host_groups
 
-# Note you may define any additional discovery rules here that are required for your
-# implementation in Phase 3 Infrastructure
-# For others baremetal systems that may part of your platform deployment
-# include discovery rules in your Phase 4 configuration
-#
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_discovery_rules.yml"
   tags:
     - provisioning_config
@@ -249,11 +234,3 @@
   tags:
     - provisioning_config
     - discovery
-
-- import_tasks: "{{ role_path }}/tasks/poweron.yml"
-  tags:
-    - provisioning_config
-    - power_on
-
-
-            
