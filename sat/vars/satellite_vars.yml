@@ -37,6 +37,7 @@ sat_installer_options:
   - '--enable-foreman-plugin-discovery'
   - '--enable-foreman-plugin-leapp'
   - '--enable-foreman-plugin-openscap'
+  - '--enable-foreman-proxy-plugin-openscap'
   - '--enable-foreman-plugin-webhooks'
   - '--enable-foreman-proxy-plugin-discovery'
   - '--foreman-proxy-registration true'
@@ -1666,9 +1667,45 @@ git_repos_mandatory:
     clone: true
     force: true
 
-# SCAP contents
+scap_content_mandatory:
+  - title: "RHEL 7 SCAP content"
+    scap_file: "ssg-rhel7-ds.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
+  - title: "RHEL 8 SCAP content"
+    scap_file: "ssg-rhel8-ds.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
+  - title: "RHEL 9 SCAP content"
+    scap_file: "ssg-rhel9-ds.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
 
-# SCAP tailoring files
+scap_tailoring_files_mandatory:
+  - name: "RHEL 7 DS 2022 Tailoring v3.0"
+    scap_file: "ssg-rhel7-ds-tailoring.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
+  - name: "RHEL 8 DS 2022 Tailoring v3.0"
+    scap_file: "ssg-rhel8-ds-tailoring.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
+  - name: "RHEL 9 DS 2022 Tailoring v3.0"
+    scap_file: "ssg-rhel9-ds-tailoring.xml"
+    locations:
+      - "{{ satellite_initial_location }}"
+    organizations:
+      - "{{ satellite_initial_organization }}"
 
 # ansible roles
 ansible_roles_import_list:
@@ -1706,10 +1743,10 @@ ansible_roles_import_list:
   - "ansible-role-anssi_bp28_high"
   - "ansible-role-anssi_bp28_enhanced"
   - "theforeman.foreman_scap_client"
+  - "RedHatInsights.insights-client"
 
 # ansible variables
 # imported when the role is imported
-
 
 # hostgroups
 hostgroups:
