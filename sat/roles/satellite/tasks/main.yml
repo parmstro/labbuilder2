@@ -5,3 +5,15 @@
   vars:
     satellite_installer_scenario: "satellite"
     satellite_installer_options: "{{ sat_installer_options }}"
+
+# This is currently a workaround for an issue with ks listening port
+- name: "Ensure foreman-proxy template setting"
+  ansible.builtin.lineinfile:
+    path: "/etc/foreman-proxy/settings.d/templates.yml"
+    regexp: "^:template_url:"
+    line: ":template_url: http://sat.example.ca"
+
+- name: "Restart foreman-proxy"
+  ansible.builtin.service:
+    name: "foreman-proxy"
+    state: restarted
