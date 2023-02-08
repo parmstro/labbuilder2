@@ -2,10 +2,38 @@
 # setup the server for the installation of Satellite or Capsule
 # Supports RHEL8 running Satellite 6.11 or greater
 - ansible.builtin.import_tasks: ensure_repositories.yml
+  tags:
+    - mandatory
+    - sat_repos
+
 - ansible.builtin.import_tasks: ensure_chronyd.yml
+    - mandatory
+    - time
+
 - ansible.builtin.import_tasks: ensure_firewalld_config.yml
+    - mandatory
+    - firewall
+
 - ansible.builtin.import_tasks: ensure_sat_binaries.yml
+    - mandatory
+    - packages
+
 - ansible.builtin.import_tasks: ensure_idm_registered.yml
+    - mandatory
+    - idmclient
+    - idm_setup
+
 - ansible.builtin.import_tasks: generate_certs.yml
+    - mandatory
+    - idmclient
+    - gen_certs
+
 - ansible.builtin.import_tasks: check_certs.yml
+    - mandatory
+    - idmclient
+    - check_certs
+
 - ansible.builtin.import_tasks: foreman_prepare_realm.yml
+    - mandatory
+    - idmclient
+    - prepare_realm
