@@ -1,43 +1,14 @@
 TODO:
-#2022-01-20
+#2023-02-07
 
-This is the 2022 reboot of labbuilder.
-
-Restating our goals. 
-
-1) create code to extract **configuration only** dumps from our Red Hat technologies 
-2) create code to consume the configuration dumps to allow us to recreate complex environments
-3) start with Red Hat Identity Management, Satellite and Ansible Automation Platform - the enterprise service and construction backplane. 4) extend to other infrastucture planes such as container platform and virtualization, storage infrastucture, etc..
-
-Binary bootstrap model. 
-Use ansible locally to create and configure an IdM server
-Use ansible locally to create a Satellite server
-Use ansible locally to create have Satellite provision an AAP controller server and then use ansible locally to configure AAP
-Use tower to run workflows to create additional infrastructure.
-- IdM replicas
-- Satellite capsules
-- AAP controller cluster
-- OpenShift clusters
+# IdM does not have reverse address for satellite
+# Kickstart issue due to foreman-proxy listening on port 80 vs. 8000
+# Finish build out of Content Views for Test Cases re: JBoss content views
+# Finish build out of Hostgroups for sample builds including JBoss, LAMP, Wordpress and compliance profiles
+# Finish policy module
+# Add policy variables
+# Add policy tasks
 
 
-Tasks:
-- rebuild base builder image
-- retest everything built so far
-- check discovery
-- install and configure virt-who
-- create Globals
-- configure remote-execution
-- add ansible roles to Satellite
-- add ansible variables to Satellite
-- create host groups
-- add SCAP content to Satellite
-- add tailoring files
-- create SCAP policies
-
-- create Tower server
-- configure tower
-- configure tower example jobs
-
-- deploy OpenShift
-
-- populate meta.yml information
+# Back Burner
+# figure out why vim and wget cause issues during install when specified as custom packages - modularity??
