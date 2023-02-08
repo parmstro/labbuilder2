@@ -1449,14 +1449,14 @@ compute_profiles_mandatory:
           scsi_controllers:
             - type: ParaVirtualSCSIController
               key: 1000
-          volume_attributes:
+          volumes_attributes:
             0:
               thin: true
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore_name: "SYN_VMS"
-              size: 69793218560
+              datastore: "SYN_VMS"
+              size_gb: 65
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
@@ -1484,14 +1484,14 @@ compute_profiles_mandatory:
           scsi_controllers:
             - type: ParaVirtualSCSIController
               key: 1000
-          volume_attributes:
+          volumes_attributes:
             0:
               thin: true
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore_name: "SYN_VMS"
-              size: 107374182400
+              datastore: "SYN_VMS"
+              size_gb: 100
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
@@ -1519,14 +1519,14 @@ compute_profiles_mandatory:
           scsi_controllers:
             - type: ParaVirtualSCSIController
               key: 1000
-          volume_attributes:
+          volumes_attributes:
             0:
               thin: true
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore_name: "SYN_VMS"
-              size: 107374182400
+              datastore: "SYN_VMS"
+              size_gb: 100
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
