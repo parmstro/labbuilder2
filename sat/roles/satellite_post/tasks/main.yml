@@ -353,4 +353,16 @@
     - provisioning_config
     - discovery_rules
 
+- import_tasks: "{{ role_path }}/tasks/configure_mandatory_global_parameters.yml"
+  tags:
+    - mandatory
+    - provisioning_config
+    - global_parameters
+
+- import_tasks: "{{ role_path }}/tasks/configure_optional_global_parameters.yml"
+  tags:
+    - optional
+    - provisioning_config
+    - global_parameters
+
 # End of Satellite Configuration
