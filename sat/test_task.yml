@@ -9,5 +9,5 @@
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
 
-  tasks:
-    - import_tasks: "roles/satellite_pre/tasks/foreman_prepare_realm.yml"
+  roles:
+    - satellite_post

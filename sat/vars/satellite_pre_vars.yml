@@ -7,6 +7,13 @@ repository_ids:
   - satellite-maintenance-6.12-for-rhel-8-x86_64-rpms
 
 sat_firewalld_zone: "public"
+sat_firewalld_services: 
+  - RH-Satellite-6
+  - http
+  - https
+  - dhcp
+  - dns
+  - tftp
 
 timeserver1: "192.168.252.8"
 timeserver2: "192.168.252.7"

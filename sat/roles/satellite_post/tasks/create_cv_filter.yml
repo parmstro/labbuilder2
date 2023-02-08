@@ -15,8 +15,8 @@
     filter_type: "{{ cvf.type }}"
     inclusion: "{{ cvf.inclusion }}"
     repositories: "{{ cvf.repositories }}"
-    original_packages: "{{ original_packages | default(omit) }}"
-    original_module_streams: "{{ original_module_streams | default(omit) }}"
+    original_packages: "{{ cvf.original_packages | default(omit) }}"
+    original_module_streams: "{{ cvf.original_module_streams | default(omit) }}"
 
 
 - name: "Configure Content View Filter Rules"

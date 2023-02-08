@@ -30,3 +30,6 @@
           port: ["5646/tcp","8888/tcp","8889/tcp","5671/tcp","5671/udp"],
           permanent: true,
           state: present }
+      - { service: "{{ sat_firewalld_services }}",
+          permanent: true,
+          state: enabled }

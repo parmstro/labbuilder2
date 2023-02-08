@@ -3,7 +3,7 @@
 # ensure we boot to the foreman discovery image
 
 - name: Create the default pxe configuration
-  command: "hammer templates build-pxe-default --organization={{ satellite_initial_organization | quote }} --location={{ foreman_initial_location | quote }}"
+  ansible.builtin.command: "hammer template build-pxe-default"
 
 # ensure the discovery image gets booted on timeout
 - name: Modify the menu default for Foreman Discovery

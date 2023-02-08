@@ -84,6 +84,7 @@ manifest_portal_url: "https://subscription.rhsm.redhat.com"
 manifest_validate_certs: true 
 manifest_cdn_username: "{{ cdn_username_vault }}"
 manifest_cdn_password: "{{ cdn_password_vault }}"
+manifest_account: "{{ cdn_account_number_vault }}"
 manifest_subs:
   - name: "Base"
     pool_id: "8a85f99c7ed94239017faf33fdb95d94"
@@ -360,59 +361,6 @@ product_plan:
 
 errata_end_date: "{{ ansible_date_time.date }}"
 cvs_mandatory:
-  - name: "SOE_RHEL7"
-    desc: "Our Red Hat Enterprise Linux 7 Standard Operating Environment Content"
-    org: "{{ satellite_initial_organization }}"
-    repositories:
-    - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
-      product: "Red Hat Ansible Engine"
-    - name: "Red Hat Satellite Client 6 for RHEL 7 Server RPMs x86_64"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs x86_64 7Server"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Enterprise Linux 7 Server - RH Common RPMs x86_64 7Server"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Enterprise Linux 7 Server RPMs x86_64 7Server"
-      product: "Red Hat Enterprise Linux Server"
-    - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
-      product: "Red Hat Enterprise Linux Server"
-    filters:
-    - name: "Include_All_Packages_No_Errata"
-      type: "rpm"
-      inclusion: true
-      description: "Include all packages with no errata for all repositories"
-      original_packages: true
-      repositories: "[]"
-    - name: "Include_Errata_By_Date"
-      type: "erratum"
-      inclusion: true
-      description: "Include all errata updated as of the 1st of the month"
-      repositories: "[]"
-      rules:
-      - name: "errata-by-date-{{ errata_end_date }}"
-        end_date: "{{ errata_end_date }}"
-        date_type: "updated"
-        types:
-        - "enhancement"
-        - "bugfix"
-        - "security"
-    - name: "Exclude_FireFox"
-      type: "rpm"
-      inclusion: false
-      description: "Do not provide Firefox to servers"
-      repositories: "[]"
-      rules:
-      - name: "firefox*"
-        basearch: "x86_64"
-    date_filter_name: "Include_Errata_By_Date"
-    environments:
-    - "Library"
-    - "Development"
-    - "Qualification"
-    - "Production"
-  
   - name: "SOE_RHEL8"
     desc: "Red Hat Enterprise Linux 8 Standard Operating Environment Content"
     org: "{{ satellite_initial_organization }}"
@@ -470,6 +418,59 @@ cvs_mandatory:
     - "Qualification"
     - "Production"
 
+  - name: "SOE_RHEL7"
+    desc: "Our Red Hat Enterprise Linux 7 Standard Operating Environment Content"
+    org: "{{ satellite_initial_organization }}"
+    repositories:
+    - name: "Red Hat Ansible Engine 2.9 RPMs for Red Hat Enterprise Linux 7 Server x86_64"
+      product: "Red Hat Ansible Engine"
+    - name: "Red Hat Satellite Client 6 for RHEL 7 Server RPMs x86_64"
+      product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64"
+      product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs x86_64 7Server"
+      product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server - RH Common RPMs x86_64 7Server"
+      product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server RPMs x86_64 7Server"
+      product: "Red Hat Enterprise Linux Server"
+    - name: "Red Hat Enterprise Linux 7 Server Kickstart x86_64 7.9"
+      product: "Red Hat Enterprise Linux Server"
+    filters:
+    - name: "Include_All_Packages_No_Errata"
+      type: "rpm"
+      inclusion: true
+      description: "Include all packages with no errata for all repositories"
+      original_packages: true
+      repositories: "[]"
+    - name: "Include_Errata_By_Date"
+      type: "erratum"
+      inclusion: true
+      description: "Include all errata updated as of the 1st of the month"
+      repositories: "[]"
+      rules:
+      - name: "errata-by-date-{{ errata_end_date }}"
+        end_date: "{{ errata_end_date }}"
+        date_type: "updated"
+        types:
+        - "enhancement"
+        - "bugfix"
+        - "security"
+    - name: "Exclude_FireFox"
+      type: "rpm"
+      inclusion: false
+      description: "Do not provide Firefox to servers"
+      repositories: "[]"
+      rules:
+      - name: "firefox*"
+        basearch: "x86_64"
+    date_filter_name: "Include_Errata_By_Date"
+    environments:
+    - "Library"
+    - "Development"
+    - "Qualification"
+    - "Production"
+  
   - name: "LEAPP_2_RHEL8"
     desc: "Red Hat Enterprise Linux 8.6 for LEAPP migrations"
     org: "{{ satellite_initial_organization }}"
@@ -1275,7 +1276,7 @@ aks_mandatory:
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
     subscriptions:
-      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
+      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-7-server-satellite-client-6-rpms"
         override: "enabled"
@@ -1289,7 +1290,7 @@ aks_mandatory:
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
     subscriptions:
-      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
+      - name: "Employee SKU"
     content_overrides:
       - label: "satellite-client-6-for-rhel-8-x86_64-rpms"
         override: "enabled"
@@ -1303,7 +1304,7 @@ aks_mandatory:
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
     subscriptions:
-      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
+      - name: "Employee SKU"
     content_overrides:
       - label: "satellite-client-6-for-rhel-9-x86_64-rpms"
         override: "enabled"
@@ -1318,7 +1319,7 @@ aks_optional:
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
     subscriptions:
-      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
+      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-7-server-extras-rpms"
         override: "enabled"
@@ -1332,7 +1333,7 @@ aks_optional:
     organization: "{{ satellite_initial_organization }}"
     auto_attach: true
     subscriptions:
-      - pool_id: "40287e8c85dfad340185e1ff805f40eb"
+      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-8-for-x86_64-supplementary-rpms"
         override: "disabled"
@@ -1427,107 +1428,107 @@ compute_profiles_mandatory:
   - name: "1-Small"
     updated_name: "SOE_Small"
     compute_attributes:
-      compute_resource: "VMware_Lab"
-      vm_attributes:
-        cpus: 1
-        corespersocket: 1
-        memory_mb: 4096
-        cluster: "NUCLab"
-        resource_pool: "Resources"
-        path: "/Datacenters/parmstrong.ca/vm"
-        guest_id: "rhel8_64Guest"
-        hardware_version: "Default"
-        memoryHotAddEnabled: true
-        cpuHotAddEnabled: true
-        add_cdrom: false
-        boot_order:
-          - "network"
-          - "disk"
-        scsi_controllers:
-          - type: ParaVirtualSCSIController
-            key: 1000
-        volume_attributes:
-          0:
-            thin: true
-            name: "Hard disk"
-            mode: "persistent"
-            controller_key: 1000
-            datastore: "SYN_VMS"
-            size_gb: 65
-        interfaces_attributes:
-          0:
-            type: "VirtualVmxnet3"
-            network: "VM Network"
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 1
+          corespersocket: 1
+          memory_mb: 4096
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volume_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 65
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
 
   - name: "2-Medium"
     updated_name: "SOE_Medium"
     compute_attributes:
-      compute_resource: "VMware_Lab"
-      vm_attributes:
-        cpus: 2
-        corespersocket: 1
-        memory_mb: 8192
-        cluster: "NUCLab"
-        resource_pool: "Resources"
-        path: "/Datacenters/parmstrong.ca/vm"
-        guest_id: "rhel8_64Guest"
-        hardware_version: "Default"
-        memoryHotAddEnabled: true
-        cpuHotAddEnabled: true
-        add_cdrom: false
-        boot_order:
-          - "network"
-          - "disk"
-        scsi_controllers:
-          - type: ParaVirtualSCSIController
-            key: 1000
-        volume_attributes:
-          0:
-            thin: true
-            name: "Hard disk"
-            mode: "persistent"
-            controller_key: 1000
-            datastore: "SYN_VMS"
-            size_gb: 100
-        interfaces_attributes:
-          0:
-            type: "VirtualVmxnet3"
-            network: "VM Network"
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 2
+          corespersocket: 1
+          memory_mb: 8192
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volume_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 100
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
 
   - name: "3-Large"
     updated_name: "SOE_Large"
     compute_attributes:
-      compute_resource: "VMware_Lab"
-      vm_attributes:
-        cpus: 4
-        corespersocket: 2
-        memory_mb: 8192
-        cluster: "NUCLab"
-        resource_pool: "Resources"
-        path: "/Datacenters/parmstrong.ca/vm"
-        guest_id: "rhel8_64Guest"
-        hardware_version: "Default"
-        memoryHotAddEnabled: true
-        cpuHotAddEnabled: true
-        add_cdrom: false
-        boot_order:
-          - "network"
-          - "disk"
-        scsi_controllers:
-          - type: ParaVirtualSCSIController
-            key: 1000
-        volume_attributes:
-          0:
-            thin: true
-            name: "Hard disk"
-            mode: "persistent"
-            controller_key: 1000
-            datastore: "SYN_VMS"
-            size_gb: 100
-        interfaces_attributes:
-          0:
-            type: "VirtualVmxnet3"
-            network: "VM Network"
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 4
+          corespersocket: 2
+          memory_mb: 8192
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volume_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 100
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
 
 # ansible role sources
 git_repos_mandatory:
@@ -1654,16 +1655,16 @@ git_repos_mandatory:
     dest: "/etc/ansible/roles/ansible-role-anssi_nt28_minimal"
     clone: true
     force: true
-  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_bp28_intermediary.git"
-    dest: "/etc/ansible/roles/ansible-role-anssi_bp28_intermediary"
+  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_nt28_intermediary.git"
+    dest: "/etc/ansible/roles/ansible-role-anssi_nt28_intermediary"
     clone: true
     force: true
-  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_bp28_high.git"
-    dest: "/etc/ansible/roles/ansible-role-anssi_bp28_high"
+  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_nt28_high.git"
+    dest: "/etc/ansible/roles/ansible-role-anssi_nt28_high"
     clone: true
     force: true
-  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_bp28_enhanced.git"
-    dest: "/etc/ansible/roles/ansible-role-anssi_bp28_enhanced"
+  - repository: "https://github.com/RedHatOfficial/ansible-role-rhel7-anssi_nt28_enhanced.git"
+    dest: "/etc/ansible/roles/ansible-role-anssi_nt28_enhanced"
     clone: true
     force: true
 
@@ -1708,6 +1709,7 @@ scap_tailoring_files_mandatory:
       - "{{ satellite_initial_organization }}"
 
 # ansible roles
+satellite_api_proxy_id_string: "1-sat.example.ca"
 ansible_roles_import_list:
   - "ansible-role-rhel9-e8"
   - "ansible-role-rhel9-ism"
@@ -1749,7 +1751,7 @@ ansible_roles_import_list:
 # imported when the role is imported
 
 # hostgroups
-hostgroups:
+hostgroups_mandatory:
   - name: "RHEL8base"
     description: "RHEL 8 SOE base hostgroup"
     activation_keys: "SOE_RHEL8"
@@ -1758,15 +1760,13 @@ hostgroups:
     architecture: "x86_64"
     compute_profile: "SOE_Medium"
     compute_resource: "VMware_Lab"
-    content_source: "{{ satellite_fqdn }}"
+    content_source: "sat.example.ca"
     content_view: "SOE_RHEL8"
     domain: "{{ satellite_domain }}"
     lifecycle_environment: "Development"
     kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
-    locations: 
-      - "{{ satellite_initial_location }}"
-    organizations: 
-      - "{{ satellite_initial_organization }}"
+    locations: "{{ satellite_initial_location }}"
+    organization: "{{ satellite_initial_organization }}"
     openscap_capsule: "{{ satellite_fqdn }}"
     operatingsystem: "RHEL 8.7"
     ptable: "RHEL_Server_CIS1"
@@ -1788,10 +1788,8 @@ hostgroups:
     domain: "{{ satellite_domain }}"
     lifecycle_environment: "Development"
     kickstart_repository: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.1"
-    locations: 
-      - "{{ satellite_initial_location }}"
-    organizations: 
-      - "{{ satellite_initial_organization }}"
+    locations: "{{ satellite_initial_location }}"
+    organization: "{{ satellite_initial_organization }}"
     openscap_capsule: "{{ satellite_fqdn }}"
     operatingsystem: "RHEL 9.1"
     ptable: "RHEL_Server_CIS1"
@@ -1807,6 +1805,7 @@ hostgroups:
       - theforeman.foreman_scap_client
       - ansible-role-rhel8-cis
     ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
 
   - name: "RHEL9_CIS2"
     parent: "RHEL9base"
@@ -1815,9 +1814,39 @@ hostgroups:
       - theforeman.foreman_scap_client
       - ansible-role-rhel9-cis
     ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
 
+discovery_rules_mandatory:
+  - name: "3nic_host"
+    enabled: false
+    state: present
+    organizations: "{{ satellite_initial_organization }}"
+    locations: "{{ satellite_initial_location }}" 
+    search: 'disk_count = 2 and memory > 32000 and facts.interfaces ~ "*,*,*,*"' 
+    priority: 20
+    hostgroup: "RHEL9base/RHEL9_CIS2"
 
-# SCAP
+# SCAP policies - writing ansible module
+# Draft definition
+scap_policies:
+  - name: "RHEL9_CIS2"
+    description: "CIS Server Level 2 for RHEL9 scan"
+    deploy_by: "ansible"
+    scap_content: "name"
+    scap_profile: "name"
+    period: "weekly"
+    weekday: "Monday"
+    day_of_month:
+    cron_line:
+    hostgroups:
+      - "RHEL9_CIS2" 
+    tailoring_file: "name"
+    tailoring_file_profile: "name"
+    organizations:
+      - "{{ satellite_initial_organization }}"
+    locations:
+      - "{{ satellite_initial_location }}" 
+    
 
 # general_settings
 # users
