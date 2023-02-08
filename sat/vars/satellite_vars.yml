@@ -38,10 +38,12 @@ sat_installer_options:
   - '--enable-foreman-plugin-leapp'
   - '--enable-foreman-plugin-openscap'
   - '--enable-foreman-proxy-plugin-openscap'
+  - '--enable-foreman-plugin-templates'
   - '--enable-foreman-plugin-webhooks'
   - '--enable-foreman-proxy-plugin-discovery'
   - '--foreman-proxy-registration true'
   - '--foreman-proxy-templates true'
+  - '--foreman-proxy-templates-listen-on both'
   - '--foreman-proxy-tftp true'
   - '--foreman-proxy-dns true'
   - '--foreman-proxy-dns-managed true'
@@ -49,10 +51,10 @@ sat_installer_options:
   - '--foreman-proxy-dns-server "{{ ipa_server_fqdn }}"'
   - '--foreman-proxy-dns-reverse "{{ ipa_dns_reverse_zone }}"'
   - '--foreman-proxy-dns-tsig-keytab "/etc/foreman-proxy/freeipa.keytab"'
-  - '--foreman-proxy-dns-tsig-principal "{{ foreman_proxy_realm_principal }}@{{ ipa_client_domain}}"'
+  - '--foreman-proxy-dns-tsig-principal "{{ foreman_proxy_realm_principal }}"'
   - '--foreman-proxy-realm true'
   - '--foreman-proxy-realm-keytab "/etc/foreman-proxy/freeipa.keytab"'
-  - '--foreman-proxy-realm-principal "{{ foreman_proxy_realm_principal }}@{{ ipa_client_domain | upper }}"'
+  - '--foreman-proxy-realm-principal "{{ foreman_proxy_realm_principal }}"'
   - '--foreman-proxy-realm-provider  "freeipa"'
   - '--foreman-proxy-content-enable-ansible true'
   - '--foreman-proxy-content-enable-deb true'
@@ -1308,7 +1310,7 @@ aks_mandatory:
     content_overrides:
       - label: "satellite-client-6-for-rhel-9-x86_64-rpms"
         override: "enabled"
-    content_view: "SOE_RHEL8"
+    content_view: "SOE_RHEL9"
     lifecycle_environment: "Development"
     unlimited_hosts: true
 
@@ -1453,8 +1455,8 @@ compute_profiles_mandatory:
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore: "SYN_VMS"
-              size_gb: 65
+              datastore_name: "SYN_VMS"
+              size: 69793218560
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
@@ -1488,8 +1490,8 @@ compute_profiles_mandatory:
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore: "SYN_VMS"
-              size_gb: 100
+              datastore_name: "SYN_VMS"
+              size: 107374182400
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
@@ -1523,8 +1525,8 @@ compute_profiles_mandatory:
               name: "Hard disk"
               mode: "persistent"
               controller_key: 1000
-              datastore: "SYN_VMS"
-              size_gb: 100
+              datastore_name: "SYN_VMS"
+              size: 107374182400
           interfaces_attributes:
             0:
               type: "VirtualVmxnet3"
