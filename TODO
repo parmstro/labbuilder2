@@ -1,13 +1,65 @@
 TODO:
 #2023-02-07
 
+# IdM Items:
+
 # IdM does not have reverse address for satellite
+
+
+# Satellite Items:
+
 # Kickstart issue due to foreman-proxy listening on port 80 vs. 8000
+# Test CreateHostFromHostGroup.yml
 # Finish build out of Content Views for Test Cases re: JBoss content views
 # Finish build out of Hostgroups for sample builds including JBoss, LAMP, Wordpress and compliance profiles
 # Finish policy module
-# Add policy variables
+# Add policy variables 
 # Add policy tasks
+# Test policies
+
+
+# AAP Items
+
+# Create the variable file and vault file for AAP/HUB install
+# Build the Controller VM
+# Build the Hub
+# Download the installer
+# Upload the installer to the Controller
+# Extract the installer
+# Template the inventory file
+# Install the controller
+# Upload the installer to the Hub
+# Extract the installer
+# Template the inventory file
+# Install the controller
+# Template the Satellite Execution Environment container
+# built the container
+# register the container to the hub
+# create the execution environment on the controller
+# load the import for ACM
+# test the ACM pipeline
+# load the import for VMware modules
+# test the VMware modules
+# load the callback test modules
+# test the callbacks
+
+
+# Build the tang server
+# test a NBDE build of a host
+
+# Build an IdM replica
+
+# Create the Azure Compute Resource
+# Create an image on console. and load it to Azure
+# Build a system in Azure
+# Deploy a capsule
+# Deploy an IdM replica
+
+# Create the AWS Compute Resource
+# Create an image on console. and load it to AWS
+# Build a system in AWS
+# Deploy a capsule
+# Deploy an IdM replica
 
 
 # Back Burner
