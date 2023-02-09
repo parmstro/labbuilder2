@@ -17,12 +17,20 @@
   tasks:
     - name: "Get the imagebuilder image"
       ansible.builtin.include_tasks: tasks/buildimage.yml
+      tags:
+        - buildimage
 
     - name: "Configure image on vCenter"
       ansible.builtin.include_tasks: tasks/load_image_vcenter.yml
+      tags:
+        - image_2_vcenter
 
     - name: "Initialize primary identity management server"
       ansible.builtin.include_tasks: tasks/initialize_idm_primary.yml
+      tags:
+        - build_idm_primary
 
     - name: "Initialize satellite server"
       ansible.builtin.include_tasks: tasks/initialize_sat_primary.yml
+      tags:
+        - build_satellite_primary

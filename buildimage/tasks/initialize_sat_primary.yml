@@ -15,6 +15,8 @@
     guest_network_config_type: "{{ sat_network_config_type }}"
     guest_hot_cpu_add: "{{ sat_hot_cpu_add }}"
     guest_hot_memory_add: "{{ sat_hot_memory_add }}"
+  tags:
+    - build_satellite_primary
 
 - name: "Add data disk to the satellite primary server"
   ansible.builtin.include_tasks: add_disk_to_guest.yml
@@ -27,10 +29,14 @@
     type: "{{ sat_data_disk_type }}"
     scsi_type: "{{ sat_data_disk_scsi_type }}"
     disk_mode: "{{ sat_data_disk_disk_mode }}"
-
-- name: "Add data disk to the satellite primary server"
+  tags:
+    - build_satellite_primary
+  
+- name: "Reconfigure Satellite storage volumes"
   ansible.builtin.include_tasks: ensure_image_storage_config.yml
   vars:
     guest_fqdn: "{{ sat_fqdn }}"
     pv_list: "{{ sat_pv_list }}"
+  tags:
+    - build_satellite_primary
   

@@ -16,4 +16,5 @@
         state: "present"
     validate_certs: false
   delegate_to: localhost
-
+  tags:
+    - build

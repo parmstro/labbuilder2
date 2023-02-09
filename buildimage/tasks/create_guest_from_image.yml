@@ -38,6 +38,8 @@
     state: "powered-off"
     validate_certs: false
   delegate_to: localhost
+  tags:
+    - build
 
 - name: "Copy the image to the folder for guest"
   ansible.builtin.shell: |
@@ -49,6 +51,8 @@
     export GOVC_URL=https://{{ vcenter_hostname }}
     govc datastore.cp {{ vcenter_base_folder_path }}/{{ image_file_name }} {{ guest_fqdn }}/{{ builder_image_name}}.{{ image_extension }}
   delegate_to: localhost
+  tags:
+    - build
 
 - name: "Add disk to the vm - powered off"
   community.vmware.vmware_guest_disk:
@@ -64,6 +68,8 @@
         filename: "[{{ vcenter_datastore }}] {{ guest_fqdn }}/{{ builder_image_name}}.{{ image_extension }}"
     validate_certs: false
   delegate_to: localhost
+  tags:
+    - build
 
 - name: "Power on the vm"
   community.vmware.vmware_guest_powerstate:
@@ -74,6 +80,8 @@
     state: "powered-on"
   delegate_to: localhost
   register: deploy
+  tags:
+    - build
 
 - name: "Wait for system to allow ssh"
   ansible.builtin.wait_for:
@@ -82,4 +90,5 @@
     search_regex: OpenSSH
     sleep: 5
     delay: 180
-
+  tags:
+    - build
