@@ -1,9 +1,0 @@
----
-- name: Download the specified manifest
-  redhat_manifest:
-    name: "{{ manifest_name }}"
-    portal: "{{ portal_url }}"
-    username: "{{ cdn_username }}"
-    password: "{{ cdn_password }}"
-    path: "{{ manifest_path }}"
-    validate_certs: "{{ validate_certs }}"
