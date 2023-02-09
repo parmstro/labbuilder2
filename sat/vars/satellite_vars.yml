@@ -41,6 +41,7 @@ sat_installer_options:
   - '--enable-foreman-plugin-templates'
   - '--enable-foreman-plugin-webhooks'
   - '--enable-foreman-proxy-plugin-discovery'
+  - '--foreman-proxy-http true'
   - '--foreman-proxy-registration true'
   - '--foreman-proxy-templates true'
   - '--foreman-proxy-templates-listen-on both'
