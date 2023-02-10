@@ -46,6 +46,7 @@ sat_installer_options:
   - '--foreman-proxy-templates true'
   - '--foreman-proxy-templates-listen-on both'
   - '--foreman-proxy-tftp true'
+  - '--foreman-proxy-plugin-discovery-install-images'
   - '--foreman-proxy-dns true'
   - '--foreman-proxy-dns-managed true'
   - '--foreman-proxy-dns-provider "nsupdate_gss"'
