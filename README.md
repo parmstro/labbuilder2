@@ -1,167 +1,65 @@
-# lab_builder
-This project builds a Red Hat based lab environment
+# labbuilder2
+Be sure to check out the [Wiki](https://github.com/parmstro/labbuilder2/wiki)
+
+Welcome to version2 of lab builder. We have changed the project to focus on building virtual environments instead of physical environments. In its current iteration, labbuilder2 requires a VMware environment to start off. If you want to build some physical systems in place of the IdM and Satellite nodes, that shouldn't be a problem, however, it is left as an exercise for the user.
+
+## Lab builder goals
+
+The goal of this project is to build a Red Hat based lab environment suitable for demostrating the a Red Hat infrastructure that implements several  Standard Operating Environments for Red Hat Enterprise Linux. There will be more documentation and presentation material made available later, but for now, please check out the [Wiki](https://github.com/parmstro/labbuilder2/wiki)
+
+When completed Lab builder should be able to deploy all parts of the standard infrastructure on any hypervisor or cloud (or combinations thereof). The basic deployment builds a lab on VMware, sets up the the hosting VMware cluster as a compute resource in Satellite and deploys the rest of the hosts on that cluster. The build is controlled by a provisioning node (usually your laptop) that kicks off the main ansible playbook, site.yml.
 
 The lab build includes:
-  - Red Hat Identity Management Master and "POC" users, groups, HBAC and sudo
-      The initial IdM Master is the buildmaster
-  - Red Hat Satellite 6.6 with all the bells and whistles turned on
-      The initial Satellite server is the foreman
+  - creating and downloading a base image from Red Hat image builder on console.redhat.com
+  - Red Hat Identity Management primary server with "POC" users, groups, HBAC and sudo, etc..
+  - Red Hat Satellite with all the bells and whistles turned on
+  - Red Hat Ansible Automation Platform controllers, an execution environment and sample workflows for managing Satellite content
+  - Red Hat Ansible Automation Hub
+  - 2 x Container hosts that run tang servers in containers to manage NBDE for some of the sample hostgroups
+  
+## Lab builder non-goals
 
-  The additional platforms installed will be integrated with the above
-  - Red Hat Hyperconverged Infrastructure (RHV+Gluster)
-  - Red Hat Ansible Platform (Tower cluster)
-  - Red Hat Openshift Container Platform
-  - Red Hat Openshift Container Storage
-
-The requirements below are for a bare metal lab. We will add alternate specs
-for a cloud based lab at a later date.
-
-If you are not interested in building a bare metal lab, this project is
-probably not what you want to use. Just sayin.
-
-# Basic Process
-
-This process was originally designed to start on bare metal systems that the 
-user has direct access to - like my lab. The project includes additional 
-playbooks so that the user can set this up on remote machines where access 
-is limited to network only. The process requires the two bootstrap systems 
-to have access to the Red Hat CDN and to have access to the appropriate 
-Red Hat subscriptions to build the lab. Please see the Requirements section 
-to understand which subscriptions need to be available. 
-
-The assumptions for this process are that you have nothing but the required 
-hardware to build the lab that you are specifying and a connection to the 
-internet.
-
-Minimum Environment
-
-1 IdM Master - buildmaster
-(1x 2-core proc, 16GB RAM, 128GB SSD recommended)
-
-1 Satellite Server - foreman
-(2x 2-core proc, 32GB RAM, 1x128GB SSD, 1x 1TB SSD minimum)
-
-3 RHV Hypervisors configured for RHHI 
-(ea. 2x 2-core proc, 32GB RAM, 1x128GB SSD, 1x 1TB SSD minimum, 3x 1Gb NIC)
-
-This process has been tested on Intel NUC Gen5 and above with good success.
-Any similar or more powerful systems will work. I am using NUCs because they
-are cheap, quiet and consume very little power. This is for a learning lab, 
-not production.
-
-:-)
-
-## Preparation and Phase 1
-
-Phase 1 creates the buildmaster and foreman systems from base RHEL7 images.
-At the time of writing, Satellite 6.6 does not support RHEL8. Before Phase 1
-begins, we need to prepare the systems with connections to the CDN and network
-information. 
-
-There is a single image that is used to create the buildmaster and the foreman.
-The root user of the image can ssh without password to the image, therefore, to
-both the buildmaster and the foreman. If you are building without the image,
-there are additional steps to ensure passwordless ssh for the root user. 
-
-Directions to build your own image and a kickstart are provided in the 
-labbuilder2_image repository on my github. This will require appropriate 
-RHEL subscriptions in order to register. This process was not intended to use
-CentOS, Fedora, or other distributions. This process is for RHEL.
-
-To start we run the prepare.yml ansible playbook on each host. This will ask
-for the information to configure itself and for the information of the
-corresponding bootstrap partner. 
-
-The buildmaster installs an IdM Master server on itself with DNS services and 
-a certificate authority, configures a set of users and groups for the realm,
-adds a basic set of sudo rules, and other IdM configuration that might be
-useful to demonstrate or we want to include with other systems in our lab. This
-configuration can easily be extended.
-
-The buildmaster then configures the "foreman" server for prerequisites, installs 
-the satellite binaries, copies over a satellite installation template and launches
-the satellite installer. After the satellite installation, the buildmaster
-applies the foreman-post role to the foreman server. This takes a long time to
-complete, usually several hours as the system downloads all the necessary
-content from the CDN. It configures all of the content, content views,
-installation media, partition templates, provisioning templates, etc.. that we
-will require to deploy other systems in the lab. One of the important parts of
-the configuration if foreman-discovery so that we can provision the remaining
-physical hosts.
-
-Phase 1 ends when the foreman-post role is complete and the user is asked to
-power on the remaining physical systems.
-
-The buildmaster then waits for the systems to be discovered.
-
-## Phase 2
-
-Phase 2 begins when sufficient hosts are discovered to start the deployment of
-our hypervisor platform for the lab. For default configuration is to deploy 3
-hypervisor systems as Red Hat Hyperconverged Infrastructure hosts. The default
-configuration expects them to have a minimum of 2 physical disks (1 being at
-least 1 TB - should be SSD for performance), 32 GB of RAM and 3 NICs to support
-an ovirtmgmt/vm network, a storage network and a migration network. For small
-labs you can get away with a single NIC, but it is a very limited deployment.
-
-Phase 2 builds the RHHI platform using the foreman host. The build supports the
-current standard number of RHHI nodes. After the RHV nodes are deployed from 
-baremetal, they are updated, ssh configured, and the appropriate templates
-are deployed to the first hypervisor to guide the gluster and hosted engine
-installation and configuration. Once the hosted engine is up, further
-configuration is performed to integrate the hypervisors and rhvm into the IPA
-configuration and ipa authenticated ssh and IPA SSO and certs for the RHVM
-host. The storage domains are then verified, the Storage and Migration networks
-are configured, satellite integration is configured from the RHVM side. 
-
-Once the RHVM configuration is complete, Phase 2 continues to configure the 
-foreman server to use the RHHI platform as a compute resource. Compute profiles
-are created for some defined system types that we demonstrate (CPGPC profiles,
-database server profiles, etc..), host groups are created that use these
-profiles and the RHV compute resource, virt-who is configured on the Satellite
-and finally, a test server is deployed on the RHHI compute resoure. 
-
-At this point we are ready to deploy any remaining systems that we wish to
-deliver in our lab. This is the role of Phase 3.
-
-## Phase 3
-
-Phase 3 is the portion of Lab Builder that deploys some additional Red Hat
-services that we would like to demonstrate and also sets up the automated care
-and feeding of our lab. This becomes the job of Ansible Tower and some
-additional projects that can be consumed from github. 
-
-Phase 3 begins with the deployment of Ansible Tower as a virtual machine on the
-RHHI platform completed in Phase 2. 
-
-- deploy single ansible tower node or cluster
-- configure tower for authentication with IPA
-- configure tower to use Satellite as an inventory source
-- configure tower to manage Satellite content view publication and promotion
-- configure tower to manage Satellite content view testing and QA builds
-- configure Satellite to use Tower callbacks.
-
-Phase 3 is complete when tower has successfully updated and published all
-content views on Satellite and successfully run the smoke tests for the test
-servers.
-
-We are now ready to continue to any additional phase that you wish to define.
-
-## Phase 4
-
-The default Phase 4 deploys OpenShift Container Platform with OpenShift
-Container Storage.
+It is not currently a goal of lab builder to create a production environment, although it could do that for small environments. The flexibility to build a completely custom production environment is not there yet.
 
 
-## Phase 5 
+## High Level Flow
 
-The default Phase 5 deploys sample infrastructure hosts such as 
-- a mail server for recieving notifications from all our infrastructure.
-- a rsyslog server for managing centralized logging.
-- a git server for managing projects
-- deployment of several OpenShift demonstration projects
-- deployment of the LabBuilder Documentation.
+- collect the credentials and config elements needed
+- plan your deployment
+- configure the appropriate variable files and inventory
+- run ansible-playbook -i inventory site.yml
+- make coffee, pull out your favourite game console
 
-When we are done, LabBuilder should be able to deploy LabBuilder...
+## Preparation
 
+We can break lab builder flow into a number of phases. 
+- create the image and load it to our target
+- bootstrap our idm system and configure it
+- bootstrap our satellite system and configure it
+- bootstrap ansible and our other hosts
+
+Each of these phases requires configuration. We are going to keep it simple for this overview. 1 Idm server, 1 satellite, 1 automation controller, 1 hub, and 2 container hosts (we want redundancy for our tang servers). To even get started, we need to gather some credentials. 
+
+You need a login to access.redhat.com and need to create an offline API token. The information on this process is located [here](https://access.redhat.com/articles/3626371). If you are familiar with the process, you can jump right to your [API Token management page](https://access.redhat.com/management/api). You will also need the organization number of your red hat account and the name of an activation key that will enable your IdM server and Satellite server. Attach the proper subscriptions to the activation key to enable the deployment of the two servers. These servers will start out registered directly to the CDN, once the Satellite server is built, the IdM server will unregister from the portal and re-register to the Satellite server that you build. You can plan accordingly.
+
+You also need access to the target VMware instance that you are going to build your lab on. For now Labbuilder uses only VMware, however, we are working diligently to add other providers and will eventually support other hypervisors and the hyperscalers. For VMware, you need a service account that allows you to upload images to storage and create virtual machines. You should be able to use any account that meets the criteria for a [Satellite compute resource](https://access.redhat.com/solutions/1339483). In short in needs the following:
+
+  - All Privileges -> Datastore -> Allocate Space, Browse datastore, Update Virtual Machine files, Low level file operations, Update virtual machine metadata
+  - All Privileges -> Network -> Assign Network 
+  - All Privileges -> Resource -> Apply recommendation, Assign virtual machine to resource pool 
+  - All Privileges -> Virtual Machine -> Change Configuration (All) 
+  - All Privileges -> Virtual Machine -> Interaction (All) 
+  - All Privileges -> Virtual Machine -> Edit Inventory (All) 
+  - All Privileges -> Virtual Machine -> Provisioning (All)
+  
+As a general note, we are using ansible vault for storing our credentials and follow a standard pattern. For each variable file that stores encrypted variables, we also have a corresponding file _vault.yml. For example:
+- builder_vars.yml
+- builder_vault.yml
+
+When we have a variable secret that we are vaulting we reference a vaulted variable using variablename_vault, like this:
+- offline_token: "{{ offline_token_vault }}"
+
+To see a list of the variables used in each of the phases see the appropriate wiki page as outlined below. 
+
+See the Wiki page for [configuring the buildimage variables](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-buildimage-variables).
 
