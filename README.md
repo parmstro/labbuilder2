@@ -61,5 +61,135 @@ When we have a variable secret that we are vaulting we reference a vaulted varia
 
 To see a list of the variables used in each of the phases see the appropriate wiki page as outlined below. 
 
+## Phase 1 - build the image and load it to the target
+
+This phase uses a variety of information to:
+- define and build a base image from current rpms on the Red Hat CDN using imagebuilder.
+- download the image to the provisioning system
+- upload the image to your vmware datastore
+- initialize an IdM primary server
+- initialize a Satellite primary server
+- ensure proper storage layout for the Satellite
+
+At the end of the phase, we will be ready to deploy the IdM server.
+
+There are numerous variable files for this phase as we are dealing with multiple systems. 
 See the Wiki page for [configuring the buildimage variables](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-buildimage-variables).
+
+## Phase 2 - bootstrap the Identity Management server
+
+In this phase we deploy the IdM primary including:
+- configure the IdM prerequisites
+- deploy and configuring the base IdM deployment - IdM + CA + DNS
+- create the POC user groups
+- create the POC users
+- create and assign the HBAC rules
+- create and assign the sudo rules
+- ensure that foreman-proxy configuration exists for DNS zone update.
+- configure any DNS zone forwarding
+
+At the end of this phase we have a fully functional IdM Realm with integrated certificate authority and DNS.
+Please note, we don't support the generation of a CSR yet for external signing. This will come in a future iteration.
+
+See the Wiki page for [configuring the idm variables](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-IdM-variables).
+
+## Phase 3 - bootstrap the Satellite server
+
+This is a truly massive section. This phase installs and fully configures a Satellite server. The configuration of Satellite has two components - those configuration components that are considered mandatory for the functionality of our demonstrations and those components that are optional. The optional configuration components are those that you want to add to customize the environment for your builds or that perhaps you are working on for a new example/demonstration/deployment. By setting up mandatory and optional components it allows you to generate a build that you know works and then slowly add to it without mucking up stuff that you know works. The configuration covers almost every aspect of Satellite including:
+- configure the Satellite prerequisites
+- registering the satellite to Identity Manager
+- creating certificates for the Satellite instance
+- preparing the IdM realm to support Satellite integration
+- (generate a user for kerberos integrated remote execution)
+- defining and running the Satellite installation
+
+### Content Configuration
+  - configure hammer
+  - download and install a Red Hat manifest to access content.
+  - configure Red Hat repositories.
+  - configure content credentials
+  - configure any custom products and repos e.g. MSSQL Server for Linux
+  - synchronize the content (warning can take a loooonnnng time depending on your link)
+  - create the sync plans
+  - attach the sync plans to content
+  - create the life cycle environments
+  - create the content views including filters, rules and target lifecycle environments
+  - create the composite content views
+  - publish and promote initial versions of content views and composite content views
+  
+### Provisioning Configuration
+  - configure installation media
+  - configure partition table templates
+  - configure job templates
+  - configure provisioning templates
+  - configure template synchronization
+  - configure operating systems
+  - configure activation keys and content restrictions
+  - configure network domains
+  - configure kerberos realms
+  - configure subnets
+  - configure PXE provisioning defaults
+  - configure compute resources
+  - configure compute profiles
+  - configure virt-who
+  - attach subscriptions to virt-who hypervisors
+  - configure git repos for ansible modules
+  - download ansible roles for SCAP
+  - load roles
+  - configure OSCAP content
+  - configure OSCAP tailoring files
+  - configure OSCAP policy
+  - configure discovery rules
+  - configure global parameters
+  - configure hostgroups
+  
+  There are a couple of items missing, notably the configuration of users and the configuration of cloud connector for Red Hat Insights. These are works in progress.
+  
+  See the Wiki page for [configuring the satellite variables](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-Satellite-variables).
+
+## Phase 3 - Provisioning other hosts
+
+In this phase we deploy the remaining hosts in our configuration. With Satellite deployed and configured with a compute resource and bare metal discover, this section can be as large as we want. 
+
+In our sample configuration, this phase deploys 4 additional servers. These servers can be deployed on bare metal or vmware. If using bare metal pxe provisioning must be allowed and your configuration must point next-server to the Satellite. VMware deployments are also pxe based. 
+
+Aside: We are adding code to register VMware images - a work in progress. We will provide 3 methods. 
+ 1. Register an existing template image with Satellite
+ 2. Build a system with Satellite via PXE, save as a template and register the image with Satellite
+ 3. Build an image with imagebuilder, upload to the compute resource and register with Satellite (this will eventually work for cloud providers as well).
+ 
+We build the AAP controller node - currently 1, but trivial to make a cluster, including:
+  - build the server instance using Satellite, includes configuring the hosts as IdM clients
+  - download and extract the installer
+  - template our setup configuration
+  - launch ansible controller installer
+  - create and configure IdM certificates for the controller
+  - build an exection environment with the proper certs for Satellite
+  - register the execution environment
+  - import the sample AAP configuration - inventories, projects, credentials, templates, workflows, etc.
+  - configure AAP for integrated authentication with IdM
+  - test the configuration
+  
+We build the AAP hub node - currently 1, including:
+  - build the server instance using Satellite, includes configuring the host as IdM client
+  - download and extract the installer
+  - template our setup configuration
+  - launch the ansible hub installer
+  - create and configure IdM certificates for the hub
+  - configure the remote repositories - automation hub, ansible galaxy
+  - configure synchronization
+  
+We build 2 container hosts to support our [tang servers](https://github.com/latchset/tang) for [Network Bound Disk Encryption (NBDE)](https://access.redhat.com/articles/6987053)
+  - build the server instance using Satellite, includes configuring the host as IdM client
+  - download the tang container to each host
+  - configure and test the container deployment
+  - register the tang server urls with Satellite for encrypted deployments
+
+See the Wiki pages for [configuring Ansible hosts](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-Ansible-hosts) and [configuring the NBDE hosts](https://github.com/parmstro/labbuilder2/wiki/Configuring-Container-hosts-for-NBDE-tang-servers).
+
+
+## Phase 5 
+
+Finally, we test the entire configuration by launching a content promotion pipeline from ansible. This section is based on the [Automating Content Management project](https://github.com/parmstro/AutomatingContentManagement) and the Automating Content Management blog series on redhat.com.
+
 
