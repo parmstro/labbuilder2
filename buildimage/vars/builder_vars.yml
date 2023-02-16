@@ -26,7 +26,7 @@ imagebuilder_image_type: "vsphere"
 builder_distribution: "rhel-87"
 
 # what we will call the image and where we put it
-image_file_directory: "/home/parmstro/Projects/ansible/labbuilder2/buildimage"
+image_file_directory: "{{ playbook_dir }}"
 builder_image_name: "builder_main"
 image_extension: "vmdk"
 image_file_name: "{{ builder_image_name }}.{{ image_extension }}"
