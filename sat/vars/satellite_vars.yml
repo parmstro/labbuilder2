@@ -165,7 +165,7 @@ repos_mandatory:
   - name: "Red Hat Ansible Engine 2.9 for RHEL 8 x86_64 (RPMs)"
     product: "Red Hat Ansible Engine"
 
-  - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 Files"
+  - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 (Files)"
     product: "Red Hat Ansible Automation Platform"
 
 # The OS for this is name: "RHEL 8.7"
@@ -625,6 +625,15 @@ cvs_mandatory:
     environments:
     - "Library"
 
+  - name: "AAP_Files"
+    desc: "Red Hat Ansible Automation Platform Install Files"
+    org: "{{ satellite_initial_organization }}"
+    repositories:
+    - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 (Files)"
+      product: "Red Hat Ansible Automation Platform"
+    environments:
+    - "Library"
+
 cvs_optional:
   - name: "MSSQLServer"
     desc: "Microsoft SQL Server for Linux 2022 content"
@@ -718,6 +727,19 @@ ccvs_mandatory:
     - content_view: "SOE_RHEL8"
       latest: true
     - content_view: "LEAPP_2_RHEL9"
+      latest: true
+    environments:
+    - "Library"
+    - "Development"
+    - "Qualification"
+
+  - name: "SOE_AAP"
+    desc: "SOE for Ansible Automation Platform Servers"
+    org: "{{ satellite_initial_organization }}"
+    components:
+    - content_view: "SOE_RHEL8"
+      latest: true
+    - content_view: "AAP_Files"
       latest: true
     environments:
     - "Library"
