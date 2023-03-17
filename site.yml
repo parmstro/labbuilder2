@@ -5,13 +5,20 @@
 # Please see the README.md file in this directory
 - name: "Phase 1 - Generate and deploy builder images"
   ansible.builtin.import_playbook: ./buildimage/main.yml
-      
+  tags:
+  - tag_phase_1
+
 - name: "Phase 2 - bootstrap idm"
   ansible.builtin.import_playbook: ./idm/main.yml
+  tags:
+  - tag_phase_2
 
 - name: "Phase 3 - bootstrap satellite"
   ansible.builtin.import_playbook: ./sat/main.yml
+  tags:
+  - tags_phase_3 
 
-#- name: "Phase 4 - bootstrap ansible controller"
-#  ansible.builtin.import_playbook: ./aap/main.yml
-# start time 14:46:00
+- name: "Phase 4 - bootstrap ansible controller and other nodes"
+  ansible.builtin.import_playbook: ./hosts/main.yml
+  tags:
+  - tags_phase_4
