@@ -15,3 +15,4 @@ collections:
 - redhat.rhel_system_roles
 - redhat.satellite
 - redhat.satellite_operations
+- redhat.redhat_csp_download
