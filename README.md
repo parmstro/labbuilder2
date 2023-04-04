@@ -147,7 +147,7 @@ This is a truly massive section. This phase installs and fully configures a Sate
   
   See the Wiki page for [configuring the satellite variables](https://github.com/parmstro/labbuilder2/wiki/Configuring-the-Satellite-variables).
 
-## Phase 3 - Provisioning other hosts
+## Phase 4 - Provisioning other hosts
 
 In this phase we deploy the remaining hosts in our configuration. With Satellite deployed and configured with a compute resource and bare metal discover, this section can be as large as we want. 
 
