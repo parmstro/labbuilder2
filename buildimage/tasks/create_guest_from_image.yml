@@ -41,6 +41,7 @@
   tags:
     - build
 
+# if the file extension is not vmdk, govc will not properly convert the image automagically
 - name: "Copy the image to the folder for guest"
   ansible.builtin.shell: |
     export GOVC_USERNAME={{ vcenter_username }}
