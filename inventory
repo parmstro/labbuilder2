@@ -15,8 +15,11 @@ sat.example.ca
 capsule.example.ca
 
 [aap]
-aap.example.ca
+controller1.example.ca
 
 [automation_hub]
-ah.example.ca
+hub1.example.ca
 
+[container_servers]
+container1.example.ca
+container2.example.ca
