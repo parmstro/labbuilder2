@@ -16,7 +16,7 @@
 - name: "Phase 3 - bootstrap satellite"
   ansible.builtin.import_playbook: ./sat/main.yml
   tags:
-  - tags_phase_3 
+  - tags_phase_3
 
 - name: "Phase 4 - bootstrap ansible controller and other nodes"
   ansible.builtin.import_playbook: ./hosts/main.yml
