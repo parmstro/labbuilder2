@@ -53,6 +53,14 @@ dns_forward_zones:
     dns_forward_zone_policy: "only"
     dns_skip_overlap_check: true
 
+dns_update_zones:
+  - name: "example.ca"
+    foreman_proxy_BIND_update_policy: 'grant EXAMPLE.CA krb5-self * A; grant EXAMPLE.CA krb5-self * AAAA; grant EXAMPLE.CA krb5-self * SSHFP; grant realm-capsule\@EXAMPLE.CA wildcard * ANY;'
+  - name: "168.192.in-addr.arpa"
+    foreman_proxy_BIND_update_policy: 'grant EXAMPLE.CA krb5-subdomain 168.192.in-addr.arpa. PTR; grant realm-capsule\@EXAMPLE.CA wildcard * ANY;'
+  - name: "254.168.192.in-addr.arpa"
+    foreman_proxy_BIND_update_policy: 'grant EXAMPLE.CA krb5-subdomain 254.168.192.in-addr.arpa. PTR; grant realm-capsule\@EXAMPLE.CA wildcard * ANY;'
+
 additional_users:
 - { login: "sat_admin", first: "Sat", last: "Admin" }
 - { login: "sat_org_admin", first: "Org", last: "Admin" }
