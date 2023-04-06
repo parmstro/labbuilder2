@@ -1,6 +1,6 @@
 ---
 - name: "Test Task"
-  hosts: sat_primary
+  hosts: sat.example.ca
   remote_user: ansiblerunner
   become: true
   gather_facts: true
@@ -9,5 +9,7 @@
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
 
-  roles:
-    - satellite_post
+  tasks:
+
+  - name: "run the test task"
+    ansible.builtin.include_tasks: roles/satellite_post/tasks/configure_mandatory_global_parameters.yml
