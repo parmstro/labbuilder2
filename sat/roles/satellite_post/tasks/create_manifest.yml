@@ -2,6 +2,9 @@
 # Create the Satellite manifest, first add creates a manifest if it doesn't exist.
 #
 
+- name: Clean up any existing manifest
+  include_tasks: "{{ role_path }}/tasks/clean_manifest.yml"
+  
 - name: Create the manifest and attach subs
   include_tasks: "{{ role_path }}/tasks/add_sub_2_manifest.yml"
   loop: "{{ manifest_subs }}"

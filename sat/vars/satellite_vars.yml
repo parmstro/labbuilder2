@@ -80,16 +80,16 @@ manifest_cdn_password: "{{ cdn_password_vault }}"
 manifest_account: "{{ cdn_account_number_vault }}"
 manifest_subs:
   - name: "Base"
-    pool_id: "8a85f99c7ed94239017faf33fdb95d94"
+    pool_id: "2c942c3586e8eba20186f1455d851eff"
     qty: 100
   - name: "Ansible"
-    pool_id: "8a85f9a17f69ca57017faf348b657a80"
+    pool_id: "2c942c3586e8eba20186f1455d8e1f03"
     qty: 30
   - name: "SatCapsule"
-    pool_id: "8a85f9a17f69ca57017faf3480377a7e"
+    pool_id: "2c942c3586e8eba20186f1455ead1f07"
     qty: 1
   - name: "NonRHEL"
-    pool_id: "8a82c58b80de32d60180fc0436c61580"
+    pool_id: "2c946bbb86ea234a0186f1459e13397e"
     qty: 100
 
 # organizations
@@ -629,7 +629,7 @@ cvs_mandatory:
     desc: "Red Hat Ansible Automation Platform Install Files"
     org: "{{ satellite_initial_organization }}"
     repositories:
-    - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 (Files)"
+    - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 Files"
       product: "Red Hat Ansible Automation Platform"
     environments:
     - "Library"
@@ -847,6 +847,22 @@ global_parameters_mandatory:
   - name: "remove_default_passphrase"
     value: true
     parameter_type:	"boolean"
+
+  - name: "remote_execution_ssh_keys"
+    value: "{{ remote_execution_ssh_keys_vault }}"
+    parameter_type: "string"
+
+  - name: "remote_execution_ssh_user"
+    value: "{{ remote_execution_ssh_user_vault }}"
+    parameter_type: "string"
+
+  - name: "remote_execution_create_user"
+    value: true
+    parameter_type: "boolean"
+
+  - name: "remote_execution_effective_user_method"
+    value: "sudo"
+    parameter_type: "string"
 
   - name: "syspurpose_role"
     value: "Red Hat Enterprise Linux Server"
@@ -1867,6 +1883,11 @@ scap_policies:
     
 
 # general_settings
+general_settings:
+  - name: destroy_vm_on_host_delete
+    value: true
+
+
 # users
 # groups
 # roles

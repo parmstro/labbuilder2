@@ -2,7 +2,7 @@
 # This play creates the Content View Filters for a Content View
 #
 
-- name: "Create the content view filter {{ cvf.name }}"
+- name: "Create the content view filter - {{ cvf.name }}"
   redhat.satellite.content_view_filter:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"

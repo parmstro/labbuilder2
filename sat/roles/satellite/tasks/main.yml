@@ -5,4 +5,4 @@
   vars:
     satellite_installer_scenario: "satellite"
     satellite_installer_options: "{{ sat_installer_options }}"
-
+    satellite_installer_verbose: "{{ sat_installer_verbose }}"
