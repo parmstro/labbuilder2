@@ -4,6 +4,7 @@
   remote_user: ansiblerunner
   become: false
   gather_facts: false
+  connection: local
   vars_files:
     - vars/builder_vars.yml
     - vars/builder_vault.yml
