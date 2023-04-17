@@ -47,7 +47,7 @@
     {
       "image_type": "{{ imagebuilder_image_type }}",
       "architecture": "x86_64",
-      "upload_request": { {% if imagebuilder_image_type == 'vsphere' -%}{{ vsphere_upload_request }}{%-  elif imagebuilder_image_type == 'azure' -%}{{ azure_upload_request }}{%- elif imagebuilder_image_type == 'aws' -%}{%- include "aws_upload_request.j2" -%}{%-  endif %} }
+      "upload_request": { {% if imagebuilder_image_type == 'vsphere' -%}{{ vsphere_upload_request }}{%-  elif imagebuilder_image_type == 'azure' -%}{%- include "azure_upload_request.j2" -%}{%- elif imagebuilder_image_type == 'aws' -%}{%- include "aws_upload_request.j2" -%}{%-  endif %} }
     }
   ]
 }
