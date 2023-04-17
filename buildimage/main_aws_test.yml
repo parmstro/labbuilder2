@@ -18,9 +18,9 @@
 #    - vars/sat_vault.yml
 
   tasks:
-    - name: Debug aws request
-      debug:
-        var: '{{ aws_upload_request }}'
+    #- name: Debug azure request
+    #  debug:
+    #    var: '{{ azure_upload_request }}'
 
     - name: "Get the imagebuilder image"
       ansible.builtin.include_tasks: tasks/buildimage.yml
