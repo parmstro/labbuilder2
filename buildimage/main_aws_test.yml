@@ -6,6 +6,8 @@
   gather_facts: false
   connection: local
   vars_files:
+    - vars/aws_vars.yml
+    - vars/aws_vault.yml
     - vars/builder_vars.yml
     - vars/builder_vault.yml
 #    - vars/vmware_vars.yml
@@ -16,6 +18,10 @@
 #    - vars/sat_vault.yml
 
   tasks:
+    - name: Debug aws request
+      debug:
+        var: '{{ aws_upload_request }}'
+
     - name: "Get the imagebuilder image"
       ansible.builtin.include_tasks: tasks/buildimage.yml
       tags:

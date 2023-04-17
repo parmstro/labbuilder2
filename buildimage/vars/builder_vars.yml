@@ -54,5 +54,5 @@ var_log_size: 1073741824
 var_log_audit_size: 1073741824
 
 azure_upload_request: '"type": "azure", "options": { "tenant_id": "{{ azure_tenant_id }}", "subscription_id": "{{ azure_subscription_id }}", "resource_group": "az_canada_central_rg" }'
-aws_upload_request: '"type": "aws", "options": { "share_with_accounts": [ {{ aws_account_shares_vault | map("quote") | join(", ") ] } }}'
+aws_upload_request: '"type": "aws", "options": { "share_with_accounts": [ "{{ aws_account_nbr_vault }}" ] }'
 vsphere_upload_request: '"type": "aws.s3", "options": {}'
