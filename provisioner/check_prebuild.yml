@@ -7,7 +7,7 @@
   tasks:
     - name: run AWS check setup if using AWS
       include_role:
-        name: ../roles/manage_ec2_instances
+        name: roles/manage_ec2_instances
         tasks_from: check_prebuild.yml
 
     - name: print out pre_build var
