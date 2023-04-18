@@ -202,27 +202,6 @@
         cidr: "{{ec2_subnet}}"
         state: absent
 
-    - name: Get subnet2 eni_info
-      amazon.aws.ec2_eni_info:
-        region: "{{ ec2_region }}"
-        filters:
-          "tag:Subnet": '{{ ec2_name_prefix }}-subnet2'
-      register: subnet2_eni_info
-
-    - name: debug subnet2_eni_info
-      debug:
-        var: subnet2_eni_info
-      when: debug_teardown
-
-    - name: Delete subnet2 for {{ ec2_name_prefix }}-vpc
-      amazon.aws.ec2_vpc_subnet:
-        region: "{{ ec2_region }}"
-        az: "{{ec2_az}}"
-        vpc_id: "{{ec2_vpc_id}}"
-        cidr: "{{ec2_subnet2}}"
-        state: absent
-  when: workshop_type == 'security' or workshop_type == 'demo'
-
 - name: Deleted EC2 security group for VPC vpc-{{ ec2_name_prefix }}
   amazon.aws.ec2_group:
     name: "{{ec2_security_group}}"
@@ -271,15 +250,6 @@
     az: "{{ec2_az}}"
     vpc_id: "{{ec2_vpc_id}}"
     cidr: "{{ec2_subnet}}"
-    state: absent
-
-# delete ec2_subnet2 for vpc-1
-- name: Delete subnet2 for {{ ec2_name_prefix }}-vpc
-  amazon.aws.ec2_vpc_subnet:
-    region: "{{ ec2_region }}"
-    az: "{{ec2_az}}"
-    vpc_id: "{{ec2_vpc_id}}"
-    cidr: "{{ec2_subnet2}}"
     state: absent
 
 # delete ec2_network_vpc2 for vpc-2

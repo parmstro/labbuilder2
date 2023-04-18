@@ -5,7 +5,6 @@
     name: "{{ ec2_name_prefix }}-vpc"
     cidr_block:
       - "{{ec2_subnet}}"
-      - "{{ec2_subnet2}}"
     region: "{{ ec2_region }}"
     tags:
       Username: "{{ aws_user }}"
@@ -65,24 +64,6 @@
   until: create_subnet is not failed
   retries: 15
 
-- name: Create subnet2 for {{ ec2_name_prefix }}-vpc (SECURITY MODE)
-  amazon.aws.ec2_vpc_subnet:
-    region: "{{ ec2_region }}"
-    az: "{{ ec2_az }}"
-    vpc_id: "{{ create_vpc.vpc.id }}"
-    cidr: "{{ ec2_subnet2 }}"
-    wait_timeout: 600
-    resource_tags:
-      Name: "{{ ec2_name_prefix }}-subnet2"
-      Username: "{{ aws_user }}"
-      Info: "Username that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
-  register: create_subnet2
-  until: create_subnet2 is not failed
-  retries: 15
-
 - name: vpc internet gateway is present for {{ create_vpc.vpc.id }}
   amazon.aws.ec2_vpc_igw:
     region: "{{ ec2_region }}"
@@ -121,7 +102,6 @@
     ec2_vpc_id: "{{ create_vpc.vpc.id }}"
     ec2_security_group: "{{ ec2_name_prefix }}-insecure_all"
     ec2_vpc_subnet_id: "{{ create_subnet.subnet.id }}"
-    ec2_vpc_subnet2_id: "{{ create_subnet2.subnet.id }}"
 
 - name: Create ssh key pair for workshop {{ ec2_name_prefix }}
   amazon.aws.ec2_key:
@@ -152,4 +132,3 @@
       - "{{ ec2_name_prefix }}-key: {{ ec2_name_prefix }}-key"
       - "ec2_security_group: {{ ec2_security_group }}"
       - "ec2_vpc_subnet_id: {{ ec2_vpc_subnet_id }}"
-      - "ec2_vpc_subnet2_id: {{ ec2_vpc_subnet2_id }}"
