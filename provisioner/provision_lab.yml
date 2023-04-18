@@ -20,9 +20,13 @@
           fail:
             msg: The provisioner has failed during initial check_setup, please scroll up to see exact error.  Open an issue on https://github.com/ansible/workshops/issues
 
-    - name: add dns entries
+#    - name: add dns entries
+#      include_role:
+#        name: roles/aws_dns
+#      when:
+#        - dns_type is defined
+#        - dns_type == "aws"
+
+    - name: Provision network stuff
       include_role:
-        name: roles/aws_dns
-      when:
-        - dns_type is defined
-        - dns_type == "aws"
+        name: roles/manage_ec2_infra

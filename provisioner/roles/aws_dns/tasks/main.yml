@@ -10,9 +10,8 @@
 
     - name: configure SSL cert for Automation Controller
       vars:
-        dns_name: "{{ student }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
+        dns_name: "test.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
       include_role:
         name: "{{ playbook_dir|dirname }}/roles/issue_cert"
   when:
     - not teardown
-    - check_cert.status != 200
