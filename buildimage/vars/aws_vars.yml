@@ -14,3 +14,5 @@ ec2_info:
     disk_space: 500
     disk_iops: 4000
     disk_throughput: 375
+  rhel:
+    username: 'ec2-user'
