@@ -114,7 +114,7 @@
     state: absent
     instance_ids: "{{ all_workshop_vpc_nodes.instances | map(attribute='instance_id') | list }}"
     wait: true
-    wait_timeout: "{{ student_total * 300 | int}}"
+    wait_timeout: "{{ 600 | int}}"
   register: result_ec2_destroy
   when:
     - all_workshop_vpc_nodes.instances
