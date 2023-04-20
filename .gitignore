@@ -6,5 +6,7 @@ images/
 *_vault.yml
 buildimage/request-base-image.json
 buildimage/builder_main.vmdk
+buildimage/vars/idm_metadata.yml
 buildimage/vars/idm_userdata.yml
+buildimage/vars/sat_metadata.yml
 buildimage/vars/sat_userdata.yml
