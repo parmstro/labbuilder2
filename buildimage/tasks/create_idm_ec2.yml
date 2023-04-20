@@ -1,12 +1,13 @@
 ---
 - name: provision idm server
   amazon.aws.ec2_instance:
+    name: "{{ ec2_name_prefix }}-idm"
     network:
       assign_public_ip: true
     key_name: "{{ ec2_name_prefix }}-key"
     security_group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_info['idm'].instance_type }}"
-    image_id: "{{ idm_ami.image_id }}"
+    image_id: "{{ idm_ami.image_id | default('ami-0fc522222ab74a244') }}"
     region: "{{ ec2_region }}"
     state: running
     filters:
@@ -21,7 +22,7 @@
       owner: "{{ aws_user }}"
       Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
       short_name: "idm"
-      username: "{{ ec2_info[rhel].username }}"
+      username: "{{ ec2_info['rhel'].username }}"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     volumes:

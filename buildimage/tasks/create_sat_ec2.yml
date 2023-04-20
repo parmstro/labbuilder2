@@ -1,6 +1,7 @@
 ---
 - name: provision satellite server
   amazon.aws.ec2_instance:
+    name: "{{ ec2_name_prefix }}-satellite"
     network:
       assign_public_ip: true
     key_name: "{{ ec2_name_prefix }}-key"

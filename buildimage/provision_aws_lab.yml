@@ -4,7 +4,21 @@
   connection: local
   become: false
   gather_facts: true
+  vars_files:
+    - vars/aws_vars.yml
+    - vars/aws_vault.yml
+    - vars/builder_vars.yml
+    - vars/builder_vault.yml
+#    - vars/vmware_vars.yml
+#    - vars/vmware_vault.yml
+    - vars/idm_vars.yml
+#    - vars/idm_vault.yml
+#    - vars/sat_vars.yml
+#    - vars/sat_vault.yml
+  vars:
+    ec2_wait: true
   tasks:
+
     - name: workshop collection final check
       block:
         - name: run pre-check role to make sure workshop will complete provisioning
@@ -32,4 +46,4 @@
         name: roles/manage_ec2_infra
 
     - name: Provision idm machine
-      ansible.builtin.include_tasks: create_idm_ec2.yml
+      ansible.builtin.include_tasks: tasks/create_idm_ec2.yml

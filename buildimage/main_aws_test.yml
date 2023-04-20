@@ -12,20 +12,22 @@
     - vars/builder_vault.yml
 #    - vars/vmware_vars.yml
 #    - vars/vmware_vault.yml
-#    - vars/idm_vars.yml
+    - vars/idm_vars.yml
 #    - vars/idm_vault.yml
 #    - vars/sat_vars.yml
 #    - vars/sat_vault.yml
 
   tasks:
-    #- name: Debug azure request
-    #  debug:
-    #    var: '{{ azure_upload_request }}'
-
     - name: "Get the imagebuilder image"
       ansible.builtin.include_tasks: tasks/buildimage.yml
       tags:
         - buildimage
+
+    - name: "build idm VM"
+      ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
+      tags:
+        - idm
+
 
 #    - name: "Configure image on vCenter"
 #      ansible.builtin.include_tasks: tasks/load_image_vcenter.yml
