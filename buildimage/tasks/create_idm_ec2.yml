@@ -41,4 +41,8 @@
     filters:
       instance-state-name: running
       "tag:avp_idm": "{{ ec2_name_prefix }}-idm"
-  register: idm_output
+  register: idm_instance_info
+
+- name: display idm_instance_info
+  ansible.builtin.debug:
+    msg: "{{ idm_instance_info }}"
