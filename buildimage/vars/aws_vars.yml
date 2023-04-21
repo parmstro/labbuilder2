@@ -4,7 +4,7 @@ ec2_info:
     instance_type: m4.xlarge
     architecture: x86_64
     disk_volume_type: gp3
-    disk_space: 20
+    disk_space: 30
     disk_iops: 3000
     disk_throughput: 125
   satellite:
