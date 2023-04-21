@@ -14,7 +14,7 @@
       instance-state-name: running
       "tag:avp_idm": "{{ ec2_name_prefix }}-idm"
     tags:
-      avp_satellite: "{{ ec2_name_prefix }}-idm"
+      avp_idm: "{{ ec2_name_prefix }}-idm"
       avp: "{{ ec2_name_prefix }}"
       uuid: "{{ ec2_name_prefix }}"
       guid: "{{ ec2_name_prefix }}"
@@ -42,16 +42,3 @@
       instance-state-name: running
       "tag:avp_idm": "{{ ec2_name_prefix }}-idm"
   register: idm_output
-
-- name: Ensure tags are present for idm
-  amazon.aws.ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{ item.1.instance_id }}"
-    state: present
-    tags:
-      Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-idm"
-      Index: "{{ item[0] }}"
-      launch_time: "{{ item.1.launch_time }}"
-  with_indexed_items:
-    - "{{ idm_output.instances }}"
-  when: idm_output.instances|length > 0
