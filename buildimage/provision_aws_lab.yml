@@ -41,5 +41,10 @@
       ansible.builtin.include_role:
         name: roles/manage_ec2_infra
 
-    - name: Provision idm machine
-      ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
+    - name: "Build the imagebuilder image"
+      ansible.builtin.include_tasks: tasks/buildimage.yml
+      tags:
+        - buildimage
+
+          #- name: Provision idm machine
+          #ansible.builtin.include_tasks: tasks/create_idm_ec2.yml

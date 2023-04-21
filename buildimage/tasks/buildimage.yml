@@ -83,7 +83,12 @@
   ansible.builtin.assert:
     that:
       - compose_status.json.image_status.status == "success"
+
+- name: "Assert that the build can be downloaded"
+  ansible.builtin.assert:
+    that:
       - compose_status.json.image_status.upload_status.options.url is defined
+  when: imagebuilder_image_type == "vsphere"
 
 - name: "Download the finished image"
   ansible.builtin.get_url:
