@@ -50,5 +50,5 @@
       ansible.builtin.debug:
         msg: "imagebuilder_ami is {{ imagebuilder_ami }}"
 
-          #- name: Provision idm machine
-          #ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
+    - name: Provision idm machine
+      ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
