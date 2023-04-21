@@ -78,3 +78,8 @@ vpc_ports:
     from_port: 53
     cidr_ip: 0.0.0.0/0
     rule_desc: DNS - udp
+  - proto: udp
+    to_port: 123
+    from_port: 123
+    cidr_ip: 0.0.0.0/0
+    rule_desc: NTP
