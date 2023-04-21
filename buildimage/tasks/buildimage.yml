@@ -84,15 +84,33 @@
     that:
       - compose_status.json.image_status.status == "success"
 
-- name: "Assert that the build can be downloaded"
-  ansible.builtin.assert:
-    that:
-      - compose_status.json.image_status.upload_status.options.url is defined
+- name: "Vsphere image-specific handling block"
   when: imagebuilder_image_type == "vsphere"
+  block:
+    - name: "Assert that the build can be downloaded"
+      ansible.builtin.assert:
+        that:
+          - compose_status.json.image_status.upload_status.options.url is defined
 
-- name: "Download the finished image"
-  ansible.builtin.get_url:
-    url: "{{ compose_status.json.image_status.upload_status.options.url }}"
-    dest: "{{ image_file_path }}"
-    mode: 0644
-  when: imagebuilder_image_type == "vsphere"
+    - name: "Download the finished image"
+      ansible.builtin.get_url:
+        url: "{{ compose_status.json.image_status.upload_status.options.url }}"
+        dest: "{{ image_file_path }}"
+        mode: 0644
+
+- name: "AWS image-specific handling block"
+  when: imagebuilder_image_type == "aws"
+  block:
+    - name: "Assert that the build uploaded to AWS"
+      ansible.builtin.assert:
+        that:
+          - compose_status.json.image_status.upload_status.options.ami is defined
+          - compose_status.json.image_status.upload_status.status is "success"
+
+    - name: "Retrieve AMI name from AWS imagebuild"
+      ansible.builtin.set_fact:
+        imagebuilder_ami: compose_status.json.image_status.upload_status.options.ami
+
+    - name: "Display AMI name from AWS imagebuild"
+      ansible.builtin.debug:
+        msg: "imagebuilder_ami is {{ imagebuilder_ami }}"
