@@ -7,7 +7,7 @@
     key_name: "{{ ec2_name_prefix }}-key"
     security_group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_info['idm'].instance_type }}"
-    image_id: "{{ idm_ami.image_id | default('ami-0fc522222ab74a244') }}"
+    image_id: "{{ idm_ami.image_id | default(imagebuilder_ami) }}"
     region: "{{ ec2_region }}"
     state: running
     filters:
@@ -55,4 +55,3 @@
   with_indexed_items:
     - "{{ idm_output.instances }}"
   when: idm_output.instances|length > 0
-

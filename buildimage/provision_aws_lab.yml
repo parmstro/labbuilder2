@@ -46,5 +46,9 @@
       tags:
         - buildimage
 
+    - name: "Display the imagebuilder image"
+      ansible.builtin.debug:
+        msg: "imagebuilder_ami is {{ imagebuilder_ami }}"
+
           #- name: Provision idm machine
           #ansible.builtin.include_tasks: tasks/create_idm_ec2.yml

@@ -7,7 +7,7 @@
     key_name: "{{ ec2_name_prefix }}-key"
     security_group: "{{ ec2_security_group }}"
     instance_type: "{{ ec2_info['satellite'].instance_type }}"
-    image_id: "{{ sat_ami.image_id }}"
+    image_id: "{{ sat_ami.image_id | default(imagebuilder_ami) }}"
     region: "{{ ec2_region }}"
     state: running
     filters:

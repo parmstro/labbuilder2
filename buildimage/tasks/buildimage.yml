@@ -105,12 +105,8 @@
       ansible.builtin.assert:
         that:
           - compose_status.json.image_status.upload_status.options.ami is defined
-          - compose_status.json.image_status.upload_status.status is "success"
+          - compose_status.json.image_status.upload_status.status == "success"
 
     - name: "Retrieve AMI name from AWS imagebuild"
       ansible.builtin.set_fact:
-        imagebuilder_ami: compose_status.json.image_status.upload_status.options.ami
-
-    - name: "Display AMI name from AWS imagebuild"
-      ansible.builtin.debug:
-        msg: "imagebuilder_ami is {{ imagebuilder_ami }}"
+        imagebuilder_ami: "{{ compose_status.json.image_status.upload_status.options.ami }}"
