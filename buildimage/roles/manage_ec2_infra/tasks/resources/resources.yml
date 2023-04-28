@@ -10,8 +10,7 @@
       Username: "{{ aws_user }}"
       Info: "Username that provisioned this-> {{ aws_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
   register: create_vpc
   until: create_vpc is not failed
   retries: 5
@@ -36,8 +35,7 @@
       Username: "{{ aws_user }}"
       Info: "Username that provisioned this-> {{ aws_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
     rules: "{{ all_rules }}"
     rules_egress:
       - proto: all
@@ -58,8 +56,7 @@
       Username: "{{ aws_user }}"
       Info: "Username that provisioned this-> {{ aws_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
   register: create_subnet
   until: create_subnet is not failed
   retries: 15
@@ -72,8 +69,7 @@
       Username: "{{ aws_user }}"
       Info: "Username that provisioned this-> {{ aws_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
   register: igw
   until: igw is not failed
   retries: 15
@@ -91,8 +87,7 @@
       Username: "{{ aws_user }}"
       Info: "Username that provisioned this-> {{ aws_user }}"
       Linklight: "This was provisioned through the linklight provisioner"
-      Workshop: "{{ ec2_name_prefix }}"
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
   register: routetable
   until: routetable is not failed
   retries: 5

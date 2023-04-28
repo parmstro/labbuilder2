@@ -5,7 +5,7 @@
     state: present
     region: "{{ ec2_region }}"
     tags:
-      ansible-workshops: "true"
+      Pattern: "{{ ec2_name_prefix }}"
   retries: 4
   delay: 15
   register: s3_result
