@@ -1,0 +1,20 @@
+---
+- name: "Re-arrange GPT - imagebuilder image leaves backup in the wrong place on disk"
+  ansible.builtin.command: |-
+    sgdisk -e {{ ebs_blockdev }}
+    partprobe
+
+- name: "Resize lvm partition {{ ebs_blockdev_partition }} to fill disk {{ ebs_blockdev }}"
+  community.general.parted:
+    device: '{{ ebs_blockdev }}'
+    number: '{{ ebs_blockdev_partition }}'
+    label: 'gpt'
+    state: present
+    part_end: "100%"
+    resize: true
+
+- name: "pvresize the physical volume for volume grou {{ ebs_vg }}"
+  community.general.lvg:
+    vg: '{{ ebs_vg }}'
+    pvs: '{{ ebs_blockdev }}{{ ebs_blockdev_partition }}'
+    pvresize: true
