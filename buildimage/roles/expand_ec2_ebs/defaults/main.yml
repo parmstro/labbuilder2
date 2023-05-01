@@ -1,0 +1,4 @@
+---
+ebs_blockdev: '/dev/xvda'
+ebs_blockdev_partition: 2
+ebs_vg: 'rootvg'
