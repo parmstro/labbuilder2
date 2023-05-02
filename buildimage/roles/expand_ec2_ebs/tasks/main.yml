@@ -1,4 +1,37 @@
 ---
+- name: Look for /dev/xvda to see if we can make some assumptions
+  ansible.builtin.stat:
+    path: /dev/xvda
+  register: xvda_stat
+
+- name: Discover data when xvda is not there
+  when: not xvda_stat.stat.exists
+  block:
+    - name: "Find the EBS block device - it will be the one with the GPT partition type"
+      ansible.builtin.shell: |-
+        blkid | grep 'PTTYPE="gpt"' | awk -F: '{ print $1 }'
+      register: blkid_output
+
+    - name: "Find the LVM volume group name"
+      ansible.builtin.shell: |-
+        pvs | tail -1 | awk '{ print $2 }'
+      register: vgname_output
+
+    - name: "Set discoveredvariables"
+      ansible.builtin.set_fact:
+        ebs_blockdev: '{{ blkid_output.stdout | trim }}'
+        ebs_blockdev_partition: 2
+        ebs_vg: '{{ vgname_output.stdout | trim }}'
+
+- name: "Find the LVM physical volume name"
+  ansible.builtin.shell: |-
+    pvs | tail -1 | awk '{ print $1 }'
+  register: pvname_output
+
+- name: "Set ebs_pv"
+  ansible.builtin.set_fact:
+    ebs_pv: '{{ pvname_output.stdout | trim }}'
+
 - name: "Re-arrange GPT - imagebuilder image leaves backup in the wrong place on disk"
   ansible.builtin.command: |-
     sgdisk -e {{ ebs_blockdev }}
@@ -13,8 +46,8 @@
     part_end: "100%"
     resize: true
 
-- name: "pvresize the physical volume for volume grou {{ ebs_vg }}"
+- name: "pvresize the physical volume for volume group {{ ebs_vg }}"
   community.general.lvg:
     vg: '{{ ebs_vg }}'
-    pvs: '{{ ebs_blockdev }}{{ ebs_blockdev_partition }}'
+    pvs: '{{ ebs_pv }}'
     pvresize: true

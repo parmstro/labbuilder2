@@ -9,12 +9,10 @@
     - vars/aws_vault.yml
     - vars/builder_vars.yml
     - vars/builder_vault.yml
-#    - vars/vmware_vars.yml
-#    - vars/vmware_vault.yml
     - vars/idm_vars.yml
-#    - vars/idm_vault.yml
-#    - vars/sat_vars.yml
-#    - vars/sat_vault.yml
+    - vars/idm_vault.yml
+    - vars/sat_vars.yml
+    - vars/sat_vault.yml
   vars:
     ec2_wait: true
   tasks:
@@ -45,6 +43,7 @@
       ansible.builtin.include_tasks: tasks/buildimage.yml
       tags:
         - buildimage
+      when: imagebuilder_ami is not defined
 
     - name: "Display the imagebuilder image"
       ansible.builtin.debug:
@@ -52,3 +51,39 @@
 
     - name: Provision idm machine
       ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
+
+    - name: Provision satellite machine
+      ansible.builtin.include_tasks: tasks/create_sat_ec2.yml
+
+    - name: Build inventory for subsequent plays
+      ansible.builtin.include_role:
+        name: roles/build_bootstrap_inventory
+
+- name: Post-provisioning tasks
+  hosts: idm:sat
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Debug facts
+      ansible.builtin.debug:
+        var: ansible_facts
+
+    - name: Expand EBS disks
+      ansible.builtin.include_role:
+        name: roles/expand_ec2_ebs
+
+#    # Set hosts files
+#
+#- name: IdM-specific Post-provisioning tasks
+#  hosts: idm
+#  become: true
+#  gather_facts: true
+#  tasks:
+#    # Disk layout
+#
+#- name: Satellite-specific Post-provisioning tasks
+#  hosts: satellite
+#  become: true
+#  gather_facts: true
+#  tasks:
+#    # Disk layout
