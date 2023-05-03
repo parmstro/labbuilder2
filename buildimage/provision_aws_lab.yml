@@ -70,7 +70,7 @@
 
     - name: Expand EBS disks
       ansible.builtin.include_role:
-        name: roles/expand_ec2_ebs
+        name: roles/expand_imagebuilder_rootvg
 
 #    # Set hosts files
 #
