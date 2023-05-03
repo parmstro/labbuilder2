@@ -73,7 +73,7 @@
         - "{{ sat_instance['public_ip_address'] }}"
 
 - name: Post-provisioning tasks
-  hosts: idm_nodes:sat_nodes
+  hosts: idm_primary:sat_primary
   become: true
   gather_facts: true
   vars:
