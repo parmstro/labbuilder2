@@ -65,7 +65,7 @@
         sat_instance: '{{ sat_instance_info.instances[0] }}'
 
 - name: Post-provisioning tasks
-  hosts: idm:sat
+  hosts: idm_nodes:sat_nodes
   become: true
   gather_facts: true
   vars:
