@@ -73,6 +73,10 @@
     sat_info: "{{ hostvars['localhost']['sat_instance'] }}"
   tasks:
     - name: Set hostnames
+      ansible.builtin.hostname:
+        name: '{{ short_hostname }}.{{ ipa_server_domain }}'
+
+    - name: Set /etc/hosts
       ansible.builtin.copy:
         content: |-
           127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
@@ -80,6 +84,7 @@
 
           {{ idm_info.private_ip_address }}       idm idm.{{ ipa_server_domain }}
           {{ sat_info.private_ip_address }}       sat sat.{{ ipa_server_domain }}
+
         dest: /etc/hosts
         owner: root
         group: root
