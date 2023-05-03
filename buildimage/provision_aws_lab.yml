@@ -59,20 +59,35 @@
       ansible.builtin.include_role:
         name: roles/build_bootstrap_inventory
 
+    - name: Save facts for later
+      ansible.builtin.set_fact:
+        idm_instance: '{{ idm_instance_info.instances[0] }}'
+        sat_instance: '{{ sat_instance_info.instances[0] }}'
+
 - name: Post-provisioning tasks
   hosts: idm:sat
   become: true
   gather_facts: true
+  vars:
+    idm_info: "{{ hostvars['localhost']['idm_instance'] }}"
+    sat_info: "{{ hostvars['localhost']['sat_instance'] }}"
   tasks:
-    - name: Debug facts
-      ansible.builtin.debug:
-        var: ansible_facts
+    - name: Set hostnames
+      ansible.builtin.copy:
+        content: |-
+          127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+          ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+          {{ idm_info.private_ip_address }}       idm idm.{{ ipa_server_domain }}
+          {{ sat_info.private_ip_address }}       sat sat.{{ ipa_server_domain }}
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: Expand EBS disks
       ansible.builtin.include_role:
         name: roles/expand_imagebuilder_rootvg
-
-#    # Set hosts files
 #
 #- name: IdM-specific Post-provisioning tasks
 #  hosts: idm
