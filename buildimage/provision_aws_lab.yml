@@ -64,6 +64,14 @@
         idm_instance: '{{ idm_instance_info.instances[0] }}'
         sat_instance: '{{ sat_instance_info.instances[0] }}'
 
+    - name: Wait for EC2 servers to be available
+      ansible.builtin.wait_for:
+        host: "{{ item }}"
+        port: 22
+      loop:
+        - "{{ idm_instance['public_ip_address'] }}"
+        - "{{ sat_instance['public_ip_address'] }}"
+
 - name: Post-provisioning tasks
   hosts: idm_nodes:sat_nodes
   become: true
