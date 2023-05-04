@@ -73,6 +73,7 @@
         overwrite: true
         value: "{{ item.public_ip_address }}"
         wait: true
+      when: manage_public_dns
       loop:
         -  '{{ idm_instance }}'
         -  '{{ sat_instance }}'

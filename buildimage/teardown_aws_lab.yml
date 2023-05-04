@@ -39,6 +39,7 @@
         record: "{{ item }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
         type: A
         wait: true
+      when: manage_public_dns
       loop:
         - 'idm'
         - 'sat'
