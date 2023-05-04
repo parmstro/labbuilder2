@@ -21,7 +21,7 @@
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
       Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      short_name: "satellite"
+      short_name: "sat"
       username: "{{ ec2_info['rhel'].username }}"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"

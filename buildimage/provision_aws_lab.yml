@@ -65,18 +65,17 @@
         sat_instance: '{{ sat_instance_info.instances[0] }}'
 
     - name: Configure public DNS for idm and satellite
-      become: false
       community.aws.route53:
         state: present
         zone: "{{ workshop_dns_zone }}"
-        record: "{{ item.name }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
+        record: "{{ item.tags.short_name }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
         type: A
         overwrite: true
-        value: "{{ item.ipaddress }}"
+        value: "{{ item.public_ip_address }}"
         wait: true
       loop:
-        - { 'name': 'idm', 'ipaddress': "idm_instance['public_ip_address']" }
-        - { 'name': 'sat', 'ipaddress': "sat_instance['public_ip_address']" }
+        -  '{{ idm_instance }}'
+        -  '{{ sat_instance }}'
 
     - name: Wait for EC2 servers to be available
       ansible.builtin.wait_for:

@@ -30,7 +30,18 @@
 
   tasks:
     - {include_role: {name: roles/manage_ec2_infra}}
-#    - {include_role: {name: roles/aws_dns}, when: dns_type == "aws"}
+
+    - name: Remove route53 dns entries
+      become: false
+      community.aws.route53:
+        state: absent
+        zone: "{{ workshop_dns_zone }}"
+        record: "{{ item }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
+        type: A
+        wait: true
+      loop:
+        - 'idm'
+        - 'sat'
 
     - name: Remove workshop local files
       file:
