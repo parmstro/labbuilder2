@@ -18,7 +18,7 @@
     rootvg_blockdev: "{{ lsblk_vgtree['children'][0]['children'][0]['name'] }}"
 
 - name: "Re-arrange GPT - imagebuilder image leaves backup in the wrong place on disk"
-  ansible.builtin.command: |-
+  ansible.builtin.command: |
     sgdisk -e /dev/{{ rootvg_blockdev }}
     partprobe
 

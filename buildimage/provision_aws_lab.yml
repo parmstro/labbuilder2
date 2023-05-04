@@ -126,17 +126,32 @@
       ansible.builtin.include_role:
         name: roles/expand_satellite_storage
 
-#
-#- name: IdM-specific Post-provisioning tasks
-#  hosts: idm
-#  become: true
-#  gather_facts: true
-#  tasks:
-#    # Disk layout
-#
-#- name: Satellite-specific Post-provisioning tasks
-#  hosts: satellite
-#  become: true
-#  gather_facts: true
-#  tasks:
-#    # Disk layout
+- name: "Phase 2 - bootstrap idm"
+  ansible.builtin.import_playbook: ../idm/main.yml
+  tags:
+    - tag_phase_2
+
+- name: Configure DHCP options for VPC
+  hosts: build_control
+  connection: local
+  become: false
+  gather_facts: true
+  tasks:
+    - name: "Configure satellite storage"
+      amazon.aws.ec2_vpc_dhcp_option:
+        vpc_id: '{{ ec2_vpc_id }}'
+        region: '{{ ec2_region }}'
+        inherit_existing: true
+        domain_name: '{{ ipa_server_domain }}'
+        dns_servers:
+          - "{{ idm_instance['public_ip_address'] }}"
+
+- name: Restart NetworkManager to get nodes to pick up new DHCP options
+  hosts: aws_nodes
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Restart NetworkManager on EC2 nodes"
+      ansible.builtin.service:
+        name: NetworkManager
+        state: restarted
