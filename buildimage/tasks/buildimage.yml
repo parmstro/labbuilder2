@@ -76,8 +76,8 @@
   until:
     - compose_status.json.image_status.status != "building"
     - compose_status.json.image_status.status != "pending"
-  retries: 720
-  delay: 10
+  retries: 360
+  delay: 30
 
 - name: "Assert that the build was successful"
   ansible.builtin.assert:
