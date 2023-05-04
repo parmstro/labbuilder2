@@ -86,13 +86,12 @@
 
     - name: Set /etc/hosts
       ansible.builtin.copy:
-        content: |-
+        content: |
           127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
           ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
           {{ idm_info.private_ip_address }}       idm.{{ ipa_server_domain }} idm
           {{ sat_info.private_ip_address }}       sat.{{ ipa_server_domain }} sat satellite
-
         dest: /etc/hosts
         owner: root
         group: root
@@ -101,6 +100,7 @@
     - name: Expand EBS disks
       ansible.builtin.include_role:
         name: roles/expand_imagebuilder_rootvg
+
 #
 #- name: IdM-specific Post-provisioning tasks
 #  hosts: idm
