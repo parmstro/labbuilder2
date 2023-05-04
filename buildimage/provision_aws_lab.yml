@@ -144,7 +144,7 @@
         inherit_existing: true
         domain_name: '{{ ipa_server_domain }}'
         dns_servers:
-          - "{{ idm_instance['public_ip_address'] }}"
+          - "{{ idm_instance['private_ip_address'] }}"
 
 - name: Restart NetworkManager to get nodes to pick up new DHCP options
   hosts: aws_nodes
