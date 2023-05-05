@@ -32,25 +32,9 @@
       - compose_result.failed == false
       - compose_result.json.id is defined
 
-- name: "Prepare to start waiting for imagebuild to complete"
-  ansible.builtin.set_fact:
-    composer_done: false
-
 - name: "Watch for finished image compose"
-  block:
-    - name: "Include compose wait tasks"
-      ansible.builtin.include_tasks:
-        file: compose_wait.yml
-
-    - name: "Include compose wait tasks (part 2 if needed)"
-      ansible.builtin.include_tasks:
-        file: compose_wait.yml
-      when: composer_done is false
-
-    - name: "Include compose wait tasks (part 3 if needed)"
-      ansible.builtin.include_tasks:
-        file: compose_wait.yml
-      when: composer_done is false
+  ansible.builtin.include_tasks:
+    file: compose_wait.yml
 
 - name: "Assert that the build was successful"
   ansible.builtin.assert:

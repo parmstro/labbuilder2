@@ -155,3 +155,8 @@
       ansible.builtin.service:
         name: NetworkManager
         state: restarted
+
+- name: "Phase 3 - bootstrap satellite"
+  ansible.builtin.import_playbook: ../sat/main.yml
+  tags:
+    - tag_phase_3
