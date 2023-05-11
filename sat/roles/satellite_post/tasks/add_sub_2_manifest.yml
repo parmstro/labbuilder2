@@ -11,5 +11,5 @@
     validate_certs: "{{ manifest_validate_certs }}"
     name: "{{ manifest_name }}"
     pool_id: "{{ sub.pool_id }}"
-    quantity: "{{ sub.qty }}"
+    quantity: "{{ sub.qty | default(omit) }}"
     state: present
