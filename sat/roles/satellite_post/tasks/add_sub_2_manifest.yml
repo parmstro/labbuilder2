@@ -5,6 +5,7 @@
 - name: Add specified subscriptions to manifest
   redhat.satellite.redhat_manifest:
     portal: "{{ manifest_portal_url }}"
+    content_access_mode: "{{ satellite_manifest_content_access_mode | default(omit) }}"
     username: "{{ manifest_cdn_username }}"
     password: "{{ manifest_cdn_password }}"
     validate_certs: "{{ manifest_validate_certs }}"
