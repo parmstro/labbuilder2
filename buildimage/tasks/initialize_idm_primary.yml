@@ -1,5 +1,6 @@
 ---
-- name: "Create the idm primary server"
+- name: "Create the idm primary server (vsphere)"
+  when: imagebuilder_image_type == "vsphere"
   ansible.builtin.include_tasks: create_guest_from_image.yml
   vars:
     guest_ip: "{{ idm_ip }}"
@@ -15,3 +16,8 @@
     guest_network_config_type: "{{ idm_network_config_type }}"
     guest_hot_cpu_add: "{{ idm_hot_cpu_add }}"
     guest_hot_memory_add: "{{ idm_hot_memory_add }}"
+
+- name: "Create the idm primary server (aws)"
+  when: imagebuilder_image_type == "aws"
+  ansible.builtin.include_tasks: create_idm_ec2.yml
+  vars:
