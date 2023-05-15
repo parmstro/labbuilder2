@@ -1,0 +1,21 @@
+---
+- name: "Test Task"
+  hosts: localhost
+  remote_user: ansiblerunner
+  become: true
+  vars_files:
+  - ../vars/common_vault.yml
+  - ../vars/common_vars.yml
+  - ../vars/controller_vault.yml
+  - ../vars/controller_vars.yml
+  - ../vars/hub_vault.yml
+  - ../vars/hub_vars.yml
+  - ../vars/rhis_post_vault.yml
+  - ../vars/rhis_post_vars.yml
+
+  tasks:
+
+  - name: "Test Build EEs"
+    ansible.builtin.include_tasks: "./tasks/add_ees.yml"
+    vars:
+      active_controller: "{{ controllers[0].fqdn }}"

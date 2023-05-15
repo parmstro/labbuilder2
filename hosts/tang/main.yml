@@ -1,0 +1,36 @@
+---
+# Deploy the container hosts for tang servers
+- name: "Create the container hosts from hostgroup"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/common/tasks/create_host_from_hostgroup.yml"
+  loop: "{{ containerhosts }}"
+  loop_control:
+    loop_var: host
+
+- name: "Wait for container hosts to be up"
+  ansible.builtin.wait_for:
+      timeout: 7200
+      sleep: 60
+      port: 22
+      host: "{{ host }}"
+      search_regex: OpenSSH
+  loop: "{{ containerhosts | map(attribute='fqdn') | flatten | list }}"
+  loop_control:
+    loop_var: host
+
+# We really should create a hostgroup for container hosts that builds it with podman, etc..
+- name: "Ensure podman is installed on container hosts"
+  loop: "{{ containerhosts }}"
+  loop_control:
+    loop_var: host
+
+# - name: "Fetch latest Tang Container to host"
+
+# - name: "Configure Tang startup"
+
+# - name: "Start Container"
+
+# - name: "Test Tang Server"
+
+
+
+

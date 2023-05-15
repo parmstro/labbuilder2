@@ -1,0 +1,47 @@
+---
+# Deploy the automation controller
+- name: "Create the ansible controller hosts from hostgroup"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/common/tasks/create_host_from_hostgroup.yml"
+  loop: "{{ controllers }}"
+  loop_control:
+    loop_var: host
+
+- name: "Wait for all controllers to be built"
+  ansible.builtin.wait_for:
+      timeout: 7200
+      sleep: 60
+      port: 22
+      host: "{{ host }}"
+      search_regex: OpenSSH
+  loop: "{{ controllers | map(attribute='fqdn') | flatten | list }}"
+  loop_control:
+    loop_var: host
+
+- name: "Generate SSL certificates for the controllers"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/common/tasks/generate_ssl_config.yml"
+  loop: "{{ controllers }}"
+  loop_control:
+    loop_var: host
+  
+- name: "Fetch latest AAP installer"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/download_content.yml"
+
+- name: "Extract installer"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/extract_aap_installer.yml"
+
+- name: "Template install config"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/generate_installer_template.yml"
+  
+- name: "Launch installer"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/launch_installer.yml"
+
+- name: "Download the subscriptions manifest"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/fetch_manifest.yml"
+
+- name: "Add the subscriptions to the controller"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/add_aap_manifest.yml"
+  vars:
+    active_controller: :{{ controllers[0].fqdn }}
+
+- name: "Configure controller authentication"
+  ansible.builtin.include_tasks: "{{ playbook_dir }}/controller/tasks/configure_aap_auth.yml"

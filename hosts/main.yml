@@ -1,0 +1,38 @@
+---
+- name: "Build the required hosts"
+  hosts: localhost
+  remote_user: ansiblerunner
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/common_vars.yml
+    - vars/common_vault.yml
+    - vars/controller_vars.yml
+    - vars/controller_vault.yml
+    - vars/hub_vars.yml
+    - vars/hub_vault.yml
+    - vars/tang_vars.yml
+    - vars/tang_vault.yml
+
+  tasks:
+
+    - name: "Build the ansible controllers"
+      ansible.builtin.include_tasks: controller/main.yml
+      tags:
+        - Phase_4
+        - aap
+        - controllers
+
+    - name: "Build the ansible automation hubs"
+      ansible.builtin.include_tasks: hub/main.yml
+      tags:
+        - Phase_4
+        - aap
+        - hubs
+
+    - name: "Build the container servers for tang and others"
+      ansible.builtin.include_tasks: tang/main.yml
+      tags:
+        - Phase_4
+        - nbde
+        - tang

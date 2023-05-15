@@ -1,0 +1,21 @@
+containerhosts:
+  - fqdn: "containerhost1.example.ca"
+    organization: "{{ satellite_initial_organization }}"
+    location: "{{ satellite_initial_location }}"
+    hostgroup: "RHEL8base"
+    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+    compute_resource: "{{ default_compute_resource }}"
+    compute_profile: "{{ default_compute_profile }}"
+    mac: "{{ default_vm_mac }}"
+    build_comment: "Deployed by Labbuilder2"
+
+  - fqdn: "containerhost2.example.ca"
+    organization: "{{ satellite_initial_organization }}"
+    location: "{{ satellite_initial_location }}"
+    hostgroup: "RHEL8base"
+    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+    compute_resource: "{{ default_compute_resource }}"
+    compute_profile: "{{ default_compute_profile }}"
+    mac: "{{ default_vm_mac }}"
+    build_comment: "Deployed by Labbuilder2"
+

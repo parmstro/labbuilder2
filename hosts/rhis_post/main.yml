@@ -1,0 +1,13 @@
+---
+# Run the post build tasks
+# Much of this can be run on the provisioner node
+
+- name: "Build Execution Environments"
+  ansible.builtin.include_tasks: "tasks/build_ees.yml"
+
+- name: "Register Execution Environments"
+  ansible.builtin.include_tasks: "tasks/add_ees.yml"
+
+# - name: "Run AAP Content Import"
+
+# - name: "Run Test Plays"
