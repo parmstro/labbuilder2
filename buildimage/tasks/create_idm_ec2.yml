@@ -34,15 +34,3 @@
           throughput: "{{ ec2_info['idm'].disk_throughput }}"
           delete_on_termination: true
     ebs_optimized: "{{ ebs_optimized_capable | default(false) }}"
-
-- name: grab instance ids to tag idm
-  amazon.aws.ec2_instance_info:
-    region: "{{ ec2_region }}"
-    filters:
-      instance-state-name: running
-      "tag:avp_idm": "{{ ec2_name_prefix }}-idm"
-  register: idm_instance_info
-
-- name: display idm_instance_info
-  ansible.builtin.debug:
-    msg: "{{ idm_instance_info }}"

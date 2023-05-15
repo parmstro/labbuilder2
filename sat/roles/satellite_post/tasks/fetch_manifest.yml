@@ -14,3 +14,5 @@
     validate_certs: "{{ manifest_validate_certs }}"
     name: "{{ manifest_name }}"
     path: "{{ manifest_path }}"
+    content_access_mode: "{{ satellite_manifest_content_access_mode | default(omit) }}"
+    uuid: "{{ satellite_manifest_uuid | default(omit) }}"

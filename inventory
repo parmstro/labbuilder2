@@ -2,24 +2,15 @@
 localhost
 
 [idm_primary]
-idm.example.ca
 
 [idm_replicas]
-idmr1.example.ca
-idmr2.example.ca
 
 [sat_primary]
-sat.example.ca
 
 [sat_capsule]
-capsule.example.ca
 
 [aap]
-controller1.example.ca
 
 [automation_hub]
-hub1.example.ca
 
 [container_servers]
-container1.example.ca
-container2.example.ca

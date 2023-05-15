@@ -24,3 +24,6 @@
 
 - name: "Ensure standard lab hbac rules exist"
   ansible.builtin.include_tasks: ensure_std_hbac_rules.yml
+
+- name: "Ensure DNS server is queryable on local network"
+  ansible.builtin.include_tasks: ensure_dns_queryable.yml

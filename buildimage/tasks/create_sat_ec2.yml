@@ -21,8 +21,8 @@
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
       Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      short_name: "satellite"
-      username: "{{ ec2_info[rhel].username }}"
+      short_name: "sat"
+      username: "{{ ec2_info['rhel'].username }}"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id }}"
     volumes:
@@ -34,24 +34,3 @@
           throughput: "{{ ec2_info['satellite'].disk_throughput }}"
           delete_on_termination: true
     ebs_optimized: "{{ ebs_optimized_capable | default(false) }}"
-
-- name: grab instance ids to tag each satellite
-  amazon.aws.ec2_instance_info:
-    region: "{{ ec2_region }}"
-    filters:
-      instance-state-name: running
-      "tag:avp_satellite": "{{ ec2_name_prefix }}-satellite"
-  register: satellite_output
-
-- name: Ensure tags are present for satellite
-  amazon.aws.ec2_tag:
-    region: "{{ ec2_region }}"
-    resource: "{{ item.1.instance_id }}"
-    state: present
-    tags:
-      Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-satellite"
-      Index: "{{ item[0] }}"
-      launch_time: "{{ item.1.launch_time }}"
-  with_indexed_items:
-    - "{{ satellite_output.instances }}"
-  when: satellite_output.instances|length > 0
