@@ -1,0 +1,28 @@
+---
+- name: "Build the image"
+  ansible.builtin.import_playbook: ./buildimage/main.yml 
+  tags:
+    - tags_buildimage
+
+- name: "Initialize the environment"
+  ansible.builtin.import_playbook: ./vmware/main.yml
+  tags:
+    - tags_init_vmware
+
+#    - name: "Initialize the environment"
+#      ansible.builtin.import_playbook: aws/main.yml
+#      when: imagebuilder_image_type == "aws"
+#      tags:
+#        - tag_init_aws
+
+#    - name: "Initialize the environment"
+#      ansible.builtin.import_playbook: azure/main.yml
+#      when: imagebuilder_image_type == "azure"
+#      tags:
+#        - tag_init_azure
+
+#    - name: "Initialize the environment"
+#      ansible.builtin.import_playbook: gcp/main.yml
+#      when: imagebuilder_image_type == "gcp"
+#      tags:
+#        - tag_init_gcp

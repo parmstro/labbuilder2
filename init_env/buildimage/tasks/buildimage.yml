@@ -1,0 +1,93 @@
+---
+# This play generates a minimal RHEL image of a particular image type and version
+# using the imagebuilder service on console.redhat.com
+# for use as the build machines (idm primary and satellite primary)
+
+- name: "Retrieve an access token"
+  ansible.builtin.uri:
+    url: "{{ auth_url }}"
+    method: "POST"
+    body:
+      grant_type: "refresh_token"
+      client_id: "rhsm-api"
+      refresh_token: "{{ offline_token }}"
+    body_format: "form-urlencoded"
+    validate_certs: true
+    return_content: true
+  register: result
+
+- name: "Set access token"
+  ansible.builtin.set_fact:
+    access_token: "{{ result.json.access_token }}"
+
+- name: "Test connection - get API version"
+  ansible.builtin.uri:
+    url: "https://console.redhat.com/api/image-builder/v1/version"
+    method: "GET"
+    headers:
+      Authorization: "Bearer {{ access_token }}"
+      Content-Type: "application/json"
+    body_format: "form-urlencoded"
+    validate_certs: true
+    return_content: true
+  register: result
+
+- name: "Assert success"
+  ansible.builtin.assert:
+    that:
+      - result.json.version == "1.0"
+
+- name: "Create the build configuration from template"
+  ansible.builtin.template:
+    src: "{{ image_template }}"
+    dest: "{{ image_file_directory }}/{{ image_definition_file }}"
+    mode: 0644
+
+- name: "Create the image from the configuration"
+  ansible.builtin.uri:
+    url: "{{ build_url }}"
+    method: "POST"
+    headers:
+      Authorization: "Bearer {{ access_token }}"
+      Content-Type: "application/json"
+    body: "{{ lookup('ansible.builtin.file', '{{ image_definition_file }}') }}"
+    body_format: json
+    status_code: 201
+    validate_certs: true
+    return_content: true
+  register: compose_result
+
+- name: "Assert success"
+  ansible.builtin.assert:
+    that:
+      - compose_result.failed == false
+      - compose_result.json.id is defined
+
+- name: "Watch for finished image compose"
+  ansible.builtin.uri:
+    url: "{{ build_status_url }}{{ compose_result.json.id }}"
+    method: "GET"
+    headers:
+      Authorization: "Bearer {{ access_token }}"
+      Content-Type: "application/json"
+    validate_certs: true
+    return_content: true
+  register: compose_status
+  until:
+    - compose_status.json.image_status.status != "building"
+    - compose_status.json.image_status.status != "pending"
+  retries: 720
+  delay: 10
+
+- name: "Assert that the build was successful"
+  ansible.builtin.assert:
+    that:
+      - compose_status.json.image_status.status == "success"
+      - compose_status.json.image_status.upload_status.options.url is defined
+
+- name: "Download the finished image"
+  ansible.builtin.get_url:
+    url: "{{ compose_status.json.image_status.upload_status.options.url }}"
+    dest: "{{ image_file_path }}"
+    mode: 0644
+  when: imagebuilder_image_type == "vsphere"
