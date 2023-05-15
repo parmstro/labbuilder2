@@ -12,35 +12,6 @@
     - admins
     - satgroup-administrator
 
-- name: "Create an OCP POC users HBAC rule"
-  redhat.rhel_idm.ipahbacrule:
-    name: ocp-poc-users
-    description: "Restrict access to OpenShift Control Nodes"
-    state: present
-    ipaadmin_password: "{{ ipa_admin_password }}"
-    hostgroup:
-    - ocp-controllers
-    - util-servers
-    servicecategory: all
-    group:
-    - ocpgroup-developer
-    - ocpgroup-proj_administrator
-
-- name: "Create an OCP Admins HBAC rule"
-  redhat.rhel_idm.ipahbacrule:
-    name: ocp-admins
-    description: "OCP Admins can access to ocp controllers, nodes, routers, load balancers and utility servers"
-    state: present
-    ipaadmin_password: "{{ ipa_admin_password }}"
-    hostgroup:
-    - ocp-controllers
-    - ocp-servers
-    - util-servers
-    servicecategory: all
-    group:
-    - ocpgroup-operator
-    - ocpgroup-cluster_administrator
-
 - name: "Create a Sat Operators HBAC rule"
   redhat.rhel_idm.ipahbacrule:
     name: sat-operators

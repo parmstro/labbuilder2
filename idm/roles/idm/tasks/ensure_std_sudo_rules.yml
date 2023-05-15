@@ -27,20 +27,6 @@
     - satgroup-site-administrator
     - satgroup-operator
 
-
-- name: "Add the ocp-admin sudo rule"
-  redhat.rhel_idm.ipasudorule:
-    name: "ocp-admin"
-    description: "Control sudo access on OCP Servers"
-    state: present
-    ipaadmin_password: "{{ ipa_admin_password }}"
-    cmdcategory: all
-    hostgroup:
-    - ocp-servers
-    group:
-    - ocpgroup-cluster_administrator
-    - ocpgroup-operator
-
 - name: "Add the aap-admin sudo rule"
   redhat.rhel_idm.ipasudorule:
     name: "aap-admin"
