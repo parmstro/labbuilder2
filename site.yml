@@ -4,14 +4,14 @@
 # in order for this play to run successfully. 
 # Please see the README.md file in this directory
 - name: "Phase 1 - Generate and deploy builder images"
-  ansible.builtin.import_playbook: ./buildimage/main.yml
+  ansible.builtin.import_playbook: ./init_env/main.yml
   tags:
-  - tag_phase_1
+  - tags_phase_1
 
 - name: "Phase 2 - bootstrap idm"
   ansible.builtin.import_playbook: ./idm/main.yml
   tags:
-  - tag_phase_2
+  - tags_phase_2
 
 - name: "Phase 3 - bootstrap satellite"
   ansible.builtin.import_playbook: ./sat/main.yml

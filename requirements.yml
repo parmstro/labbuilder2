@@ -7,10 +7,9 @@ collections:
 - ansible.posix
 - ansible.utils
 - azure.azcollection
-
 - community.general
 - community.vmware
-
+- containers.podman
 - redhat.rhel_idm
 - redhat.rhel_system_roles
 - redhat.satellite

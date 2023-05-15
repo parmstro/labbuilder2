@@ -3,13 +3,15 @@ TODO:
 
 # IdM Items:
 
-# IdM does not have reverse address for satellite
-
-
 # Satellite Items:
 
-# Kickstart issue due to foreman-proxy listening on port 80 vs. 8000
-# Test CreateHostFromHostGroup.yml
+# Add Anisble Automation Platform File Content
+# Sync
+# Create content view for AAP File Content
+# Create composite content view for AAP Systems
+
+
+
 # Finish build out of Content Views for Test Cases re: JBoss content views
 # Finish build out of Hostgroups for sample builds including JBoss, LAMP, Wordpress and compliance profiles
 # Finish policy module

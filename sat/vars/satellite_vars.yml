@@ -210,9 +210,11 @@ repos_mandatory:
 # we got both by not specifying releasever for the kickstart repos
   - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS (Kickstart)"
     product: "Red Hat Enterprise Linux for x86_64"
+    releasever: "9.1"
   
   - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream (Kickstart)"
     product: "Red Hat Enterprise Linux for x86_64"
+    releasever: "9.1"
   
   - name: "Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
@@ -222,6 +224,10 @@ repos_mandatory:
 
   - name: "Red Hat Satellite Maintenance 6.12 for RHEL 8 x86_64 (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
+
+# Needed for the JBoss server pipeline
+  - name: "JBoss Enterprise Application Platform 7.4 (RHEL 8) (RPMs)"
+    product: "JBoss Enterprise Application Platform"
 
 repos_optional:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs)"
@@ -634,6 +640,42 @@ cvs_mandatory:
     environments:
     - "Library"
 
+  - name: "JBossEAP74"
+    desc: "Red Hat JBoss EAP 7.4 Content"
+    org: "{{ satellite_initial_organization }}"
+    repositories:
+    - name: "JBoss Enterprise Application Platform 7.4 RHEL 8 RPMs"
+      product: "JBoss Enterprise Application Platform"
+    filters:
+    - name: "Include_All_Packages_No_Errata"
+      type: "rpm"
+      inclusion: "true"
+      description: "Include all packages with no errata for all repositories"
+      original_packages: true
+      repositories: "[]"
+    - name: "Include_All_Streams_No_Errata"
+      type: "modulemd"
+      inclusion: "true"
+      description: "Include all packages with no errata for all repositories"
+      original_module_streams: true
+      repositories: "[]"
+    - name: "Include_Errata_By_Date"
+      type: "erratum"
+      inclusion: "true"
+      description: "Include all errata updated as of {{ errata_end_date }}"
+      repositories: "[]"
+      rules:
+      - name: "errata-by-date-{{ errata_end_date }}"
+        end_date: "{{ errata_end_date }}"
+        date_type: "updated"
+        types:
+        - "enhancement"
+        - "bugfix"
+        - "security"
+    date_filter_name: "Include_Errata_By_Date"
+    environments:
+    - "Library"
+
 cvs_optional:
   - name: "MSSQLServer"
     desc: "Microsoft SQL Server for Linux 2022 content"
@@ -740,6 +782,19 @@ ccvs_mandatory:
     - content_view: "SOE_RHEL8"
       latest: true
     - content_view: "AAP_Files"
+      latest: true
+    environments:
+    - "Library"
+    - "Development"
+    - "Qualification"
+
+  - name: "SOE_JBoss"
+    desc: "Production JBoss Applications"
+    org: "{{ satellite_initial_organization }}"
+    components:
+    - content_view: "SOE_RHEL8"
+      latest: true
+    - content_view: "JBossEAP74"
       latest: true
     environments:
     - "Library"
@@ -1399,7 +1454,7 @@ subnets_mandatory:
     network: 192.168.254.0
     prefix: 22
     mask: 255.255.252.0
-    gateway: 192.168.254.1
+    gateway: 192.168.252.1
     dns_primary: 192.168.254.5
     dns_secondary: 192.168.252.5
     ipam: "Internal DB"
@@ -1849,6 +1904,17 @@ hostgroups_mandatory:
       - ansible-role-rhel9-cis
     ptable: "RHEL_Server_Compliance"
     organization: "{{ satellite_initial_organization }}"
+
+  - name: "RHEL8_JBoss"
+    parent: "RHEL8base/RHEL_8_CIS2"
+    description: "RHEL 8 SOE CIS2 for JBoss"
+    content_view: "SOE_JBoss"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+      - ansible-role-rhel8-cis
+    ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
+
 
 discovery_rules_mandatory:
   - name: "3nic_host"
