@@ -12,4 +12,4 @@
   tasks:
 
   - name: "run the test task"
-    ansible.builtin.include_tasks: roles/satellite_post/tasks/configure_mandatory_global_parameters.yml
+    ansible.builtin.include_tasks: roles/satellite_post/tasks/configure_mandatory_cvs.yml
