@@ -1,2 +1,13 @@
 ---
 # AWS specific initialization starts here
+- name: "AWS specific initialization"
+  hosts: build_control
+  remote_user: ansiblerunner
+  become: true
+
+
+  tasks:
+  
+    - name: "Debug message"
+      debug:
+        msg: "AWS init starts here"
