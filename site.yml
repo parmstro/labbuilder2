@@ -3,7 +3,7 @@
 # You need to have visited all the component directories and set up the variables 
 # in order for this play to run successfully. 
 # Please see the README.md file in this directory
-- name: "Phase 1 - Generate and deploy builder images"
+- name: "Phase 1 - initialize the environment with 2 machines"
   ansible.builtin.import_playbook: ./init_env/main.yml
   tags:
   - tags_phase_1
