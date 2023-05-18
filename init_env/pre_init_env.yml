@@ -1,0 +1,21 @@
+---
+- name: "Pre-initialization the environment - setting and varifying config"
+  hosts: build_control
+  remote_user: ansiblerunner
+  become: true
+  gather_facts: false
+  vars_files: 
+    - "./vars/init_env_vars.yml"
+
+  tasks:
+    - name: "Assert that we have a valid target platform"
+      ansible.builtin.assert:
+        that: 
+          - rhisbuilder_bootstrap_target | length > 0
+          - rhisbuilder_bootstrap_target in bootstrap_allowable_values
+        fail_msg: "{{ rhisbuilder_bootstrap_target }} is not a supported bootstrap target"
+        success_msg: "Assertion passed: bootstrapping on {{ rhisbuilder_bootstrap_target }}"
+
+    - name: "Set our target bootstrap platform"
+      ansible.builtin.set_fact:
+        bootstrap_target: "{{ rhisbuilder_bootstrap_target }}"
