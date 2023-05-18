@@ -12,5 +12,6 @@
   tasks:
     - name: "Get the imagebuilder image"
       ansible.builtin.include_tasks: tasks/buildimage.yml
+      when: not skip_imagebuilder_build
       tags:
         - buildimage

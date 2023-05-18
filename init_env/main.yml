@@ -1,3 +1,11 @@
+- name: "Initialize the environment"
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  vars_files:
+    - "./vars/init_env_vars.yml"
+    - "~/rhisbuilder_vault.yml"
 - name: "Set variables"
   ansible.builtin.import_playbook: "./pre_init_env.yml"
   tags:
