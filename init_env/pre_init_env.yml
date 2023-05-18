@@ -1,16 +1,34 @@
 ---
-- name: "Pre-initialization the environment - setting and varifying config"
+- name: "Pre-initialization the environment - setting and verifying config"
   hosts: build_control
-  remote_user: ansiblerunner
-  become: true
+  connection: local
+  become: false
   gather_facts: false
-  vars_files: 
+  vars_files:
     - "./vars/init_env_vars.yml"
-
+    - "~/rhisbuilder_vault.yml"
   tasks:
+    - name: "Write ansible.cfg"
+      ansible.builtin.template:
+        src: ansible.cfg.j2
+        dest: ansible.cfg
+        mode: '0600'
+
+    - name: "Install collections for ansible environment"
+      when: init_env_collection_install
+      block:
+        - name: "Install local patched files"
+          ansible.builtin.command: |-
+            ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'
+          loop: '{{ special_collection_installs }}'
+
+        - name: "Install requirements file based collections"
+          ansible.builtin.command: |-
+            ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' -r requirements.yml
+
     - name: "Assert that we have a valid target platform"
       ansible.builtin.assert:
-        that: 
+        that:
           - rhisbuilder_bootstrap_target | length > 0
           - rhisbuilder_bootstrap_target in bootstrap_allowable_values
         fail_msg: "{{ rhisbuilder_bootstrap_target }} is not a supported bootstrap target"

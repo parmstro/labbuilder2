@@ -6,7 +6,6 @@ localhost
 [idm_replicas]
 
 [sat_primary]
-sat.example.ca
 
 [sat_capsule]
 
