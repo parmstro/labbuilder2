@@ -2,12 +2,155 @@
 # AWS specific initialization starts here
 - name: "AWS specific initialization"
   hosts: build_control
-  remote_user: localhost
   connection: local
   become: false
   vars_files:
     - '~/rhisbuilder_vault.yml'
+---
+- name: initial check setup
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: true
+  vars_files:
+    - vars/aws_vars.yml
+    - vars/builder_vars.yml
+    - vars/builder_vault.yml
+    - vars/idm_vars.yml
+    - vars/idm_vault.yml
+    - vars/sat_vars.yml
+    - vars/sat_vault.yml
+  vars:
+    ec2_wait: true
   tasks:
-    - name: "Debug message"
-      debug:
-        msg: "AWS init starts here"
+    - name: collection final check
+      block:
+        - name: run AWS check setup if using AWS
+          ansible.builtin.include_role:
+            name: roles/aws_check_setup
+
+      rescue:
+        - name: Error with setup
+          fail:
+            msg: The provisioner has failed during initial check_setup, please scroll up to see exact error.  Open an issue on https://github.com/ansible/workshops/issues
+
+    - name: Provision network stuff
+      ansible.builtin.include_role:
+        name: roles/manage_ec2_infra
+
+    - name: Provision idm machine
+      ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
+
+    - name: Provision satellite machine
+      ansible.builtin.include_tasks: tasks/create_sat_ec2.yml
+
+    - name: Build inventory for subsequent plays
+      ansible.builtin.include_role:
+        name: roles/build_bootstrap_inventory
+
+    - name: Save facts for later
+      ansible.builtin.set_fact:
+        idm_instance: '{{ idm_instance_info.instances | first }}'
+        sat_instance: '{{ sat_instance_info.instances | first }}'
+
+    - name: Configure public DNS for idm and satellite
+      community.aws.route53:
+        state: present
+        zone: "{{ workshop_dns_zone }}"
+        record: "{{ item.tags.short_name }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
+        type: A
+        ttl: 300
+        overwrite: true
+        value: "{{ item.public_ip_address }}"
+        wait: true
+      when: manage_public_dns
+      loop:
+        -  '{{ idm_instance }}'
+        -  '{{ sat_instance }}'
+
+    - name: Wait for EC2 servers to be available
+      ansible.builtin.wait_for:
+        host: "{{ item }}"
+        port: 22
+      loop:
+        - "{{ idm_instance['public_ip_address'] }}"
+        - "{{ sat_instance['public_ip_address'] }}"
+
+- name: Post-provisioning tasks
+  hosts: idm_primary:sat_primary
+  become: true
+  gather_facts: true
+  vars:
+    idm_info: "{{ hostvars['localhost']['idm_instance'] }}"
+    sat_info: "{{ hostvars['localhost']['sat_instance'] }}"
+  tasks:
+    - name: Set facts
+      ansible.builtin.set_fact:
+        idm_ip: "{{ idm_info.private_ip_address }}"
+        ipaserver_ip_addresses: "{{ idm_info.private_ip_address }}"
+        ipaclient_configure_dns_resolver: false
+
+    - name: Set hostnames
+      ansible.builtin.hostname:
+        name: '{{ short_hostname }}.{{ ipa_server_domain }}'
+
+    - name: Set /etc/hosts
+      ansible.builtin.copy:
+        content: |
+          127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+          ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+          {{ idm_info.private_ip_address }}       idm.{{ ipa_server_domain }} idm
+          {{ sat_info.private_ip_address }}       sat.{{ ipa_server_domain }} sat satellite
+        dest: /etc/hosts
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Expand EBS disks
+      ansible.builtin.include_role:
+        name: roles/expand_imagebuilder_rootvg
+
+- name: Configure Satellite storage
+  hosts: sat_primary
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/sat_vars.yml
+  tasks:
+    - name: "Configure satellite storage"
+      ansible.builtin.include_role:
+        name: roles/expand_satellite_storage
+
+- name: Configure DHCP options for VPC
+  hosts: build_control
+  connection: local
+  become: false
+  gather_facts: true
+  tasks:
+    - name: "Configure satellite storage"
+      amazon.aws.ec2_vpc_dhcp_option:
+        vpc_id: '{{ ec2_vpc_id }}'
+        region: '{{ ec2_region }}'
+        inherit_existing: true
+        domain_name: '{{ ipa_server_domain }}'
+        dns_servers:
+          - "{{ idm_instance['private_ip_address'] }}"
+
+- name: Restart NetworkManager to get nodes to pick up new DHCP options
+  hosts: aws_nodes
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Restart NetworkManager on EC2 nodes"
+      ansible.builtin.service:
+        name: NetworkManager
+        state: restarted
+
+- name: "Phase 3 - bootstrap satellite"
+  ansible.builtin.import_playbook: ../sat/main.yml
+  vars:
+    idm_ip: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
+    ipaserver_ip_addresses: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
+  tags:
+    - tag_phase_3
