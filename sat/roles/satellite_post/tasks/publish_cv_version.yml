@@ -2,16 +2,19 @@
 # This play publishes a content view version
 # It expects to be called in a loop with a loop variable cv
 
-- name: "Publish the content view version"
-  redhat.satellite.content_view_version:
-    username: "{{ satellite_admin_username }}"
-    password: "{{ satellite_admin_password }}"
-    server_url: "{{ satellite_url }}"
-    organization: "{{ satellite_initial_organization }}"
-    validate_certs: "{{ satellite_validate_certs }}"
-    content_view: "{{ cv.name }}"
-    description: "{{ cv.description | default(omit) }}"
-    version: "{{ cv.version | default(omit) }}" # default is a new version
-    lifecycle_environments: "{{ cv.environments | default(omit) }}" # underlying default is publish new version to the library
-    state: "{{ cv.state | default(omit) }}" # underlying default is present
-    
+- name: "Only publish if skip_publish is false"
+  block:
+    - name: "Publish the content view version"
+      redhat.satellite.content_view_version:
+        username: "{{ satellite_admin_username }}"
+        password: "{{ satellite_admin_password }}"
+        server_url: "{{ satellite_url }}"
+        organization: "{{ satellite_initial_organization }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        content_view: "{{ cv.name }}"
+        description: "{{ cv.description | default(omit) }}"
+        version: "{{ cv.version | default(omit) }}" # default is a new version
+        lifecycle_environments: "{{ cv.environments | default(omit) }}" # underlying default is publish new version to the library
+        state: "{{ cv.state | default(omit) }}" # underlying default is present
+  when: skip_publish == false
+  
