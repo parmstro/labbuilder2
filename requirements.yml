@@ -9,6 +9,7 @@ collections:
 - azure.azcollection
 - community.general
 - community.vmware
+- community.aws
 - containers.podman
 - redhat.rhel_idm
 - redhat.rhel_system_roles

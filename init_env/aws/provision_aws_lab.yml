@@ -1,14 +1,22 @@
 ---
-# AWS specific initialization starts here
-- name: "AWS specific initialization"
-  hosts: build_control
+- name: initial check setup
+  hosts: localhost
   connection: local
   become: false
+  gather_facts: true
   vars_files:
-    - "~/rhisbuilder_vault.yml"
+    - vars/aws_vars.yml
+    - vars/aws_vault.yml
+    - vars/builder_vars.yml
+    - vars/builder_vault.yml
+    - vars/idm_vars.yml
+    - vars/idm_vault.yml
+    - vars/sat_vars.yml
+    - vars/sat_vault.yml
   vars:
     ec2_wait: true
   tasks:
+
     - name: collection final check
       block:
         - name: run AWS check setup if using AWS
@@ -20,9 +28,26 @@
           fail:
             msg: The provisioner has failed during initial check_setup, please scroll up to see exact error.  Open an issue on https://github.com/ansible/workshops/issues
 
+#    - name: add dns entries
+#      include_role:
+#        name: roles/aws_dns
+#      when:
+#        - dns_type is defined
+#        - dns_type == "aws"
+
     - name: Provision network stuff
       ansible.builtin.include_role:
         name: roles/manage_ec2_infra
+
+    - name: "Build the imagebuilder image"
+      ansible.builtin.include_tasks: tasks/buildimage.yml
+      tags:
+        - buildimage
+      when: imagebuilder_ami is not defined
+
+    - name: "Display the imagebuilder image"
+      ansible.builtin.debug:
+        msg: "imagebuilder_ami is {{ imagebuilder_ami }}"
 
     - name: Provision idm machine
       ansible.builtin.include_tasks: tasks/create_idm_ec2.yml
@@ -108,6 +133,11 @@
       ansible.builtin.include_role:
         name: roles/expand_satellite_storage
 
+- name: "Phase 2 - bootstrap idm"
+  ansible.builtin.import_playbook: ../idm/main.yml
+  tags:
+    - tag_phase_2
+
 - name: Configure DHCP options for VPC
   hosts: build_control
   connection: local
@@ -133,10 +163,10 @@
         name: NetworkManager
         state: restarted
 
-#- name: "Phase 3 - bootstrap satellite"
-#  ansible.builtin.import_playbook: ../sat/main.yml
-#  vars:
-#    idm_ip: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
-#    ipaserver_ip_addresses: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
-#  tags:
-#    - tag_phase_3
+- name: "Phase 3 - bootstrap satellite"
+  ansible.builtin.import_playbook: ../sat/main.yml
+  vars:
+    idm_ip: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
+    ipaserver_ip_addresses: "{{ hostvars['localhost']['idm_instance']['private_ip_address'] }}"
+  tags:
+    - tag_phase_3
