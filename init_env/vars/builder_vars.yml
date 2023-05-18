@@ -48,7 +48,7 @@ activation_key: "{{ activation_key_vault }}"
 image_template: "template.request-base-image.json.j2"
 slash_size: 10737418240
 home_size: 1073741824
-var_size: 1073741824
+var_size: 2147483648
 tmp_size: 1073741824
 var_tmp_size: 1073741824
 var_log_size: 1073741824

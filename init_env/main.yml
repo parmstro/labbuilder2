@@ -2,7 +2,7 @@
   ansible.builtin.import_playbook: "./pre_init_env.yml"
   tags:
     - tags_pre_init
-   
+
 - name: "Build the image"
   ansible.builtin.import_playbook: "./buildimage/main.yml"
   tags:
