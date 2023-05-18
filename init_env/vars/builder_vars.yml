@@ -26,7 +26,6 @@ imagebuilder_image_type: "vsphere"
 # edge-commit      
 # edge-installer   iso
 
-
 # you can use the API url to pull a current list of available distributions 
 # they must match what is supported for Satellite and Identity Management. RHEL 8.7 works for both.
 builder_distribution: "rhel-87"
@@ -48,7 +47,7 @@ activation_key: "{{ activation_key_vault }}"
 image_template: "template.request-base-image.json.j2"
 slash_size: 10737418240
 home_size: 1073741824
-var_size: 1073741824
+var_size: 2147483648
 tmp_size: 1073741824
 var_tmp_size: 1073741824
 var_log_size: 1073741824
