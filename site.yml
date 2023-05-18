@@ -3,17 +3,18 @@
 # You need to have visited all the component directories and set up the variables 
 # in order for this play to run successfully. 
 # Please see the README.md file in this directory
+
 - name: "Phase 1 - initialize the environment with 2 machines"
   ansible.builtin.import_playbook: ./init_env/main.yml
   tags:
   - tags_phase_1
 
-- name: "Phase 2 - bootstrap idm"
+- name: "Phase 2 - install and configure idm primary"
   ansible.builtin.import_playbook: ./idm/main.yml
   tags:
   - tags_phase_2
 
-- name: "Phase 3 - bootstrap satellite"
+- name: "Phase 3 - install and configure satellite primary"
   ansible.builtin.import_playbook: ./sat/main.yml
   tags:
   - tags_phase_3

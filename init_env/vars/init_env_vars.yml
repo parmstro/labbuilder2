@@ -1,1 +1,8 @@
+---
 # variables controlling environment initialization
+# control the target platform for first 2 nodes
+bootstrap_allowable_values:
+  - "vmware"
+  - "aws"
+
+rhisbuilder_bootstrap_target: "vmware"
