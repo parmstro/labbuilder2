@@ -1,6 +1,6 @@
 ---
 - name: "Pre-initialization the environment - setting and verifying config"
-  hosts: build_control
+  hosts: localhost
   connection: local
   become: false
   gather_facts: false
@@ -11,20 +11,22 @@
     - name: "Write ansible.cfg"
       ansible.builtin.template:
         src: ansible.cfg.j2
-        dest: ansible.cfg
+        dest: '../ansible.cfg'
         mode: '0600'
 
     - name: "Install collections for ansible environment"
       when: init_env_collection_install
       block:
         - name: "Install local patched files"
-          ansible.builtin.command: |-
-            ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'
+          ansible.builtin.command:
+            cmd: "ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'"
+            chdir: ".."
           loop: '{{ special_collection_installs }}'
 
         - name: "Install requirements file based collections"
-          ansible.builtin.command: |-
-            ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' -r requirements.yml
+          ansible.builtin.command:
+            cmd: "ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' -r requirements.yml"
+            chdir: ".."
 
     - name: "Assert that we have a valid target platform"
       ansible.builtin.assert:
