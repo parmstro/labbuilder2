@@ -7,6 +7,11 @@
   loop_control:
     loop_var: ccv
   when: "ccvs_optional is defined"
+  tags:
+    - tags_content_management
+    - tags_composite_content_views
+    - tags_optional
+    - tags_optional_composite_content_views
 
 # Publish requires the cv loop variable. 
 - name: Publish the specified content views
@@ -14,3 +19,9 @@
   loop: "{{ ccvs_optional }}"
   loop_control:
     loop_var: cv
+  when: "ccvs_optional is defined"
+  tags:
+    - tags_content_management
+    - tags_composite_content_views
+    - tags_optional
+    - tags_optional_composite_content_views

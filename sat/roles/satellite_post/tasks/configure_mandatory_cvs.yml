@@ -6,6 +6,11 @@
   loop: "{{ cvs_mandatory }}"
   loop_control:
     loop_var: cv
+  tags:
+    - tags_content_management
+    - tags_content_views
+    - tags_mandatory
+    - tags_mandatory_content_views
 
 # Publish requires the cv loop variable.
 - name: Publish the specified content views
@@ -13,3 +18,8 @@
   loop: "{{ cvs_mandatory }}"
   loop_control:
     loop_var: cv
+  tags:
+    - tags_content_management
+    - tags_content_views
+    - tags_mandatory
+    - tags_mandatory_content_views

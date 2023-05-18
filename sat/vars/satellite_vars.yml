@@ -101,6 +101,13 @@ manifest_subs:
 # the repo may or may not have a basearch or releasever - this is a total crap shoot
 # 
 
+# Sync / Publish / Promote main control vars
+# set to true to overide default to sync all content, publish all CVs and CCVs, and promote
+# these are valuable in testing or in maintainance runs
+# Content promotion is embedded in the publish operation for this project 
+skip_sync: false
+skip_publish: false
+
 repos_mandatory:
   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"
     product: "Red Hat Enterprise Linux Server"
