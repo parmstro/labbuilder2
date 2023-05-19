@@ -4,6 +4,9 @@
   connection: local
   become: false
   gather_facts: true
+  vars_files:
+    - "~/rhisbuilder_vault.yml"
+    - "vars/aws_vars.yml"
   tasks:
     - name: collection final check
       block:
@@ -15,12 +18,14 @@
           fail:
             msg: The provisioner has failed during initial check_setup, please scroll up to see exact error.  Open an issue on https://github.com/ansible/workshops/issues
 
-- name: Destroy lab instances in AWS
+- name: Destroy instances in AWS
   hosts: localhost
   connection: local
   become: false
   gather_facts: false
-
+  vars_files:
+    - "~/rhisbuilder_vault.yml"
+    - "vars/aws_vars.yml"
   vars:
     ec2_wait: false
     teardown: true

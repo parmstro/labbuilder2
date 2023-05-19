@@ -1,5 +1,0 @@
----
-# _vault values for sensitive variables
-offline_token_vault: "A Red Hat offline token retrieved from https://access.redhat.com/management/api"
-org_number_vault: "Red Hat subscription org number"
-activation_key_vault: "Red Hat Activation Key name"

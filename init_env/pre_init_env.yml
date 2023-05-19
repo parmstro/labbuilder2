@@ -14,18 +14,18 @@
         dest: '../ansible.cfg'
         mode: '0600'
 
-    - name: "Install collections for ansible environment"
+    - name: "Install collections for ansible environment {{ 'forcefully' if init_env_collection_install_force }}"
       when: init_env_collection_install
       block:
         - name: "Install local patched files"
           ansible.builtin.command:
-            cmd: "ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'"
+            cmd: "ansible-galaxy collection install {{ '--force' if init_env_collection_install_force }} -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'"
             chdir: ".."
           loop: '{{ special_collection_installs }}'
 
-        - name: "Install requirements file based collections"
+        - name: "Install requirements file based collections {{ 'forcefully' if init_env_collection_install_force }}"
           ansible.builtin.command:
-            cmd: "ansible-galaxy collection install --force -p '{{ ansible_cfg_patch_collection_dir }}' -r requirements.yml"
+            cmd: "ansible-galaxy collection install {{ '--force' if init_env_collection_install_force }} -p '{{ ansible_cfg_patch_collection_dir }}' -r requirements.yml"
             chdir: ".."
 
     - name: "Assert that we have a valid target platform"
