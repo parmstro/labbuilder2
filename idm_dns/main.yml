@@ -8,18 +8,20 @@
   vars_files:
     - '~/rhisbuilder_vault.yml'
   tasks:
-    - name: Build inventory for subsequent tasks
-      ansible.builtin.include_role:
-        name: roles/build_bootstrap_inventory
+    - name: "AWS inventory and DHCP option setting"
+      block:
+        - name: Build inventory for subsequent tasks
+          ansible.builtin.include_role:
+            name: roles/build_bootstrap_inventory
 
-    - name: "AWS-specific configuration to configure IDM as DNS Server for VPC"
-      amazon.aws.ec2_vpc_dhcp_option:
-        vpc_id: '{{ ec2_vpc_id }}'
-        region: '{{ ec2_region }}'
-        inherit_existing: true
-        domain_name: '{{ ipa_server_domain }}'
-        dns_servers:
-          - "{{ idm_instance['private_ip_address'] }}"
+        - name: "AWS-specific configuration to configure IDM as DNS Server for VPC"
+          amazon.aws.ec2_vpc_dhcp_option:
+            vpc_id: '{{ ec2_vpc_id }}'
+            region: '{{ ec2_region }}'
+            inherit_existing: true
+            domain_name: '{{ ipa_server_domain }}'
+            dns_servers:
+              - "{{ idm_instance['private_ip_address'] }}"
 
 - name: Restart NetworkManager to get nodes to pick up new DHCP options
   hosts: aws_nodes
