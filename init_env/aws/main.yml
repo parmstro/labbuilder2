@@ -66,8 +66,8 @@
   become: true
   gather_facts: true
   vars_files:
-    - "~/rhisbuilder_vault.yml"
     - "vars/aws_vars.yml"
+    - "~/rhisbuilder_vault.yml"
   vars:
     idm_info: "{{ hostvars['localhost']['idm_instance'] }}"
     sat_info: "{{ hostvars['localhost']['sat_instance'] }}"
@@ -105,6 +105,7 @@
   gather_facts: true
   vars_files:
     - vars/sat_vars.yml
+    - "~/rhisbuilder_vault.yml"
   tasks:
     - name: "Configure satellite storage"
       ansible.builtin.include_role:
