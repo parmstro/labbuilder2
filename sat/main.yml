@@ -8,6 +8,7 @@
     - vars/satellite_vault.yml
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
+    - "~/rhisbuilder_vault.yml"
 
   tasks:
 

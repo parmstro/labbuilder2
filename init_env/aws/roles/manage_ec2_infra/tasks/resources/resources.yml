@@ -1,5 +1,4 @@
 ---
-# Security workshop needs a second subnet inside the VPC
 - name: Create AWS VPC {{ ec2_name_prefix }}-vpc
   amazon.aws.ec2_vpc_net:
     name: "{{ ec2_name_prefix }}-vpc"

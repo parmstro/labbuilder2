@@ -9,7 +9,7 @@ satellite_initial_organization: "example"
 satellite_initial_location: "lab"
 satellite_admin_username: "{{ sat_inital_admin_username_vault }}"
 satellite_admin_password: "{{ sat_inital_admin_password_vault }}"
-satellite_validate_certs: false
+satellite_validate_certs: true
 
 satellite_admin_email: "{{ satellite_admin_username}}@{{ satellite_domain }}"
 
@@ -257,14 +257,14 @@ custom_products:
       url: "http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/"
       username: ""
       password: ""
-      download_policy: "immediate"
+      download_policy: "on_demand"
     - name: "centos-8-baseos"
       upstream_name: ""
       content_type: "yum"
       url: "http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/"
       username: ""
       password: ""
-      download_policy: "immediate"
+      download_policy: "on_demand"
 
   - name: "Microsoft SQL Server for Linux 2022 for RHEL 8"
     desc: "Microsoft SQL Server for Linux 2022 installation and tools"
@@ -278,7 +278,7 @@ custom_products:
       url: "https://packages.microsoft.com/rhel/8/mssql-server-2022/"
       username: ""
       password: ""
-      download_policy: "immediate"
+      download_policy: "on_demand"
     - name: "msql-tools-2022-rhel-8"
       description: "MSSQL Server 2022 tools and drivers packages"
       upstream_name: ""
@@ -286,7 +286,7 @@ custom_products:
       url: "https://packages.microsoft.com/rhel/8/prod/"
       username: ""
       password: ""
-      download_policy: "immediate"
+      download_policy: "on_demand"
 
 lifecycle_environments:
   - name: "Development"
