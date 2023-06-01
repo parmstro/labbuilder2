@@ -145,7 +145,6 @@ repos_mandatory:
     product: "Red Hat Enterprise Linux for x86_64"
     releasever: "8.8"
 
-repos_optional:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
     releasever: "8.8"
@@ -158,7 +157,7 @@ repos_optional:
     product: "Red Hat Enterprise Linux for x86_64"
     releasever: "8.8"
 
-# The OS for this is name: "RHEL 8.7"
+repos_optional:
   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"
     product: "Red Hat Enterprise Linux Server"
     basearch: "x86_64"
@@ -326,16 +325,8 @@ sync_plans_mandatory:
     organization: "{{ satellite_initial_organization }}"
     location: "{{ satellite_initial_location }}"
 
-product_plan:
-  - name: "Red Hat Enterprise Linux Server"
-    plan: "nightly_os"
-    organization: "{{ satellite_initial_organization }}"
-
+product_plan_mandatory:
   - name: "Red Hat Enterprise Linux Server for x86_64"
-    plan: "nightly_os"
-    organization: "{{ satellite_initial_organization }}"
-
-  - name: "Red Hat Enterprise Linux High Availability for x86_64"
     plan: "nightly_os"
     organization: "{{ satellite_initial_organization }}"
 
@@ -347,6 +338,15 @@ product_plan:
     plan: "nightly_infra"
     organization: "{{ satellite_initial_organization }}"
 
+product_plan_optional:
+  - name: "Red Hat Enterprise Linux Server"
+    plan: "nightly_os"
+    organization: "{{ satellite_initial_organization }}"
+
+  - name: "Red Hat Enterprise Linux High Availability for x86_64"
+    plan: "nightly_os"
+    organization: "{{ satellite_initial_organization }}"
+
   - name: "CentOS Streams"
     plan: "nightly_third_party"
     organization: "{{ satellite_initial_organization }}"
@@ -354,7 +354,6 @@ product_plan:
   - name: "Microsoft SQL Server for Linux 2022 for RHEL 8"
     plan: "nightly_third_party"
     organization: "{{ satellite_initial_organization }}"
-
 
 errata_end_date: "{{ ansible_date_time.date }}"
 
@@ -369,9 +368,9 @@ cvs_mandatory:
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs 8"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.7"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.8"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.8"
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Satellite Client 6 for RHEL 8 x86_64 RPMs"
       product: "Red Hat Enterprise Linux for x86_64"
@@ -775,7 +774,7 @@ ccvs_optional:
     - "Qualification"
 
   - name: "LEAPP_8_2_9"
-    desc: "Migrate from RHEL 8.7 to RHEL 9.0"
+    desc: "Migrate from RHEL 8 to RHEL 9"
     org: "{{ satellite_initial_organization }}"
     components:
     - content_view: "SOE_RHEL8"
@@ -1106,7 +1105,7 @@ oss_mandatory:
   - name: "RedHat"
     major: 8
     minor: 7
-    description: "RHEL 8.7"
+    description: "RHEL 8.8"
     family: "Redhat"
     password_hash: "SHA256"
     organization: "{{ satellite_initial_organization }}"
@@ -1849,11 +1848,11 @@ hostgroups_mandatory:
     content_view: "SOE_RHEL8"
     domain: "{{ satellite_domain }}"
     lifecycle_environment: "Development"
-    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.8"
     locations: "{{ satellite_initial_location }}"
     organization: "{{ satellite_initial_organization }}"
     openscap_capsule: "{{ satellite_fqdn }}"
-    operatingsystem: "RHEL 8.7"
+    operatingsystem: "RHEL 8.8"
     ptable: "RHEL_Server_CIS1"
     pxe_loader: "PXELinux BIOS"
     realm: "{{ satellite_domain | upper }}"
