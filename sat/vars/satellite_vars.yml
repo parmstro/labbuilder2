@@ -366,6 +366,15 @@ product_plan_optional:
 errata_end_date: "{{ ansible_date_time.date }}"
 
 cvs_mandatory:
+  - name: "AAP_Files"
+    desc: "Red Hat Ansible Automation Platform Install Files"
+    org: "{{ satellite_initial_organization }}"
+    repositories:
+    - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 Files"
+      product: "Red Hat Ansible Automation Platform"
+    environments:
+    - "Library"
+
   - name: "SOE_RHEL8"
     desc: "Red Hat Enterprise Linux 8 Standard Operating Environment Content"
     org: "{{ satellite_initial_organization }}"
@@ -422,15 +431,6 @@ cvs_mandatory:
     - "Development"
     - "Qualification"
     - "Production"
-
-  - name: "AAP_Files"
-    desc: "Red Hat Ansible Automation Platform Install Files"
-    org: "{{ satellite_initial_organization }}"
-    repositories:
-    - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 Files"
-      product: "Red Hat Ansible Automation Platform"
-    environments:
-    - "Library"
 
 cvs_optional:
   - name: "SOE_RHEL7"
@@ -1366,7 +1366,7 @@ aks_mandatory:
     state: "present"
     description: "Activate a RHEL 8 system"
     organization: "{{ satellite_initial_organization }}"
-    auto_attach: true
+    auto_attach: false
     subscriptions:
       - name: "Employee SKU"
     content_overrides:
@@ -1381,7 +1381,7 @@ aks_optional:
     state: "present"
     description: "Activate a RHEL 7 system"
     organization: "{{ satellite_initial_organization }}"
-    auto_attach: true
+    auto_attach: false
     subscriptions:
       - name: "Employee SKU"
     content_overrides:
@@ -1395,7 +1395,7 @@ aks_optional:
     state: "present"
     description: "Activate a RHEL 9 system"
     organization: "{{ satellite_initial_organization }}"
-    auto_attach: true
+    auto_attach: false
     subscriptions:
       - name: "Employee SKU"
     content_overrides:
@@ -1409,7 +1409,7 @@ aks_optional:
     state: "present"
     description: "Migrate a RHEL 7 system to RHEL 8"
     organization: "{{ satellite_initial_organization }}"
-    auto_attach: true
+    auto_attach: false
     subscriptions:
       - name: "Employee SKU"
     content_overrides:
@@ -1423,7 +1423,7 @@ aks_optional:
     state: "present"
     description: "Migrate a RHEL 8 system to RHEL 9"
     organization: "{{ satellite_initial_organization }}"
-    auto_attach: true
+    auto_attach: false
     subscriptions:
       - name: "Employee SKU"
     content_overrides:
