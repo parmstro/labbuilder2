@@ -1367,8 +1367,6 @@ aks_mandatory:
     description: "Activate a RHEL 8 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: false
-    subscriptions:
-      - name: "Employee SKU"
     content_overrides:
       - label: "satellite-client-6-for-rhel-8-x86_64-rpms"
         override: "enabled"
@@ -1382,8 +1380,6 @@ aks_optional:
     description: "Activate a RHEL 7 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: false
-    subscriptions:
-      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-7-server-satellite-client-6-rpms"
         override: "enabled"
@@ -1396,8 +1392,6 @@ aks_optional:
     description: "Activate a RHEL 9 system"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: false
-    subscriptions:
-      - name: "Employee SKU"
     content_overrides:
       - label: "satellite-client-6-for-rhel-9-x86_64-rpms"
         override: "enabled"
@@ -1410,8 +1404,6 @@ aks_optional:
     description: "Migrate a RHEL 7 system to RHEL 8"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: false
-    subscriptions:
-      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-7-server-extras-rpms"
         override: "enabled"
@@ -1424,8 +1416,6 @@ aks_optional:
     description: "Migrate a RHEL 8 system to RHEL 9"
     organization: "{{ satellite_initial_organization }}"
     auto_attach: false
-    subscriptions:
-      - name: "Employee SKU"
     content_overrides:
       - label: "rhel-8-for-x86_64-supplementary-rpms"
         override: "disabled"
