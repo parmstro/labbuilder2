@@ -330,7 +330,15 @@ product_plan_mandatory:
     plan: "nightly_os"
     organization: "{{ satellite_initial_organization }}"
 
+  - name: "Red Hat Enterprise Linux for x86_64"
+    plan: "nightly_os"
+    organization: "{{ satellite_initial_organization }}"
+
   - name: "Red Hat Satellite Capsule"
+    plan: "nightly_infra"
+    organization: "{{ satellite_initial_organization }}"
+
+  - name: "Red Hat Ansible Automation Platform"
     plan: "nightly_infra"
     organization: "{{ satellite_initial_organization }}"
 
