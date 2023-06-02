@@ -19,7 +19,7 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: "{{ async_delay }}"
+    poll: 0
     register: async_update
 
 - name: "Check on mandatory product sync"
@@ -44,7 +44,7 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: "{{ async_delay }}"
+    poll: 0
     register: async_update
 
   - name: "Check on optional product sync"
@@ -69,7 +69,7 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: "{{ async_delay }}"
+    poll: 0
     register: async_update
 
   - name: "Check on custom product sync"

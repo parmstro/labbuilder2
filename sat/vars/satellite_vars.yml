@@ -12,8 +12,11 @@ satellite_validate_certs: true
 
 satellite_admin_email: "{{ satellite_admin_username}}@{{ satellite_domain }}"
 
-cv_publish_timeout: 14400
-cv_publish_retry_interval: 15
+async_timeout: 14400
+async_delay: 15
+
+cv_publish_timeout: "{{ async_timeout }}"
+cv_publish_retry_interval: "{{ async_delay }}"
 
 sat_installer_verbose: true
 sat_installer_options:

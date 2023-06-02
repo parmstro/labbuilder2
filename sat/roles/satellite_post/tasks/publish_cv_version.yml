@@ -18,7 +18,7 @@
         lifecycle_environments: "{{ cv.environments | default(omit) }}" # underlying default is publish new version to the library
         state: "{{ cv.state | default(omit) }}" # underlying default is present
       async: "{{ cv_publish_timeout | default(14400) }}"
-      poll: 5
+      poll: 0
       register: publish_async
 
     - name: "Check for content view publish completion"
