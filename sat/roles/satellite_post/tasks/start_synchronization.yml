@@ -19,16 +19,8 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: 0
+    poll: "{{ async_delay }}"
     register: async_update
-
-  - name: "Check on mandatory product sync"
-    async_status:
-      jid: "{{ async_update.ansible_job_id }}"
-    register: job_result
-    until: job_result.finished
-    retries: "{{ ( async_timeout / async_delay ) | int }}"
-    delay: "{{ async_delay }}"
 
   - name: "Get the unique list of optional products"
     set_fact:
@@ -44,16 +36,8 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: 0
+    poll: "{{ async_delay }}"
     register: async_update
-
-  - name: "Check on optional product sync"
-    async_status:
-      jid: "{{ async_update.ansible_job_id }}"
-    register: job_result
-    until: job_result.finished
-    retries: "{{ ( async_timeout / async_delay ) | int }}"
-    delay: "{{ async_delay }}"
 
   - name: "Get the unique list of custom products"
     set_fact:
@@ -69,16 +53,8 @@
       product: "{{ item }}"
     loop: "{{ products_to_sync }}"
     async: "{{ async_timeout }}"
-    poll: 0
+    poll: "{{ async_delay }}"
     register: async_update
-
-  - name: "Check on custom product sync"
-    async_status:
-      jid: "{{ async_update.ansible_job_id }}"
-    register: job_result
-    until: job_result.finished
-    retries: "{{ ( async_timeout / async_delay ) | int }}"
-    delay: "{{ async_delay }}"
 
   when: skip_sync == false
   tags:
