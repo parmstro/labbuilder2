@@ -19,12 +19,3 @@
         state: "{{ cv.state | default(omit) }}" # underlying default is present
       async: "{{ cv_publish_timeout | default(14400) }}"
       poll: "{{ cv_publish_retry_interval | default(15) }}"
-      #register: publish_async
-
-#    - name: "Check for content view publish completion"
-#      async_status:
-#        jid: "{{ publish_async.ansible_job_id }}"
-#      register: job_result
-#      until: job_result.finished
-#      retries: "{{ ( cv_publish_timeout / cv_publish_retry_interval ) | default(14400) | int }}"
-#      delay: "{{ cv_publish_retry_interval | default(15) }}"
