@@ -33,7 +33,7 @@ sat_installer_options:
   - '--certs-server-cert "/etc/ipa/private/{{ satellite_fqdn }}/{{ satellite_fqdn }}.crt"'
   - '--certs-server-key "/etc/ipa/private/{{ satellite_fqdn }}/{{ satellite_fqdn }}.key"'
   - '--enable-foreman-compute-ec2'
-  - '--enable-foreman-compute-gce'
+ #- '--enable-foreman-compute-gce'
   - '--enable-foreman-compute-libvirt'
   - '--enable-foreman-compute-vmware'
   - '--foreman-proxy-dns true'
@@ -137,10 +137,10 @@ repos_mandatory:
   - name: "Red Hat Satellite Client 6 for RHEL 8 x86_64 (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
 
-  - name: "Red Hat Satellite Capsule 6.12 for RHEL 8 x86_64 (RPMs)"
+  - name: "Red Hat Satellite Capsule 6.13 for RHEL 8 x86_64 (RPMs)"
     product: "Red Hat Satellite Capsule"
 
-  - name: "Red Hat Satellite Maintenance 6.12 for RHEL 8 x86_64 (RPMs)"
+  - name: "Red Hat Satellite Maintenance 6.13 for RHEL 8 x86_64 (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
 
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)"
