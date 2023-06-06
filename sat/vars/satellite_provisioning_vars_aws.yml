@@ -1,0 +1,158 @@
+---
+subnets_mandatory: []
+subnets_optional: []
+
+aws_access_key: "{{ aws_access_key_vault }}"
+aws_secret_key: "{{ aws_secret_key_vault }}"
+
+compute_resources_mandatory:
+  - name: "VMware_Lab"
+    provider: "vmware"
+    description: "Lab VCenter Server"
+    locations: "{{ satellite_initial_location }}"
+    organizations: "{{ satellite_initial_organization }}"
+    provider_params:
+      caching_enabled: true
+      datacenter: "parmstrong.ca"
+      url: "192.168.252.30"
+      user: "{{ vcenter_service_username }}"
+      password: "{{ vcenter_service_password }}"
+
+
+# compute_resources_optional:
+
+# setup_virtwho
+vcenter_virtwho_username: "{{ vcenter_virtwho_username_vault }}"
+vcenter_virtwho_password: "{{ vcenter_virtwho_password_vault }}"
+satellite_virtwho_username: "{{ satellite_virtwho_username_vault }}"
+satellite_virtwho_password: "{{ satellite_virtwho_password_vault }}"
+
+virtwho_configs_mandatory:
+  - foreman_virt_who_configure_config:
+      name: "VMware"
+      hypervisor_type: "esx"
+      hypervisor_server: "192.168.252.30"
+      hypervisor_username: "{{ vcenter_virtwho_username }}"
+      hypervisor_password: "{{ vcenter_virtwho_password }}"
+      hypervisor_id: "hostname"
+      interval: "120"
+      filtering_mode: 0
+      satellite_url: "sat.example.ca"
+      organization_id: 1
+
+# compute_profiles
+compute_profiles_mandatory:
+  - name: "1-Small"
+    updated_name: "SOE_Small"
+    compute_attributes:
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 1
+          corespersocket: 1
+          memory_mb: 4096
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volumes_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 65
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
+
+  - name: "2-Medium"
+    updated_name: "SOE_Medium"
+    compute_attributes:
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 2
+          corespersocket: 1
+          memory_mb: 8192
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volumes_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 100
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
+
+  - name: "3-Large"
+    updated_name: "SOE_Large"
+    compute_attributes:
+      - compute_resource: "VMware_Lab"
+        vm_attrs:
+          cpus: 4
+          corespersocket: 2
+          memory_mb: 8192
+          cluster: "NUCLab"
+          resource_pool: "Resources"
+          path: "/Datacenters/parmstrong.ca/vm"
+          guest_id: "rhel8_64Guest"
+          hardware_version: "Default"
+          memoryHotAddEnabled: true
+          cpuHotAddEnabled: true
+          add_cdrom: false
+          boot_order:
+            - "network"
+            - "disk"
+          scsi_controllers:
+            - type: ParaVirtualSCSIController
+              key: 1000
+          volumes_attributes:
+            0:
+              thin: true
+              name: "Hard disk"
+              mode: "persistent"
+              controller_key: 1000
+              datastore: "SYN_VMS"
+              size_gb: 100
+          interfaces_attributes:
+            0:
+              type: "VirtualVmxnet3"
+              network: "VM Network"
+
+discovery_rules_mandatory:
+  - name: "3nic_host"
+    enabled: false
+    state: present
+    organizations: "{{ satellite_initial_organization }}"
+    locations: "{{ satellite_initial_location }}"
+    search: 'disk_count = 2 and memory > 32000 and facts.interfaces ~ "*,*,*,*"'
+    priority: 20
+    hostgroup: "RHEL9base/RHEL9_CIS2"
