@@ -3,6 +3,7 @@
 # It expects to be called in a loop with a loop variable cv
 
 - name: "Only publish if skip_publish is false"
+  when: skip_publish == false
   block:
     - name: "Publish the content view version"
       redhat.satellite.content_view_version:
@@ -16,5 +17,5 @@
         version: "{{ cv.version | default(omit) }}" # default is a new version
         lifecycle_environments: "{{ cv.environments | default(omit) }}" # underlying default is publish new version to the library
         state: "{{ cv.state | default(omit) }}" # underlying default is present
-  when: skip_publish == false
-  
+      async: "{{ cv_publish_timeout | default(14400) }}"
+      poll: "{{ cv_publish_retry_interval | default(15) }}"

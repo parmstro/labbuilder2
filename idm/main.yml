@@ -9,6 +9,7 @@
   vars_files:
     - vars/idm_vars.yml
     - vars/idm_vault.yml
+    - "~/rhisbuilder_vault.yml"
   tasks:
 
     - name: "Apply role idm"

@@ -4,22 +4,15 @@
 - name: Apply any ansible templating defined in the configuration template
   ansible.builtin.template:
     src: "{{ pt.path }}"
-    dest: "{{ playbook_dir }}/{{ pt.path }}.out"
-  delegate_to: localhost
+    dest: "{{ pt.path }}.out"
 
-- name: "Copy the file to the target satellite"
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/{{ pt.path }}.out"
-    dest: "provisioning_template.tmp"
-    remote_src: false
-  
 - name: "Create the Provisioning Template from file"
   redhat.satellite.provisioning_template:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_validate_certs }}"
-    file_name: "provisioning_template.tmp"
+    file_name: "{{ pt.path }}.out"
     state: present
     organizations:
       - "{{ satellite_initial_organization }}"
@@ -28,6 +21,5 @@
 
 - name: "Remove the temporary file"
   ansible.builtin.file:
-    path: "{{ playbook_dir }}/{{ pt.path }}.out"
+    path: "{{ pt.path }}.out"
     state: absent
-  delegate_to: localhost

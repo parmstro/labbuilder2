@@ -5,10 +5,12 @@
     state: enabled
     purge: true
 
-- name: "Ensure the system is updated"
+- name: "Update the system"
   ansible.builtin.dnf:
-    name: "*"
+    name: '*'
     state: latest
+  async: "{{ async_timeout }}"
+  poll: "{{ async_delay }}"
 
 - name: "Install chrony for accurate time keeping"
   ansible.builtin.dnf:

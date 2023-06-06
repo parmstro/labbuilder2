@@ -15,11 +15,11 @@
   - tags_phase_2
 
 - name: "Phase 2a - Reconfigure infrastructure to use IDM DNS"
-  ansible.builtin.import_playbook: ./idm_dns/main.yml
+  ansible.builtin.import_playbook: ./init_env/aws/configure_idm_dns.yml
   tags:
   - tags_phase_2
   - tags_phase_2a
-  when: rhis_bootstrap_target == "aws"
+  when: rhisbuilder_bootstrap_target == "aws"
 
 - name: "Phase 3 - install and configure satellite primary"
   ansible.builtin.import_playbook: ./sat/main.yml

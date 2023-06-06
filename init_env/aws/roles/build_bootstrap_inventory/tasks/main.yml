@@ -46,3 +46,8 @@
     ansible_user: '{{ aws_ansible_user | default("ec2-user") }}'
     ansible_remote_tmp: '{{ aws_remote_tmp | default("/home/ec2-user/.ansible/tmp") }}'
     short_hostname: 'sat'
+
+- name: Save facts for later
+  ansible.builtin.set_fact:
+    idm_instance: '{{ idm_instance_info.instances | first }}'
+    sat_instance: '{{ sat_instance_info.instances | first }}'

@@ -29,29 +29,15 @@
       ansible.builtin.include_role:
         name: roles/build_initial_servers
 
+      # This also provides idm_instance and sat_instance facts
     - name: Build inventory for subsequent plays
       ansible.builtin.include_role:
         name: roles/build_bootstrap_inventory
 
-    - name: Save facts for later
-      ansible.builtin.set_fact:
-        idm_instance: '{{ idm_instance_info.instances | first }}'
-        sat_instance: '{{ sat_instance_info.instances | first }}'
-
-    - name: Configure public DNS for idm and satellite
-      community.aws.route53:
-        state: present
-        zone: "{{ workshop_dns_zone }}"
-        record: "{{ item.tags.short_name }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
-        type: A
-        ttl: 300
-        overwrite: true
-        value: "{{ item.public_ip_address }}"
-        wait: true
+    - name: Manage DNS entries
+      ansible.builtin.include_role:
+        name: roles/manage_route53_dns
       when: manage_public_dns
-      loop:
-        -  '{{ idm_instance }}'
-        -  '{{ sat_instance }}'
 
     - name: Wait for EC2 servers to be available
       ansible.builtin.wait_for:
@@ -77,6 +63,12 @@
         idm_ip: "{{ idm_info.private_ip_address }}"
         ipaserver_ip_addresses: "{{ idm_info.private_ip_address }}"
         ipaclient_configure_dns_resolver: false
+
+    - name: 'Ensure hostname-setting can persist (thanks, cloud-init)'
+      ansible.builtin.lineinfile:
+        path: '/etc/cloud/cloud.cfg'
+        regexp: '^\s*preserve_hostname:'
+        line: 'preserve_hostname: true'
 
     - name: Set hostnames
       ansible.builtin.hostname:

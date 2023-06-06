@@ -8,8 +8,16 @@
     - vars/satellite_vault.yml
     - vars/satellite_pre_vars.yml
     - vars/satellite_vars.yml
+    - "~/rhisbuilder_vault.yml"
 
   tasks:
+    - name: "Dynamically include variables"
+      ansible.builtin.include_vars:
+        file: "{{ item }}"
+      loop:
+        - "vars/satellite_provisioning_vars_{{ rhisbuilder_bootstrap_target }}.yml"
+        - "~/rhisbuilder_vault.yml"
+      when: item is file
 
     - name: "Apply role of satellite_pre to {{ ansible_fqdn }}"
       ansible.builtin.include_role:
