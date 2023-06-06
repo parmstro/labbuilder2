@@ -64,6 +64,12 @@
         ipaserver_ip_addresses: "{{ idm_info.private_ip_address }}"
         ipaclient_configure_dns_resolver: false
 
+    - name: 'Ensure hostname-setting can persist (thanks, cloud-init)'
+      ansible.builtin.lineinfile:
+        path: '/etc/cloud/cloud.cfg'
+        regexp: '^\s*preserve_hostname:'
+        line: 'preserve_hostname: true'
+
     - name: Set hostnames
       ansible.builtin.hostname:
         name: '{{ short_hostname }}.{{ ipa_server_domain }}'
