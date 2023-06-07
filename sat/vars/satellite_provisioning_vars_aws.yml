@@ -44,11 +44,38 @@ virtwho_configs_mandatory: []
 
 # compute_profiles
 compute_profiles_mandatory:
-  - name: "1-Small"
-    updated_name: "AWS_Small"
+  - name: "AWS_Small"
     compute_attributes:
       - compute_resource: "EC2-{{ ec2_region }}"
-        vm_attrs: {}
+        vm_attrs:
+          flavor_id: "m1.small"
+          image_id: "{{ imagebuilder_ami }}"
+          managed_ip: "private"
+
+  - name: "AWS_Medium"
+    compute_attributes:
+      - compute_resource: "EC2-{{ ec2_region }}"
+        vm_attrs:
+          flavor_id: "m4.large"
+          image_id: "{{ imagebuilder_ami }}"
+          managed_ip: "private"
+
+  - name: "AWS_Large"
+    compute_attributes:
+      - compute_resource: "EC2-{{ ec2_region }}"
+        vm_attrs:
+          flavor_id: "m4.xlarge"
+          image_id: "{{ imagebuilder_ami }}"
+          managed_ip: "private"
+
+  - name: "AWS_XLarge_Public"
+    compute_attributes:
+      - compute_resource: "EC2-{{ ec2_region }}"
+        vm_attrs:
+          flavor_id: "m4.4xlarge"
+          image_id: "{{ imagebuilder_ami }}"
+          interfaces_attributes:
+          managed_ip: "private"
 
 #  - name: "2-Medium"
 #    updated_name: "SOE_Medium"
