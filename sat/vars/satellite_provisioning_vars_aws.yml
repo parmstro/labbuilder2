@@ -44,7 +44,7 @@ virtwho_configs_mandatory: []
 
 # compute_profiles
 compute_profiles_mandatory:
-  - name: "AWS_Small"
+  - name: "AWS_SOE_Small"
     compute_attributes:
       - compute_resource: "EC2-{{ ec2_region }}"
         vm_attrs:
@@ -52,7 +52,7 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
 
-  - name: "AWS_Medium"
+  - name: "AWS_SOE_Medium"
     compute_attributes:
       - compute_resource: "EC2-{{ ec2_region }}"
         vm_attrs:
@@ -60,7 +60,7 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
 
-  - name: "AWS_Large"
+  - name: "AWS_SOE_Large"
     compute_attributes:
       - compute_resource: "EC2-{{ ec2_region }}"
         vm_attrs:
@@ -68,7 +68,7 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
 
-  - name: "AWS_XLarge_Public"
+  - name: "AWS_SOE_XLarge"
     compute_attributes:
       - compute_resource: "EC2-{{ ec2_region }}"
         vm_attrs:
@@ -77,75 +77,37 @@ compute_profiles_mandatory:
           interfaces_attributes:
           managed_ip: "private"
 
-#  - name: "2-Medium"
-#    updated_name: "SOE_Medium"
-#    compute_attributes:
-#      - compute_resource: "VMware_Lab"
-#        vm_attrs:
-#          cpus: 2
-#          corespersocket: 1
-#          memory_mb: 8192
-#          cluster: "NUCLab"
-#          resource_pool: "Resources"
-#          path: "/Datacenters/parmstrong.ca/vm"
-#          guest_id: "rhel8_64Guest"
-#          hardware_version: "Default"
-#          memoryHotAddEnabled: true
-#          cpuHotAddEnabled: true
-#          add_cdrom: false
-#          boot_order:
-#            - "network"
-#            - "disk"
-#          scsi_controllers:
-#            - type: ParaVirtualSCSIController
-#              key: 1000
-#          volumes_attributes:
-#            0:
-#              thin: true
-#              name: "Hard disk"
-#              mode: "persistent"
-#              controller_key: 1000
-#              datastore: "SYN_VMS"
-#              size_gb: 100
-#          interfaces_attributes:
-#            0:
-#              type: "VirtualVmxnet3"
-#              network: "VM Network"
-#
-#  - name: "3-Large"
-#    updated_name: "SOE_Large"
-#    compute_attributes:
-#      - compute_resource: "VMware_Lab"
-#        vm_attrs:
-#          cpus: 4
-#          corespersocket: 2
-#          memory_mb: 8192
-#          cluster: "NUCLab"
-#          resource_pool: "Resources"
-#          path: "/Datacenters/parmstrong.ca/vm"
-#          guest_id: "rhel8_64Guest"
-#          hardware_version: "Default"
-#          memoryHotAddEnabled: true
-#          cpuHotAddEnabled: true
-#          add_cdrom: false
-#          boot_order:
-#            - "network"
-#            - "disk"
-#          scsi_controllers:
-#            - type: ParaVirtualSCSIController
-#              key: 1000
-#          volumes_attributes:
-#            0:
-#              thin: true
-#              name: "Hard disk"
-#              mode: "persistent"
-#              controller_key: 1000
-#              datastore: "SYN_VMS"
-#              size_gb: 100
-#          interfaces_attributes:
-#            0:
-#              type: "VirtualVmxnet3"
-#              network: "VM Network"
+  - name: "AWS_SOE_XLarge_Public"
+    compute_attributes:
+      - compute_resource: "EC2-{{ ec2_region }}"
+        vm_attrs:
+          flavor_id: "m4.4xlarge"
+          image_id: "{{ imagebuilder_ami }}"
+          interfaces_attributes:
+          managed_ip: "public"
+
+hostgroups_mandatory:
+  - name: "RHEL8base"
+    description: "RHEL 8 SOE base hostgroup"
+    activation_keys: "SOE_RHEL8"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    architecture: "x86_64"
+    compute_profile: "AWS_SOE_Medium"
+    compute_resource: "EC2-{{ ec2_region }}"
+    content_source: "{{ satellite_fqdn }}"
+    content_view: "SOE_RHEL8"
+    domain: "{{ satellite_domain }}"
+    lifecycle_environment: "Development"
+    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.8"
+    locations: "{{ satellite_initial_location }}"
+    organization: "{{ satellite_initial_organization }}"
+    openscap_capsule: "{{ satellite_fqdn }}"
+    operatingsystem: "RHEL 8.8"
+    ptable: "RHEL_Server_CIS1"
+    pxe_loader: "PXELinux BIOS"
+    realm: "{{ satellite_domain | upper }}"
+    root_pass: "{{ satellite_admin_password }}"
 
 discovery_rules_mandatory: []
 #  - name: "3nic_host"
