@@ -52,6 +52,8 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
           subnet_id: "{{ hostvars['localhost']['subnet_id'] }}"
+          security_group_ids:
+            - "{{ hostvars['localhost']['sg_id'] }}"
 
   - name: "AWS_SOE_Medium"
     compute_attributes:
@@ -61,9 +63,8 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
           subnet_id: "{{ hostvars['localhost']['subnet_id'] }}"
-          #security_group_ids:
-          #- sg-02360c4544717964a
-          #- sg-0055764dec79686ea
+          security_group_ids:
+            - "{{ hostvars['localhost']['sg_id'] }}"
 
   - name: "AWS_SOE_Large"
     compute_attributes:
@@ -73,6 +74,8 @@ compute_profiles_mandatory:
           image_id: "{{ imagebuilder_ami }}"
           managed_ip: "private"
           subnet_id: "{{ hostvars['localhost']['subnet_id'] }}"
+          security_group_ids:
+            - "{{ hostvars['localhost']['sg_id'] }}"
 
   - name: "AWS_SOE_XLarge"
     compute_attributes:
@@ -83,6 +86,8 @@ compute_profiles_mandatory:
           interfaces_attributes:
           managed_ip: "private"
           subnet_id: "{{ hostvars['localhost']['subnet_id'] }}"
+          security_group_ids:
+            - "{{ hostvars['localhost']['sg_id'] }}"
 
   - name: "AWS_SOE_XLarge_Public"
     compute_attributes:
@@ -93,6 +98,8 @@ compute_profiles_mandatory:
           interfaces_attributes:
           managed_ip: "public"
           subnet_id: "{{ hostvars['localhost']['subnet_id'] }}"
+          security_group_ids:
+            - "{{ hostvars['localhost']['sg_id'] }}"
 
 oss_mandatory:
   - name: "RedHat"

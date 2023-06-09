@@ -52,3 +52,4 @@
     idm_instance: '{{ idm_instance_info.instances | first }}'
     sat_instance: '{{ sat_instance_info.instances | first }}'
     subnet_id: '{{ ec2_vpc_subnet_id }}'
+    sg_id: '{{ create_sg.group_id }}'
