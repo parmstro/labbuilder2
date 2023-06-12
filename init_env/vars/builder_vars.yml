@@ -19,6 +19,8 @@ skip_imagebuilder_build: false
 
 image_definition_file: "request-base-image.json"
 imagebuilder_image_type: "vsphere"
+imagebuilder_include_filesystem: true
+
 # type             extension 
 # vsphere          vmdk
 # aws              ami
