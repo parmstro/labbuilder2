@@ -90,6 +90,7 @@
     - name: Expand EBS disks
       ansible.builtin.include_role:
         name: roles/expand_imagebuilder_rootvg
+      when: imagebuilder_include_filesystem
 
 - name: Configure Satellite storage
   hosts: sat_primary
@@ -102,3 +103,4 @@
     - name: "Configure satellite storage"
       ansible.builtin.include_role:
         name: roles/expand_satellite_storage
+      when: imagebuilder_include_filesystem
