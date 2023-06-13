@@ -63,7 +63,7 @@
 - name: Add aap host to inventory
   ansible.builtin.add_host:
     groups:
-      - 'aap'
+      - 'aap_controllers'
       - 'aws_nodes'
     hostname: aap
     ansible_ssh_host: '{{ aap_instance_info.instances[0].public_dns_name }}'

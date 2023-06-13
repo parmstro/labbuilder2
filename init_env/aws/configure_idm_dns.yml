@@ -51,7 +51,7 @@
         state: restarted
 
 - name: Generic setup for AAP and Hub - set up repos, time, and IPA register
-  hosts: aap:automation_hub
+  hosts: aap_controllers:automation_hub
   become: true
   gather_facts: true
   vars_files:
