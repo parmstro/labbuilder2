@@ -22,6 +22,7 @@
     ansible_user: '{{ aws_ansible_user | default("ec2-user") }}'
     ansible_remote_tmp: "{{ aws_remote_tmp | default('/home/ec2-user/.ansible/tmp') }}"
     short_hostname: 'idm'
+    fqdn: 'idm.{{ ipa_server_domain }}'
 
 - name: grab instance ids to tag each satellite
   amazon.aws.ec2_instance_info:
@@ -47,6 +48,7 @@
     #ansible_remote_tmp: '{{ aws_remote_tmp | default("/home/ec2-user/.ansible/tmp") }}'
     ansible_remote_tmp: "{{ aws_remote_tmp | default('/home/ec2-user/.ansible/tmp') }}"
     short_hostname: 'sat'
+    fqdn: 'sat.{{ ipa_server_domain }}'
 
 - name: grab instance ids to tag each aap
   amazon.aws.ec2_instance_info:
@@ -72,6 +74,7 @@
     #ansible_remote_tmp: '{{ aws_remote_tmp | default("/home/ec2-user/.ansible/tmp") }}'
     ansible_remote_tmp: "{{ aws_remote_tmp | default('/home/ec2-user/.ansible/tmp') }}"
     short_hostname: 'aap'
+    fqdn: 'aap.{{ ipa_server_domain }}'
 
 - name: grab instance ids to tag each hub
   amazon.aws.ec2_instance_info:
@@ -97,6 +100,7 @@
     #ansible_remote_tmp: '{{ aws_remote_tmp | default("/home/ec2-user/.ansible/tmp") }}'
     ansible_remote_tmp: "{{ aws_remote_tmp | default('/home/ec2-user/.ansible/tmp') }}"
     short_hostname: 'hub'
+    fqdn: 'hub.{{ ipa_server_domain }}'
 
 - name: Save facts for later
   ansible.builtin.set_fact:
