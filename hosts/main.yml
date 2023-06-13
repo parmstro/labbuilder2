@@ -13,6 +13,7 @@
     - vars/hub_vault.yml
     - vars/tang_vars.yml
     - vars/tang_vault.yml
+    - '~/rhisbuilder_vault.yml'
 
   tasks:
 
@@ -36,3 +37,4 @@
         - Phase_4
         - nbde
         - tang
+      when: build_tang

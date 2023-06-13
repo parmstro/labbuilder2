@@ -46,9 +46,11 @@
       loop:
         - "{{ idm_instance['public_ip_address'] }}"
         - "{{ sat_instance['public_ip_address'] }}"
+        - "{{ aap_instance['public_ip_address'] }}"
+        - "{{ hub_instance['public_ip_address'] }}"
 
 - name: Post-provisioning tasks
-  hosts: idm_primary:sat_primary
+  hosts: aws_nodes
   become: true
   gather_facts: true
   vars_files:
@@ -57,6 +59,8 @@
   vars:
     idm_info: "{{ hostvars['localhost']['idm_instance'] }}"
     sat_info: "{{ hostvars['localhost']['sat_instance'] }}"
+    aap_info: "{{ hostvars['localhost']['aap_instance'] }}"
+    hub_info: "{{ hostvars['localhost']['hub_instance'] }}"
   tasks:
     - name: Set facts
       ansible.builtin.set_fact:
@@ -82,6 +86,8 @@
 
           {{ idm_info.private_ip_address }}       idm.{{ ipa_server_domain }} idm
           {{ sat_info.private_ip_address }}       sat.{{ ipa_server_domain }} sat satellite
+          {{ aap_info.private_ip_address }}       aap.{{ ipa_server_domain }} aap tower
+          {{ hub_info.private_ip_address }}       hub.{{ ipa_server_domain }} hub
         dest: /etc/hosts
         owner: root
         group: root

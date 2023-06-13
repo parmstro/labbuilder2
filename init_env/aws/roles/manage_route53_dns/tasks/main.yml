@@ -1,5 +1,5 @@
 ---
-- name: Configure public DNS for idm and satellite
+- name: Configure public DNS for bootstrap server set
   community.aws.route53:
     state: present
     zone: "{{ workshop_dns_zone }}"
@@ -12,3 +12,5 @@
   loop:
     - '{{ idm_instance }}'
     - '{{ sat_instance }}'
+    - '{{ aap_instance }}'
+    - '{{ hub_instance }}'

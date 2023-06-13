@@ -5,6 +5,7 @@
   loop: "{{ controllers }}"
   loop_control:
     loop_var: host
+  when: not build_aap_from_image
 
 - name: "Wait for all controllers to be built"
   ansible.builtin.wait_for:
@@ -16,6 +17,7 @@
   loop: "{{ controllers | map(attribute='fqdn') | flatten | list }}"
   loop_control:
     loop_var: host
+  when: not build_aap_from_image
 
 - name: "Generate SSL certificates for the controllers"
   ansible.builtin.include_tasks: "{{ playbook_dir }}/common/tasks/generate_ssl_config.yml"
