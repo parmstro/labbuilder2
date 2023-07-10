@@ -3,8 +3,25 @@
 # It expects to be called in a loop with a loop variable cv
 
 - name: "Only publish if skip_publish is false"
-  when: skip_publish == false
+  when:
+    - skip_publish == false
   block:
+    - name: "Check on CV by name"
+      redhat.satellite.content_view_info:
+        username: "{{ satellite_admin_username }}"
+        password: "{{ satellite_admin_password }}"
+        server_url: "{{ satellite_url }}"
+        organization: "{{ satellite_initial_organization }}"
+        validate_certs: "{{ satellite_validate_certs }}"
+        name: "{{ cv.name }}"
+      register: cv_info
+      changed_when: false
+
+    - name: "CV has already been published, bail out"
+      ansible.builtin.fail:
+        msg: "{{ cv.name }} has already been published, skipping"
+      when: cv_info.content_view.last_published
+
     - name: "Publish the content view version"
       redhat.satellite.content_view_version:
         username: "{{ satellite_admin_username }}"
@@ -19,3 +36,7 @@
         state: "{{ cv.state | default(omit) }}" # underlying default is present
       async: "{{ cv_publish_timeout | default(14400) }}"
       poll: "{{ cv_publish_retry_interval | default(15) }}"
+  rescue:
+    - name: "Report CV already published"
+      ansible.builtin.debug:
+        msg: '{{ cv.name }} has already been published'

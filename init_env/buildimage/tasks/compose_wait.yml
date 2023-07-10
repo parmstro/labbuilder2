@@ -5,7 +5,7 @@
 - name: "Wait for console build to complete"
   block:
     - name: "Set or increment retry count"
-      set_fact:
+      ansible.builtin.set_fact:
         compose_retry_count: "{{ 0 if compose_retry_count is undefined else compose_retry_count|int + 1 }}"
 
     - name: "Watch for finished image compose"

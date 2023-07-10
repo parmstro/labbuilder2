@@ -12,6 +12,7 @@
 # When you deploy AAP, the AAP server gets a copy as well
 builder_key_file: "~/.ssh/builder.parmstrong.ca.key"
 
+build_tang: false
 
 # There needs to be a refactoring of variable names across the projects to eliminate duplication and reassignment like the below.
 satellite_admin_username: "{{ satellite_username_vault }}"

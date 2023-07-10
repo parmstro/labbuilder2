@@ -49,3 +49,15 @@
       ansible.builtin.service:
         name: NetworkManager
         state: restarted
+
+- name: Generic setup for AAP and Hub - set up repos, time, and IPA register
+  hosts: aap_controllers:automation_hub
+  become: true
+  gather_facts: true
+  vars_files:
+    - '~/rhisbuilder_vault.yml'
+  tasks:
+    - name: "Setup nodes"
+      ansible.builtin.include_role:
+        name: roles/generic_vm_setup
+      when: build_aap_from_image
