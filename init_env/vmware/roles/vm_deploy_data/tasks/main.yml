@@ -1,0 +1,54 @@
+---
+# This set of tasks sets up the cloud-init metadata for the instances
+
+# (c) 2023, Paul Armstrong <parmstro@redhat.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+- name: "Retrieve users public ssh key"
+  ansible.builtin.shell: "cat /home/ansible-runner/.ssh/id_rsa.pub"
+  register: output
+
+- name: Assign the variable"
+  ansible.builtin.set_fact:
+    cloudint_ssh_key: "{{ output.stdout_lines[0] }}"
+
+- name: "Template the metadata files"
+  ansible.builtin.template:
+    src: "metadata.j2"
+    dest: "{{ item.name }}_metadata.yml"
+  loop: "{{ instance_data }}"
+
+- name: "Template the userdata files"
+  ansible.builtin.template:
+    src: "userdata.j2"
+    dest: "{{ item.name }}_userdata.yml"
+  loop: "{{ instance_data }}"
+
+- name: "Generate the base64 metadata variables"
+  ansible.builtin.include_tasks: generate_base64_metadata.yml
+  loop: "{{ instance_data }}"
+
+- name: "Generate the base64 userdata variables"
+  ansible.builtin.include_tasks: generate_base64_userdata.yml
+  loop: "{{ instance_data }}"
+
+- debug: 
+    var: instance_data
+
+- name: "Clean-up the tmp files"
+  ansible.builtin.include_tasks: cleanup.yml
+  loop: "{{ instance_data }}"
+
+- fail:

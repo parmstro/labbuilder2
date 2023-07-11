@@ -1,0 +1,24 @@
+#cloud-config
+password: {{ baseimage_password }}
+ssh_pwauth: True
+users:
+  - default
+  - name: ansible-runner 
+    groups: users,wheel
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_pwauth: True
+    ssh_authorized_keys:
+      - {{ cloudint_ssh_key }}
+chpasswd:
+  list: |
+    root:{{ baseimage_password }}
+    cloud-user:{{ baseimage_password }}
+    ansible-runner:{{ baseimage_password }}
+  expire: False
+runcmd:
+  - nmcli conn mod "System eth0" ipv4.method {{ item.network_config_type }} ipv4.address {{ item.ip }}/{{ item.prefix }} ipv4.gateway {{ item.gateway }} ipv4.dns {{ item.dns }}
+  - hostnamectl set-hostname {{ item.fqdn }}
+  - nmcli conn up "System eth0"
+  - echo {{ item.fqdn }} {{ item.ip }} >> /etc/hosts
+  - echo {{ item.bootstrap_partner_fqdn }} {{ item.bootstrap_partner_ip }} >> /etc/hosts
+  - subscription-manager register --force --org={{ item.rhsm_org }} --activationkey={{ item.activationkey }}

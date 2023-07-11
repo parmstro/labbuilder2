@@ -1,0 +1,22 @@
+---
+
+- name: "Setup provisioner"
+  hosts: localhost
+  connection: local
+
+  tasks:
+
+    - name: "Create ansible-runners ssh keys"
+      community.crypto.openssh_keypair:
+        path: "~/.ssh/id_rsa"
+        size: "4096"
+        mode: 0600
+
+    - name: "Add the new key to authorize_keys"
+      ansible.posix.authorized_key:
+        user: "ansible-runner"
+        key: "{{ lookup('file', '/home/ansible-runner/.ssh/id_rsa.pub') }}"
+
+    - name: "Ensure we can ssh"
+      ansible.builtin.shell: "ssh localhost 'whoami'"
+

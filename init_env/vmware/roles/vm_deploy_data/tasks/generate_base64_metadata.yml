@@ -1,0 +1,25 @@
+---
+# This set of tasks generates base64 encoded data variables for the instances
+
+# (c) 2023, Paul Armstrong <parmstro@redhat.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+- name: "Capture the output of the encoding process"
+  ansible.builtin.shell: gzip -c9 < {{ item.name }}_metadata.yml | base64
+  register: result
+
+- name: "Assign it to the variable"
+  ansible.builtin.set_fact: 
+    instance_data: "{{ instance_data | rejectattr('name', 'equalto', item.name) | list + [ item | combine({ 'cloud_init_metadata': result.stdout })] }}" 
