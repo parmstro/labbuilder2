@@ -1,0 +1,27 @@
+# Playbook to rotate the ansible keys for the  
+- name:  generate the ssh keys for a particular organization
+  hosts: localhost
+  tasks:
+    - name: Generate an OpenSSH Keypair with the default values 
+      community.crypto.openssh_keypair:
+        path: 'nopc_id_ssh_rsa'
+        force: true
+
+- name: rotate the ssh keys for a particular organization
+  hosts: dev
+  tasks:
+       
+      - name: This copies the public key to my remote machine / any machine outside of the execution env
+        ansible.builtin.copy:
+          src: 'nopc_id_ssh_rsa'
+          dest: "/home/dejain/nopc_id_rsa"
+        
+- name: Set the authorized key to a different location 
+  hosts: jumphost
+  tasks:
+    - name: Set the authorized key in alternate location 
+      ansible.posix.authorized_key:
+        user: nopc
+        state: present
+        key: "{{ lookup('file', 'nopc_id_ssh_rsa.pub') }}"
+      register: otpt1
