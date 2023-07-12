@@ -6,8 +6,8 @@
   gather_facts: false
   vars_files:
     - ../vars/builder_vars.yml
-    - ../vars/builder_vault.yml
-    - ~/rhisbuilder_vault.yml
+    # - ../vars/builder_vault.yml
+    - "~/rhisbuilder_vault.yml"
 
   tasks:
     - name: "Get the imagebuilder image"

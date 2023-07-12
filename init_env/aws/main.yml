@@ -39,7 +39,7 @@
         sat_instance: '{{ sat_instance_info.instances | first }}'
 
     - name: Configure public DNS for idm and satellite
-      community.aws.route53:
+      amazon.aws.route53:
         state: present
         zone: "{{ workshop_dns_zone }}"
         record: "{{ item.tags.short_name }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"

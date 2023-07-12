@@ -9,6 +9,7 @@ collections:
 - ansible.utils
 - azure.azcollection
 - community.general
+- vmware.vmware_rest
 - containers.podman
 - redhat_cop.controller_configuration
 - redhat.rhel_idm

@@ -17,4 +17,3 @@
   loop: "{{ host.container_image_list }}"
   loop_control:
     loop_var: image
-
