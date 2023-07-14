@@ -7,7 +7,6 @@
   gather_facts: true
   vars_files:
     - ../vars/builder_vault.yml
-    - ../vars/builder_vars.yml
     - '~/rhisbuilder_vault.yml'
   tasks:
 
