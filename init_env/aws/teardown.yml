@@ -48,6 +48,8 @@
       loop:
         - 'idm'
         - 'sat'
+        - 'aap'
+        - 'hub'
 
     - name: Remove workshop local files
       file:

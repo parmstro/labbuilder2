@@ -172,7 +172,7 @@
     - tags_optional
     - tags_provisioning_config
     - tags_prov_templates
-    
+
 - import_tasks: "{{ role_path }}/tasks/configure_mandatory_oss.yml"
   tags:
     - tags_mandatory

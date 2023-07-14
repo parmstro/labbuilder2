@@ -38,7 +38,8 @@
       target_name: "{{ target.discovered_name }}"
 
   when: compute_resource == "Baremetal" and mac == "ff:ff:ff:ff:ff:ff"
-  delegate_to: localhost
+  #delegate_to: localhost
+  connection: local
 
 - name: "Deploy the host"
   redhat.satellite.host:
@@ -78,7 +79,8 @@
       Accept: :application/json,version=2
   register: restart_response
   when: compute_resource == "Baremetal"
-  delegate_to: localhost
+  #delegate_to: localhost
+  connection: local
 
 - debug:
     var: restart_response
@@ -98,7 +100,8 @@
       Accept: :application/json,version=2
   register: remove_response
   when: compute_resource == "Baremetal"
-  delegate_to: localhost
+  #delegate_to: localhost
+  connection: local
 
 - debug:
     var: remove_response

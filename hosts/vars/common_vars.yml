@@ -12,6 +12,7 @@
 # When you deploy AAP, the AAP server gets a copy as well
 builder_key_file: "~/.ssh/builder.parmstrong.ca.key"
 
+build_tang: false
 
 # There needs to be a refactoring of variable names across the projects to eliminate duplication and reassignment like the below.
 satellite_admin_username: "{{ satellite_username_vault }}"
@@ -47,7 +48,7 @@ ipa_admin_password: "{{ ipa_admin_password_vault }}"
 # hostlist:
 #  - fqdn: "controller.example.ca"
 #    hostgroup: "RHEL8base"
-#    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.7"
+#    kickstart_repository: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.8"
 #    compute_resource: "{{ default_compute_resource }}"
 #    compute_profile: "{{ default_compute_profile }}"
 #    mac: "{{ default_vm_mac }}"

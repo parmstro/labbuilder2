@@ -3,8 +3,8 @@
 repository_ids:
   - rhel-8-for-x86_64-baseos-rpms
   - rhel-8-for-x86_64-appstream-rpms
-  - satellite-6.12-for-rhel-8-x86_64-rpms
-  - satellite-maintenance-6.12-for-rhel-8-x86_64-rpms
+  - satellite-6.13-for-rhel-8-x86_64-rpms
+  - satellite-maintenance-6.13-for-rhel-8-x86_64-rpms
 
 sat_firewalld_zone: "public"
 sat_firewalld_services: 
