@@ -19,6 +19,6 @@ runcmd:
   - nmcli conn mod "System eth0" ipv4.method {{ item.network_config_type }} ipv4.address {{ item.ip }}/{{ item.prefix }} ipv4.gateway {{ item.gateway }} ipv4.dns {{ item.dns }}
   - hostnamectl set-hostname {{ item.fqdn }}
   - nmcli conn up "System eth0"
-  - echo {{ item.fqdn }} {{ item.ip }} >> /etc/hosts
-  - echo {{ item.bootstrap_partner_fqdn }} {{ item.bootstrap_partner_ip }} >> /etc/hosts
+  - echo {{ item.ip }} {{ item.fqdn }} >> /etc/hosts
+  - echo {{ item.bootstrap_partner_ip }} {{ item.bootstrap_partner_fqdn }} >> /etc/hosts
   - subscription-manager register --force --org={{ item.rhsm_org }} --activationkey={{ item.activationkey }}
