@@ -6,6 +6,16 @@
 - name: "Retrieve an access token"
   ansible.builtin.include_tasks: retrieve_composer_access_token.yml
 
+- name: "Setting imagebuilder_image_type to vmware bootstrap target"
+  ansible.builtin.set_fact: 
+    imagebuilder_image_type: "vsphere"
+  when: rhisbuilder_bootstrap_target == "vmware"
+
+- name: "Setting imagebuilder_image_type to aws bootstrap target"
+  ansible.builtin.set_fact: 
+    imagebuilder_image_type: "aws"
+  when: rhisbuilder_bootstrap_target == "aws"
+
 - name: "Create the build configuration from template"
   ansible.builtin.template:
     src: "template.request-base-image.json.j2"
