@@ -24,6 +24,7 @@
   hosts: build_control
   become: true
   connection: local
+  gather_facts: true
 
   tasks:
 
@@ -49,6 +50,21 @@
         src: /root/govc_Linux_x86_64.tar.gz
         dest: /usr/bin
         remote_src: true       #because we are not root
+
+    - name: "Ensure that provisioner can resolve itself"
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        search_string: "{{ ansible_default_ipv4.address }}"
+        line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: "Ensure we can reach the provisioner"
+      ansible.builtin.wait_for:
+        host: "{{ ansible_fqdn }}"
+        port: 22
+        timeout: 10
 
     - name: "Include the vmware variables"
       ansible.builtin.include_vars:
