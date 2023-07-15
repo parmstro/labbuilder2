@@ -1,12 +1,13 @@
 ---
 - name: "Pre-initialization the environment - setting and verifying config"
-  hosts: localhost
+  hosts: build_control
   connection: local
   become: false
   gather_facts: false
   vars_files:
-    - "./vars/init_env_vars.yml"
     - "~/rhisbuilder_vault.yml"
+    - "../vars/init_env_vars.yml"
+
   tasks:
     - name: "Write ansible.cfg"
       ansible.builtin.template:
@@ -22,6 +23,7 @@
             cmd: "ansible-galaxy collection install {{ '--force' if init_env_collection_install_force }} -p '{{ ansible_cfg_patch_collection_dir }}' '{{ item }}'"
             chdir: ".."
           loop: '{{ special_collection_installs }}'
+          when: special_collection_installs is defined
 
         - name: "Install requirements file based collections {{ 'forcefully' if init_env_collection_install_force }}"
           ansible.builtin.command:
@@ -36,6 +38,3 @@
         fail_msg: "{{ rhisbuilder_bootstrap_target }} is not a supported bootstrap target"
         success_msg: "Assertion passed: bootstrapping on {{ rhisbuilder_bootstrap_target }}"
 
-    - name: "Set our target bootstrap platform"
-      ansible.builtin.set_fact:
-        bootstrap_target: "{{ rhisbuilder_bootstrap_target }}"
