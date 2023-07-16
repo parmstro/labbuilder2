@@ -10,7 +10,7 @@
 # it is the ssh key that your builder uses to access hosts. 
 # The public key is distributed by the Satellite
 # When you deploy AAP, the AAP server gets a copy as well
-builder_key_file: "~/.ssh/builder.parmstrong.ca.key"
+builder_key_file: "~/.ssh/id_rsa.key"
 
 build_tang: false
 
