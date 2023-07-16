@@ -12,5 +12,9 @@
 
   tasks:
 
-  - name: "Test the specified task"
-    ansible.builtin.include_tasks: roles/satellite_post/tasks/{{ test_task_name }}.yml
+#  - name: "run the test task"
+#    ansible.builtin.include_tasks: roles/satellite_post/tasks/configure_mandatory_compute_profiles.yml
+
+  - name: "Run a role test "
+    ansible.builtin.include_role:
+      name: "{{ test_role_name }}"
