@@ -50,7 +50,7 @@ instance_data:
     activationkey: "{{ sat_activationkey_vault }}"
     rhsm_org: "{{ sat_rhsm_org_vault }}"
     rootdisk_size_gb: "{{ sat_rootdisk_size_gb }}"
-    cpu_cores_per_socket: 1
+    cpu_cores_per_socket: 2
     cpu_sockets: 2
     memory_mb: 24576
     hot_cpu_add: true
