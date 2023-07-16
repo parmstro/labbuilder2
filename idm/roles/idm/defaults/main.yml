@@ -11,7 +11,7 @@ async_delay: 15
 
 # idm configuration
 ipa_admin_password: "{{ ipa_admin_password_vault }}"
-ipaserver_ip_addresses: "192.168.254.5"
+ipaserver_ip_addresses: "192.168.140.5"
 ipa_server_domain: "example.ca"
 ipa_server_realm: "EXAMPLE.CA"
 ipaserver_hostname: "idm.example.ca"
