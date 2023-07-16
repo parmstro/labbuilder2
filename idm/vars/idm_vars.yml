@@ -44,7 +44,7 @@ makehomedir: true
 sshtrustdns: true
 default_password: "redhat1!"
 
-# required in our lab as vcenter is owned by parmstrong.ca
+# example of forwarding to your production domain
 dns_forward_zones:
   - dns_forward_zone: "parmstrong.ca"
     dns_forward_zone_servers:
