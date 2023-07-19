@@ -41,9 +41,6 @@
   ansible.builtin.include_tasks: generate_base64_userdata.yml
   loop: "{{ instance_data }}"
 
-- debug: 
-    var: instance_data
-
 - name: "Clean-up the tmp files"
   ansible.builtin.include_tasks: cleanup.yml
   loop: "{{ instance_data }}"
