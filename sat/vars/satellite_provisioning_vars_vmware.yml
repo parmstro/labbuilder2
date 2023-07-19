@@ -3,15 +3,15 @@ subnets_mandatory:
   - name: "Public"
     description: "Front side for client apps "
     network_type: "IPv4"
-    network: 192.168.254.0
+    network: 192.168.140.0
     prefix: 22
     mask: 255.255.252.0
-    gateway: 192.168.252.1
-    dns_primary: 192.168.254.5
-    dns_secondary: 192.168.252.5
+    gateway: 192.168.140.1
+    dns_primary: 192.168.140.5
+    dns_secondary: 192.168.140.5
     ipam: "Internal DB"
-    from_ip: 192.168.254.101
-    to_ip: 192.168.254.254
+    from_ip: 192.168.140.101
+    to_ip: 192.168.140.254
     boot_mode: "Static"
     discovery_capsule: "{{ satellite_fqdn }}"
     tftp_capsule: "{{ satellite_fqdn }}"
@@ -37,8 +37,8 @@ compute_resources_mandatory:
     organizations: "{{ satellite_initial_organization }}"
     provider_params:
       caching_enabled: true
-      datacenter: "parmstrong.ca"
-      url: "192.168.252.30"
+      datacenter: "example.ca"
+      url: "192.168.140.30"
       user: "{{ vcenter_service_username }}"
       password: "{{ vcenter_service_password }}"
 
@@ -55,7 +55,7 @@ virtwho_configs_mandatory:
   - foreman_virt_who_configure_config:
       name: "VMware"
       hypervisor_type: "esx"
-      hypervisor_server: "192.168.252.30"
+      hypervisor_server: "192.168.140.30"
       hypervisor_username: "{{ vcenter_virtwho_username }}"
       hypervisor_password: "{{ vcenter_virtwho_password }}"
       hypervisor_id: "hostname"
@@ -66,7 +66,7 @@ virtwho_configs_mandatory:
 
 # compute_profiles
 compute_profiles_mandatory:
-  - name: "1-Small"
+  - name: "SOE_Small"
     updated_name: "SOE_Small"
     compute_attributes:
       - compute_resource: "VMware_Lab"
@@ -76,7 +76,7 @@ compute_profiles_mandatory:
           memory_mb: 4096
           cluster: "NUCLab"
           resource_pool: "Resources"
-          path: "/Datacenters/parmstrong.ca/vm"
+          path: "/Datacenters/example.ca/vm"
           guest_id: "rhel8_64Guest"
           hardware_version: "Default"
           memoryHotAddEnabled: true
@@ -101,7 +101,7 @@ compute_profiles_mandatory:
               type: "VirtualVmxnet3"
               network: "VM Network"
 
-  - name: "2-Medium"
+  - name: "SOE_Medium"
     updated_name: "SOE_Medium"
     compute_attributes:
       - compute_resource: "VMware_Lab"
@@ -111,7 +111,7 @@ compute_profiles_mandatory:
           memory_mb: 8192
           cluster: "NUCLab"
           resource_pool: "Resources"
-          path: "/Datacenters/parmstrong.ca/vm"
+          path: "/Datacenters/example.ca/vm"
           guest_id: "rhel8_64Guest"
           hardware_version: "Default"
           memoryHotAddEnabled: true
@@ -136,7 +136,7 @@ compute_profiles_mandatory:
               type: "VirtualVmxnet3"
               network: "VM Network"
 
-  - name: "3-Large"
+  - name: "SOE_Large"
     updated_name: "SOE_Large"
     compute_attributes:
       - compute_resource: "VMware_Lab"
@@ -146,7 +146,7 @@ compute_profiles_mandatory:
           memory_mb: 8192
           cluster: "NUCLab"
           resource_pool: "Resources"
-          path: "/Datacenters/parmstrong.ca/vm"
+          path: "/Datacenters/example.ca/vm"
           guest_id: "rhel8_64Guest"
           hardware_version: "Default"
           memoryHotAddEnabled: true
@@ -208,11 +208,11 @@ hostgroups_optional:
     content_view: "SOE_RHEL9"
     domain: "{{ satellite_domain }}"
     lifecycle_environment: "Development"
-    kickstart_repository: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.1"
+    kickstart_repository: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.2"
     locations: "{{ satellite_initial_location }}"
     organization: "{{ satellite_initial_organization }}"
     openscap_capsule: "{{ satellite_fqdn }}"
-    operatingsystem: "RHEL 9.1"
+    operatingsystem: "RHEL 9.2"
     ptable: "RHEL_Server_CIS1"
     pxe_loader: "PXELinux BIOS"
     realm: "{{ satellite_domain | upper }}"
@@ -238,7 +238,7 @@ hostgroups_optional:
     organization: "{{ satellite_initial_organization }}"
 
   - name: "RHEL8_JBoss"
-    parent: "RHEL8base/RHEL_8_CIS2"
+    parent: "RHEL8base/RHEL8_CIS2"
     description: "RHEL 8 SOE CIS2 for JBoss"
     content_view: "SOE_JBoss"
     ansible_roles:
