@@ -9,7 +9,7 @@
     guest_cloud_init_metadata: "{{ item.cloud_init_metadata }}"
     guest_cloud_init_userdata: "{{ item.cloud_init_userdata }}"
     guest_cpu_cores_per_socket: "{{item.cpu_cores_per_socket }}"
-    guest_cpu_sockets: "{{ item.cpu_sockets }}"
+    guest_vcpu_total: "{{ item.vcpu_total }}"
     guest_memory_mb: "{{ item.memory_mb }}"
     guest_network_device_type: "{{ item.network_device_type }}"
     guest_network_config_type: "{{ item.network_config_type }}"
@@ -19,7 +19,7 @@
   tags:
     - create_instance
 
-- name: "Add additional disks to the server"
+- name: "Add additional disks to the server for server {{ item.fqdn }}"
   ansible.builtin.include_tasks: add_disk_to_guest.yml
   vars:
     guest_ip: "{{ item.ip }}"

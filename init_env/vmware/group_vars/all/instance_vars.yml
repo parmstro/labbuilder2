@@ -26,7 +26,7 @@ instance_data:
     rhsm_org: "{{ idm_rhsm_org_vault }}"
     rootdisk_size_gb: "150"
     cpu_cores_per_socket: 1
-    cpu_sockets: 1
+    vcpu_total: 1  #must be a multiple of cpu_cores_per_socket e.g. for 2 sockets with 2 cores each set to: 4
     memory_mb: 8192
     hot_cpu_add: true
     hot_memory_add: true
@@ -51,8 +51,8 @@ instance_data:
     rhsm_org: "{{ sat_rhsm_org_vault }}"
     rootdisk_size_gb: "{{ sat_rootdisk_size_gb }}"
     cpu_cores_per_socket: 2
-    cpu_sockets: 2
-    memory_mb: 24576
+    vcpu_total: 4 #must be a multiple of cpu_cores_per_socket e.g. for 2 sockets with 2 cores each set to: 4
+    memory_mb: 30720
     hot_cpu_add: true
     hot_memory_add: true
     additional_disks:
