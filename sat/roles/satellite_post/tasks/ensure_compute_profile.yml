@@ -10,3 +10,6 @@
     compute_attributes: "{{ cpr.compute_attributes | default(omit) }}"
 
 # you can change the name of the compute profile by simply passing name and updated_name
+- name: "Wait on API background refresh"
+  ansible.builtin.wait_for:
+    timeout: 2
