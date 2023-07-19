@@ -1,5 +1,5 @@
 ---
-- name: "Add disk to the vm - powered off"
+- name: "Add additional disk to the vm  {{ guest_fqdn }} - powered off"
   community.vmware.vmware_guest_disk:
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
