@@ -2,7 +2,6 @@
 # VMware specific initialization begins here
 - name: "init_vmware"
   hosts: build_control
-  remote_user: ansiblerunner
   become: true
 
   tasks:

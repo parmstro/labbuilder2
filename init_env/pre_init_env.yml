@@ -4,9 +4,10 @@
   connection: local
   become: false
   gather_facts: false
+  
   vars_files:
-    - "~/rhisbuilder_vault.yml"
     - "../vars/init_env_vars.yml"
+    - "~/rhisbuilder_vault.yml"
 
   tasks:
     - name: "Write ansible.cfg"
