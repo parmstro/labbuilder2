@@ -38,3 +38,10 @@
     - item.additional_disks | length > 0
   tags:
     - additional_disks
+
+- name: "Add server {{ item.fqdn }} to inventory groups"
+  ansible.builtin.include_tasks: add_bootstrap_host_to_inventory.yml
+  vars:
+    guest_fqdn: "{{ item.fqdn }}"
+    inventory_groups: "{{ item.inventory_groups }}"
+
