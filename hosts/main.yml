@@ -3,24 +3,27 @@
   ansible.builtin.import_playbook: ../init_env/aws/fix_aws_dns.yml
   when: rhisbuilder_bootstrap_target == 'aws'
 
+- name: "Collect hosts and add to inventory"
+  ansible.builtin.import_playbook: "collect_hosts.yml"
+  when: rhisbuilder_bootstrap_target == 'vmware'
+
 - name: "Build aap"
   hosts: aap
   remote_user: ansiblerunner
   become: true
   gather_facts: true
   vars_files:
-    - vars/common_vars.yml
-    - vars/common_vault.yml
-    - vars/controller_vars.yml
-    - vars/controller_vault.yml
-    - '~/rhisbuilder_vault.yml'
+    - "vars/common_vars.yml"
+    - "vars/controller_vars.yml"
+    - "~/rhisbuilder_vault.yml"
+  
   tasks:
     - name: "Build the ansible controllers"
       ansible.builtin.include_tasks: controller/main.yml
       tags:
-        - Phase_4
-        - aap
-        - controllers
+        - tags_phase_4
+        - tags_aap
+        - tags_controllers
 
 - name: "Build automation hub"
   hosts: automation_hub
@@ -28,18 +31,17 @@
   become: true
   gather_facts: true
   vars_files:
-    - vars/common_vars.yml
-    - vars/common_vault.yml
-    - vars/hub_vars.yml
-    - vars/hub_vault.yml
-    - '~/rhisbuilder_vault.yml'
+    - "vars/common_vars.yml"
+    - "vars/hub_vars.yml"
+    - "~/rhisbuilder_vault.yml"
+  
   tasks:
     - name: "Build the ansible automation hubs"
       ansible.builtin.include_tasks: hub/main.yml
       tags:
-        - Phase_4
-        - aap
-        - hubs
+        - tags_phase_4
+        - tags_aap
+        - tags_hubs
 
 - name: "Build tang server(s) if needed"
   hosts: localhost
@@ -48,17 +50,16 @@
   become: true
   gather_facts: true
   vars_files:
-    - vars/common_vars.yml
-    - vars/common_vault.yml
-    - vars/tang_vars.yml
-    - vars/tang_vault.yml
-    - '~/rhisbuilder_vault.yml'
+    - "vars/common_vars.yml"
+    - "vars/tang_vars.yml"
+    - "~/rhisbuilder_vault.yml"
+
   tasks:
     - name: "Build the container servers for tang and others"
       ansible.builtin.include_tasks: tang/main.yml
       tags:
-        - Phase_4
-        - nbde
-        - tang
-      when: build_tang
+        - tags_phase_4
+        - tags_nbde
+        - tags_tang
+
 
