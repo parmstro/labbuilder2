@@ -7,7 +7,9 @@ passfile: "{{ ssl_certs_dir }}/passfile"
 crt_service_type: "HTTP"
 crt_force_regen: true
 
-ssl_rsa_key_pass: "{{ ssl_rsa_key_pass_vault }}"
+active_controller: "{{ controllers[0].fqdn }}"
+
+ssl_rsa_key_pass: "{{ aap_controller_ssl_rsa_key_pass_vault }}"
 ssl_private_key_cipher: "aes256"
 ssl_private_key_size: 4096 
 ssl_public_key_format: "PEM"
@@ -23,7 +25,7 @@ ipa_server_ca_path: "/etc/ipa/ca.crt"
 aap_manifest_name: "rhis_app_manifest"
 aap_manifest_destiny: "/tmp/rhis_aap_manifest.zip"
 aap_manifest_portal_url: "https://subscription.rhsm.redhat.com"
-aap_manifest_validate_certs: true 
+aap_manifest_validate_certs: false 
 aap_manifest_cdn_username: "{{ aap_cdn_username_vault }}"
 aap_manifest_cdn_password: "{{ aap_cdn_password_vault }}"
 aap_manifest_account: "{{ aap_cdn_account_number_vault }}"
@@ -54,6 +56,9 @@ aap_settings:
 
 controllers:
   - fqdn: "controller1.example.ca"
+    inventory_groups:
+      - aap_controller
+      - vmware_host
     organization: "{{ satellite_initial_organization }}"
     location: "{{ satellite_initial_location }}"
     hostgroup: "RHEL8base"
