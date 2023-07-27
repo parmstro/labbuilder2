@@ -1,12 +1,14 @@
 ---
+# These plays set up your provisioner node to run rhis_builder
 
 - name: "Setup provisioner"
   hosts: build_control
   connection: local
-
+  gather_facts: true
+  
   tasks:
 
-    - name: "Create ansiblerunners ssh keys"
+    - name: "Create ssh keys"
       community.crypto.openssh_keypair:
         path: "~/.ssh/id_rsa"
         size: "4096"
@@ -14,11 +16,14 @@
 
     - name: "Add the new key to authorize_keys"
       ansible.posix.authorized_key:
-        user: "ansiblerunner"
-        key: "{{ lookup('file', '/home/ansiblerunner/.ssh/id_rsa.pub') }}"
+        user: "{{ ansible_user_id }}"
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
     - name: "Ensure we can ssh"
       ansible.builtin.shell: "ssh localhost 'whoami'"
+      changed_when: ansible_user_id in result.stdout
+      register: result
+
 
 - name: "Setup root configuration"
   hosts: build_control
