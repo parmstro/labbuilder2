@@ -18,5 +18,4 @@
   ansible.builtin.copy:
     src: /tmp/aap_inventory
     dest: "{{ aap_installer_inventory_dir }}/inventory"
-  delegate_to: "{{ hubs[0].fqdn }}"
-  
+    remote_src: true
