@@ -33,6 +33,7 @@
 
 - name: "Determine if host already exists"
   ansible.builtin.include_tasks: check_for_host.yml
+  
 
 - debug:
     var: host_exists

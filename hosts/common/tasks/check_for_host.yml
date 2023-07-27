@@ -5,6 +5,10 @@
   - ansible.builtin.set_fact:
       host_exists: false
   
+  - name: "Can we resolve the host"
+    assert:
+      that: "{{ host.fqdn is ansible.utils.resolvable }}"
+
   - name: "Can we ssh to host?"
     ansible.builtin.wait_for:
         timeout: 60
