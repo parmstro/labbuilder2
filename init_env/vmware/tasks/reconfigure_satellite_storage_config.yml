@@ -64,5 +64,5 @@
       tags:
         - build
   
-  delegate_to: "{{ fqdn }}"
-  become: true
+  #delegate_to: "{{ fqdn }}"
+  #become: true

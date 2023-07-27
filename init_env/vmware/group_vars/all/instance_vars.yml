@@ -7,6 +7,8 @@ baseimage_password: "{{ baseimage_password_vault }}"
 
 instance_data:
   - name: "idm_primary"
+    inventory_groups: 
+      - idm_primary
     instance_id: "idm"
     local_hostname: "idm"
     iface: "eth0"
@@ -32,8 +34,11 @@ instance_data:
     hot_memory_add: true
 
   - name: "sat_primary"
+    inventory_groups: 
+      - sat_primary
     instance_id: "sat"
     local_hostname: "sat"
+    remoteuser: "{{ ansible_user_id }}"
     iface: "eth0"
     network_config_type: "static"
     network_device_type: "vmxnet3"

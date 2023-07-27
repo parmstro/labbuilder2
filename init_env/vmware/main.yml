@@ -1,9 +1,11 @@
 ---
 # VMware specific initialization begins here
+
 - name: "init_vmware"
   hosts: build_control
-  become: true
-  gather_facts: false
+  connection: local
+  become: false
+  gather_facts: true
 
   vars_files:
     - "../vars/builder_vars.yml"
@@ -33,16 +35,12 @@
         tags:
           - vm_deploy_data_role
 
-      - name: "Reconfigure the satellite primary volumes"
-        ansible.builtin.include_tasks: "tasks/reconfigure_satellite_storage_config.yml"
-        vars:
-          fqdn: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
-          pv_list: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.pv_list') | first }}"
-          var_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.var_size_gb') | first }}"
-          var_log_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.var_log_size_gb') | first }}"
-          var_log_audit_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.var_log_audit_size_gb') | first }}"
-          var_tmp_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.var_tmp_size_gb') | first }}"
-          tmp_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.tmp_size_gb') | first }}"
-          home_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.home_size_gb') | first }}"
-        tags:
-          - reconfigure_satellite_volumes
+      - name: "Set the remote user for satellite storage config"
+        ansible.builtin.set_fact:
+          sat_primary: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
+
+- name: "Initialize the environment on satellite primary"
+  ansible.builtin.import_playbook: "satellite_storage.yml"
+
+# - name: "Reconfigure all systems for IdM DNS"
+#  ansible.builtin.import_playbook: "configure_for_idm_dns.yml"
