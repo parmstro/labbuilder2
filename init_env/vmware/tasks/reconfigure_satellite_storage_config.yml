@@ -65,4 +65,5 @@
         - build
   
   delegate_to: "{{ fqdn }}"
+  delegate_facts: true
   become: true

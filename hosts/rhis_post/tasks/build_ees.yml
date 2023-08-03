@@ -18,8 +18,8 @@
   delegate_to: "{{ hubs[0].fqdn }}"
 
 - name: "Build the execution environments"
-  ansible.builtin.include_tasks: "ensure_ee.yml"
-  loop: "{{ rhis_ees }}"
+  ansible.builtin.include_tasks: "ensure_aap_ee.yml"
+  loop: "{{ exec_envs }}"
   loop_control:
     loop_var: ee
   

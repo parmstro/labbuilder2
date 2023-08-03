@@ -162,6 +162,11 @@ repos_mandatory:
     product: "Red Hat Enterprise Linux for x86_64"
     releasever: "8.8"
 
+  # Needed for the JBoss server pipeline
+  - name: "JBoss Enterprise Application Platform 7.4 (RHEL 8) (RPMs)"
+    product: "JBoss Enterprise Application Platform"
+
+
 repos_optional:
   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"
     product: "Red Hat Enterprise Linux Server"
@@ -237,10 +242,6 @@ repos_optional:
   - name: "Red Hat Satellite Client 6 for RHEL 9 x86_64 (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
 
-# Needed for the JBoss server pipeline
-  - name: "JBoss Enterprise Application Platform 7.4 (RHEL 8) (RPMs)"
-    product: "JBoss Enterprise Application Platform"
-
   - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs)"
     product: "Red Hat Enterprise Linux High Availability for x86_64"
     releasever: "8"
@@ -250,6 +251,26 @@ repos_optional:
     releasever: "9"
 
 custom_products:
+  - name: "EPEL8"
+    description: "Extra Packages for Enterprise Linux 8"
+    org: "{{ satellite_initial_organization }}"
+    label: "EPEL8"
+    repositories:
+    - name: "EPEL8"
+      upstream_name: ""
+      content_type: "yum"
+      url: "https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/"
+      username: ""
+      password: ""
+      download_policy: "on_demand"
+    - name: "EPEL8_Streams"
+      upstream_name: ""
+      content_type: "yum"
+      url: "https://dl.fedoraproject.org/pub/epel/8/Modular/x86_64/"
+      username: ""
+      password: ""
+      download_policy: "on_demand"
+
   - name: "CentOS Streams"
     desc: "CentOS Streams from Red Hat"
     org: "{{ satellite_initial_organization }}"
@@ -372,10 +393,14 @@ product_plan_optional:
     plan: "nightly_os"
     organization: "{{ satellite_initial_organization }}"
 
-  - name: "CentOS Streams"
+  - name: "EPEL8"
     plan: "nightly_third_party"
     organization: "{{ satellite_initial_organization }}"
 
+  - name: "CentOS Streams"
+    plan: "nightly_third_party"
+    organization: "{{ satellite_initial_organization }}"
+  
   - name: "Microsoft SQL Server for Linux 2022 for RHEL 8"
     plan: "nightly_third_party"
     organization: "{{ satellite_initial_organization }}"
@@ -389,6 +414,15 @@ cvs_mandatory:
     repositories:
     - name: "Red Hat Ansible Automation Platform 2.3 for RHEL 8 x86_64 Files"
       product: "Red Hat Ansible Automation Platform"
+    environments:
+    - "Library"
+
+  - name: "EPEL8"
+    desc: "Extra Packages for Enterprise Linux 8"
+    org: "{{ satellite_initial_organization }}"
+    repositories:
+    - name: "EPEL8"
+      product: "EPEL8"
     environments:
     - "Library"
 
@@ -783,6 +817,18 @@ ccvs_mandatory:
     - "Development"
     - "Qualification"
 
+  - name: "SOE_RHEL8EPEL"
+    desc: "SOE for RHEL8 with EPEL"
+    org: "{{ satellite_initial_organization }}"
+    components:
+    - content_view: "SOE_RHEL8"
+      latest: true
+    - content_view: "EPEL8"
+      latest: true
+    environments:
+    - "Library"
+    - "Development"
+    - "Qualification"
 
 ccvs_optional:
   - name: "LEAPP_7_2_8"

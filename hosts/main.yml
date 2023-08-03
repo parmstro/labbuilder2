@@ -62,4 +62,21 @@
         - tags_nbde
         - tags_tang
 
+- name: "Post deploy configuration - hosts"
+  hosts: build_control
+  connection: local
+  remote_user: ansiblerunner
+  become: true
+  gather_facts: true
+  vars_files:
+    - "vars/common_vars.yml"
+    - "vars/rhis_post.yml"
+    - "~/rhisbuilder_vault.yml"
+
+  tasks:
+    - name: "Run post provisioning tasks"
+      ansible.builtin.include_tasks: "rhis_post/main.yml"
+      tags:
+        - tags_phase_4
+        - tags_rhis_post
 

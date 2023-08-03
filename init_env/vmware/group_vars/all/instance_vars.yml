@@ -7,6 +7,8 @@ baseimage_password: "{{ baseimage_password_vault }}"
 
 instance_data:
   - name: "idm_primary"
+    inventory_groups:
+      - idm_primary
     instance_id: "idm"
     local_hostname: "idm"
     iface: "eth0"
@@ -32,6 +34,8 @@ instance_data:
     hot_memory_add: true
 
   - name: "sat_primary"
+    inventory_groups:
+      - idm_primary
     instance_id: "sat"
     local_hostname: "sat"
     iface: "eth0"

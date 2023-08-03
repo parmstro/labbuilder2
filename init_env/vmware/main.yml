@@ -35,6 +35,12 @@
 
       - name: "Reconfigure the satellite primary volumes"
         ansible.builtin.include_tasks: "tasks/reconfigure_satellite_storage_config.yml"
+        loop: "{{ instance_data }}"
+        loop_control:
+          loop_var: host
+
+      - name: "Reconfigure the satellite primary volumes"
+        ansible.builtin.include_tasks: "tasks/reconfigure_satellite_storage_config.yml"
         vars:
           fqdn: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
           pv_list: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.pv_list') | first }}"

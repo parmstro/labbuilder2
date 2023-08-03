@@ -6,7 +6,7 @@
     controller_host: "{{ active_controller }}"
     controller_username: "{{ aap_admin_username }}"
     controller_password: "{{ aap_admin_password }}"
-    validate_certs: "{{ aap_validate_controller_certs }}"
+    validate_certs: "{{ aap_validate_certs }}"
     name: "{{ ee.name }}"
     image: "{{ ee.image }}"
     pull: "{{ ee.pull | default(omit) }}"
