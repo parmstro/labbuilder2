@@ -48,7 +48,6 @@ sat_installer_options:
   - '--foreman-proxy-realm-provider  "freeipa"'
   - '--foreman-proxy-registration true'
   - '--foreman-proxy-templates true'
-  - '--foreman-proxy-templates-listen-on both'
   - '--foreman-proxy-tftp true'
   - '--foreman-proxy-content-enable-ansible true'
   - '--foreman-proxy-content-enable-deb true'
