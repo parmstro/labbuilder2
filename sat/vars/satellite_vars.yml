@@ -1,5 +1,4 @@
 ---
-satellite_hostname: "{{ ansible_domain }}"
 satellite_fqdn: "{{ ansible_fqdn }}"
 satellite_domain: "{{ ansible_domain }}"
 
@@ -36,10 +35,9 @@ sat_installer_options:
   - '--enable-foreman-compute-libvirt'
   - '--enable-foreman-compute-vmware'
   - '--foreman-proxy-dns true'
-  - '--foreman-proxy-dns-managed true'
+  - '--foreman-proxy-dns-managed false'
   - '--foreman-proxy-dns-provider "nsupdate_gss"'
   - '--foreman-proxy-dns-server "{{ ipa_server_fqdn }}"'
-  - '--foreman-proxy-dns-reverse "{{ ipa_dns_reverse_zone }}"'
   - '--foreman-proxy-dns-tsig-keytab "/etc/foreman-proxy/freeipa.keytab"'
   - '--foreman-proxy-dns-tsig-principal "{{ foreman_proxy_realm_principal }}"'
   - '--foreman-proxy-http true'
@@ -49,7 +47,6 @@ sat_installer_options:
   - '--foreman-proxy-realm-provider  "freeipa"'
   - '--foreman-proxy-registration true'
   - '--foreman-proxy-templates true'
-  - '--foreman-proxy-templates-listen-on both'
   - '--foreman-proxy-tftp true'
   - '--foreman-proxy-content-enable-ansible true'
   - '--foreman-proxy-content-enable-deb true'
