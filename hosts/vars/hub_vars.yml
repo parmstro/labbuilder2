@@ -14,7 +14,7 @@ passfile: "{{ ssl_certs_dir }}/passfile"
 crt_service_type: "HTTP"
 crt_force_regen: true
 
-ssl_rsa_key_pass: "{{ ssl_rsa_key_pass_vault }}"
+ssl_rsa_key_pass: "{{ aap_hub_ssl_rsa_key_pass_vault }}"
 ssl_private_key_cipher: "aes256"
 ssl_private_key_size: 4096 
 ssl_public_key_format: "PEM"
@@ -29,6 +29,9 @@ ipa_server_ca_path: "/etc/ipa/ca.crt"
 
 hubs:
   - fqdn: "ah1.example.ca"
+    inventory_groups:
+    - automation_hub
+    - vmware_host
     organization: "{{ satellite_initial_organization }}"
     location: "{{ satellite_initial_location }}"
     hostgroup: "RHEL8base"
@@ -47,12 +50,12 @@ hubs:
     aap_bundle_file: "ansible-automation-platform-setup-bundle-latest.tar.gz"
     aap_installer_dir: "/root/ansible_installer"
     aap_installer_host: true
-    aap_hub_admin_password: "{{ aap_admin_password_vault }}"
+    aap_hub_admin_password: "{{ aap_hub_admin_password_vault }}"
     aap_hub_pg_host: ""
     aap_hub_pg_port: 5432
     aap_hub_pg_database: "awx"
     aap_hub_pg_username: "awx"
-    aap_hub_pg_password: "{{ aap_pg_password_vault }}"
+    aap_hub_pg_password: "{{ aap_hub_pg_password_vault }}"
     aap_hub_pg_sslmode: "prefer"
     aap_registry_url: "registry.redhat.io"
     aap_registry_username: "{{ aap_registry_username_vault }}"

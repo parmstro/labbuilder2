@@ -14,10 +14,6 @@
   register: result
   delegate_to: "{{ controllers[0].fqdn }}"
 
-- name: debug
-  debug:
-    var: result
-
 - name: "Assign the directory name"
   ansible.builtin.set_fact:
     aap_installer_inventory_dir: "{{ result.files[0].path }}"

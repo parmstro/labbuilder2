@@ -3,6 +3,10 @@
   ansible.builtin.import_playbook: ../init_env/aws/fix_aws_dns.yml
   when: rhisbuilder_bootstrap_target == 'aws'
 
+- name: "Collect hosts and add to inventory"
+  ansible.builtin.import_playbook: "collect_hosts.yml"
+  when: rhisbuilder_bootstrap_target == 'vmware'
+
 - name: "Build aap"
   hosts: aap_controller
   become: true
@@ -18,9 +22,9 @@
     - name: "Build the ansible controllers"
       ansible.builtin.include_tasks: controller/main.yml
       tags:
-        - Phase_4
-        - aap
-        - controllers
+        - tags_phase_4
+        - tags_aap
+        - tags_controllers
 
 - name: "Build automation hub"
   hosts: automation_hub
@@ -37,9 +41,9 @@
     - name: "Build the ansible automation hubs"
       ansible.builtin.include_tasks: hub/main.yml
       tags:
-        - Phase_4
-        - aap
-        - hubs
+        - tags_phase_4
+        - tags_aap
+        - tags_hubs
 
 - name: "Build tang server(s) if needed"
   hosts: container_host
@@ -57,8 +61,8 @@
     - name: "Build the container servers for tang and others"
       ansible.builtin.include_tasks: tang/main.yml
       tags:
-        - Phase_4
-        - nbde
-        - tang
-      when: build_tang
+        - tags_phase_4
+        - tags_nbde
+        - tags_tang
+
 
