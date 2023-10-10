@@ -1,39 +1,20 @@
 TODO:
-#2023-02-07
+
+# 2023-10-10
 
 # IdM Items:
 
 # Satellite Items:
-
-# Add Anisble Automation Platform File Content
-# Sync
-# Create content view for AAP File Content
-# Create composite content view for AAP Systems
-
-
-
-# Finish build out of Content Views for Test Cases re: JBoss content views
-# Finish build out of Hostgroups for sample builds including JBoss, LAMP, Wordpress and compliance profiles
-# Finish policy module
-# Add policy variables 
-# Add policy tasks
-# Test policies
+### Finish build out of Content Views for Test Cases re: JBoss content views
+### Finish build out of Hostgroups for sample builds including JBoss, LAMP, Wordpress and compliance profiles
+### Finish policy module
+### Add policy variables 
+### Add policy tasks
+### Test policies
 
 
 # AAP Items
 
-# Create the variable file and vault file for AAP/HUB install
-# Build the Controller VM
-# Build the Hub
-# Download the installer
-# Upload the installer to the Controller
-# Extract the installer
-# Template the inventory file
-# Install the controller
-# Upload the installer to the Hub
-# Extract the installer
-# Template the inventory file
-# Install the controller
 # Template the Satellite Execution Environment container
 # built the container
 # register the container to the hub
