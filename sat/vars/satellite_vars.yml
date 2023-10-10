@@ -63,12 +63,12 @@ sat_installer_options:
 # when we are using Satellite as the dhcp server
 #  - '--foreman-proxy-dhcp: false'
 #  - '--foreman-proxy-dhcp-interface: "{{ ansible_facts.interfaces | select('match', '^(e)+') | list | first }}"'
-#  - '--foreman-proxy-dhcp-range: "192.168.250.1 192.168.250.254"'
-#  - '--foreman-proxy-dhcp-gateway: "192.168.248.1"'
-#  - '--foreman-proxy-dhcp-nameservers: "192.168.248.10"'
+#  - '--foreman-proxy-dhcp-range: "192.168.140.1 192.168.140.254"'
+#  - '--foreman-proxy-dhcp-gateway: "192.168.140.1"'
+#  - '--foreman-proxy-dhcp-nameservers: "192.168.140.10"'
 #  - '--foreman-proxy-dhcp-option-domain: "[{{ satellite_domain }}]"'
 #  - '--foreman-proxy-dhcp-pxeserver: "{{ satellite_fqdn }}"'
-#  - '--foreman-proxy-dhcp-network: "192.168.248.0"'
+#  - '--foreman-proxy-dhcp-network: "192.168.140.0"'
 #  - '--foreman-proxy-dhcp-netmask: "255.255.252.0"'
 
 # Satellite Configuration Variables
@@ -207,6 +207,18 @@ repos_optional:
   - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary (RPMs)"
     product: "Red Hat Enterprise Linux for x86_64"
     releasever: "9"
+
+  - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS (RPMs)"
+    product: "Red Hat Enterprise Linux for x86_64"
+    releasever: "9.2"
+
+  - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream (RPMs)"
+    product: "Red Hat Enterprise Linux for x86_64"
+    releasever: "9.2"
+
+  - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary (RPMs)"
+    product: "Red Hat Enterprise Linux for x86_64"
+    releasever: "9.2"
 
 # The OSs for this are
 #   name: "RedHat 9.2"
@@ -492,11 +504,11 @@ cvs_optional:
     desc: "Red Hat Enterprise Linux 8.6 for LEAPP migrations"
     org: "{{ satellite_initial_organization }}"
     repositories:
-    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs 8.6"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs 8.8"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs 8.6"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs 8.8"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs 8.6"
+    - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs 8.8"
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Satellite Client 6 for RHEL 8 x86_64 RPMs"
       product: "Red Hat Enterprise Linux for x86_64"
@@ -548,9 +560,9 @@ cvs_optional:
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary RPMs 9"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream Kickstart 9.1"
+    - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream Kickstart 9.2"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.1"
+    - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS Kickstart 9.2"
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs"
       product: "Red Hat Enterprise Linux for x86_64"
@@ -596,14 +608,14 @@ cvs_optional:
     - "Production"
 
   - name: "LEAPP_2_RHEL9"
-    desc: "Red Hat Enterprise Linux 9.0 for LEAPP migrations"
+    desc: "Red Hat Enterprise Linux 9.2 for LEAPP migrations"
     org: "{{ satellite_initial_organization }}"
     repositories:
-    - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream RPMs 9.0"
+    - name: "Red Hat Enterprise Linux 9 for x86_64 - AppStream RPMs 9.2"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS RPMs 9.0"
+    - name: "Red Hat Enterprise Linux 9 for x86_64 - BaseOS RPMs 9.2"
       product: "Red Hat Enterprise Linux for x86_64"
-    - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary RPMs 9.0"
+    - name: "Red Hat Enterprise Linux 9 for x86_64 - Supplementary RPMs 9.2"
       product: "Red Hat Enterprise Linux for x86_64"
     - name: "Red Hat Satellite Client 6 for RHEL 9 x86_64 RPMs"
       product: "Red Hat Enterprise Linux for x86_64"
@@ -1265,8 +1277,8 @@ oss_optional:
 
   - name: "RedHat"
     major: 9
-    minor: 1
-    description: "RHEL 9.1"
+    minor: 2
+    description: "RHEL 9.2"
     family: "Redhat"
     password_hash: "SHA256"
     organization: "{{ satellite_initial_organization }}"

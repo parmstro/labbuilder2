@@ -1,0 +1,44 @@
+---
+# VMware specific initialization begins here
+- name: "init_vmware"
+  hosts: build_control
+  connection: local
+  become: true
+
+  tasks:
+
+    - name: "Include vaulted vars"
+      ansible.builtin.include_vars:
+        file: "~/rhisbuilder_vault.yml"
+
+    - name: "Include top level vars"
+      ansible.builtin.include_vars:
+        dir: "../vars"
+
+      
+    - name: "Power off instances"
+      community.vmware.vmware_guest_powerstate:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        name: "{{ item }}"
+        state: "powered-off"
+        validate_certs: "{{ vcenter_validate_certs }}"
+      loop: 
+        - "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
+        - "{{ instance_data | selectattr('name', 'equalto', 'idm_primary') | map(attribute='fqdn') | first }}"
+    
+    - name: "Remove instances"
+      community.vmware.vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        name: "{{ item }}"
+        cluster: "{{ vcenter_cluster }}"
+        state: "absent"
+        validate_certs: "{{ vcenter_validate_certs }}"
+      loop: 
+        - "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
+        - "{{ instance_data | selectattr('name', 'equalto', 'idm_primary') | map(attribute='fqdn') | first }}"
+
+

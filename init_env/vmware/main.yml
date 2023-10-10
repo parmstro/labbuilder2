@@ -1,30 +1,46 @@
 ---
 # VMware specific initialization begins here
+
 - name: "init_vmware"
   hosts: build_control
-  remote_user: ansiblerunner
-  become: true
+  connection: local
+  become: false
   gather_facts: true
+
   vars_files:
-    - ../vars/builder_vault.yml
-    - ../vars/builder_vars.yml
-    - '~/rhisbuilder_vault.yml'
+    - "../vars/builder_vars.yml"
+    - "../vars/instance_bootstrap_vars.yml"
+    - "~/rhisbuilder_vault.yml"
+
   tasks:
 
-    - name: "Are we building on vmware?"
-      when: rhisbuilder_bootstrap_target == "vsphere"
+    - name: "Build the vmware environment"
       block:
+      - name: "Apply the vm_deploy_data role"
+        ansible.builtin.include_role:
+          name: vm_deploy_data
+        tags:
+          - vm_deploy_data_role
+
       - name: "Configure image on vCenter"
-        ansible.builtin.include_tasks: tasks/load_image_vcenter.yml
+        ansible.builtin.include_role:
+          name: vm_image_loader
         tags:
-          - image_2_vcenter
+          - vm_deploy_data_role
 
-      - name: "Initialize primary identity management server"
-        ansible.builtin.include_tasks: tasks/initialize_idm_primary.yml
+      - name: "Initialize bootstrap servers"
+        ansible.builtin.include_role:
+          name: vm_system_deployer
+        loop: "{{ instance_data }}"
         tags:
-          - build_idm_primary
+          - vm_deploy_data_role
 
-      - name: "Initialize satellite server"
-        ansible.builtin.include_tasks: tasks/initialize_sat_primary.yml
-        tags:
-          - build_satellite_primary
+      - name: "Set the remote user for satellite storage config"
+        ansible.builtin.set_fact:
+          sat_primary: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
+
+- name: "Initialize the environment on satellite primary"
+  ansible.builtin.import_playbook: "satellite_storage.yml"
+
+# - name: "Reconfigure all systems for IdM DNS"
+#  ansible.builtin.import_playbook: "configure_for_idm_dns.yml"

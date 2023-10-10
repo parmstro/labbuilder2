@@ -9,13 +9,15 @@ ansible.limit = all
 forks = 20
 host_key_checking = False
 nocows = True
-remote_user = root
+remote_user = {{ ansible_user_id }}
 gathering = smart
 fact_caching = jsonfile
 fact_caching_connection = $HOME/ansible/facts
 fact_caching_timeout = 600
 # This is way to noisy on this install, but is useful for debugging
-# callback_enabled = ansible.posix.profile_tasks
+# callbacks_enabled = ansible.posix.profile_tasks
+display_skipped_hosts = no
+callbacks_enabled = timer
 inventory_ignore_extensions = secrets.py, .pyc, .cfg, .crt, .ini
 timeout = 60
 

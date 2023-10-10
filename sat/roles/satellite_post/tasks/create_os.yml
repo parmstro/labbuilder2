@@ -1,7 +1,7 @@
 ---
 # This task ensures the OS state
 
-- name: "Ensure existence of an Operating System"
+- name: "Ensure existence of Operating System - {{ os.description }}"
   redhat.satellite.operatingsystem:
     username: "{{ satellite_admin_username }}"
     password: "{{ satellite_admin_password }}"

@@ -59,6 +59,7 @@
       async: "{{ async_timeout }}"
       poll: "{{ async_delay }}"
       register: async_update
+
   rescue:
     - name: "Retry count exceeded, failing"
       ansible.builtin.fail:

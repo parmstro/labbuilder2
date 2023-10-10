@@ -18,7 +18,9 @@ azure_resource_group: "az_canada_central_rg"
 skip_imagebuilder_build: false
 
 image_definition_file: "request-base-image.json"
-imagebuilder_image_type: "vsphere"
+# Setting this value dynamically
+# Controlled by rhisbuilder_bootstrap_target in users rhisbuilder_vault.yml file
+# imagebuilder_image_type: "vsphere"
 imagebuilder_include_filesystem: true
 
 # type             extension 

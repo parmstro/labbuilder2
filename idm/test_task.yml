@@ -1,7 +1,6 @@
 ---
 - name: "Test Task"
   hosts: idm_primary
-  remote_user: ansiblerunner
   become: true
   vars_files:
   - vars/idm_vault.yml

@@ -1,0 +1,89 @@
+---
+# This is the private vault file for your rhisbuilder secrets
+# This file is expected in your (ansiblerunner) home directory
+# 
+# Use this file to define all secrets in the project
+# Use rhisbuilder_local.yml to define non-secret location dependent variables
+# see: SAMPLE_rhisbuilder_local.yml
+# All other secrets are defined in their respective vars folders
+
+# init_env secrets
+# This value has now been standardized and no longer contains the org
+automation_hub_url_vault: "https://console.redhat.com/api/automation-hub/content/published/"
+
+# these allow access to your Red Hat Subscriptions. Do Not Publish!
+# your Red Hat Automation hub tokens
+# see: https://console.redhat.com/ansible/automation-hub/token
+automation_hub_token_vault: ""
+offline_token_vault: ""
+
+# your Red Hat CDN Organization and Activation Key for 
+# registering your boostrap systems
+# these allow access to your Red Hat Subscriptions. Do Not Publish!
+default_org_number_vault: # a number without quotes
+default_activation_key_vault: "" # a string - the name of the activation key
+
+# This is used for cloud-init when deploying
+baseimage_password_vault: "SortOfSuperSecretWithoutSpecialCharacters"
+# for simplicity in testing use this
+# for production, set each password below individually
+default_environment_password: "SuperSecretSpecialCharactersAllowed"
+
+# The general secrets for Idm and Satellite images
+# Override defaults here as necessary
+idm_activationkey_vault: "{{ default_activation_key_vault }}"
+sat_activationkey_vault: "{{ default_activation_key_vault }}"
+
+idm_rhsm_org_vault: "{{ default_org_number_vault }}"
+sat_rhsm_org_vault: "{{ default_org_number_vault }}"
+
+vcenter_username_vault: "Administrator@VSPHERE.LOCAL"
+vcenter_password_vault: "{{ default_environment_password }}"
+
+azure_tenant_id_vault: ""
+azure_subscription_id_vault: ""
+
+# IdM Intaller Role Secrets (the Satellite Pre role uses these to install the IdM client)
+# Override defaults here as necessary
+ipa_admin_principal_vault: "admin"
+ipa_admin_password_vault: "{{ default_environment_password }}"
+ipa_dm_password_vault: "{{ default_environment_password }}"   # the directory server manager password
+
+
+# Satellite Installer secrets
+sat_ssl_rsa_key_pass_vault: "{{ default_environment_password }}"
+sat_inital_admin_username_vault: "admin"
+sat_inital_admin_password_vault: "{{ default_environment_password }}"
+
+# These are your Red Hat Account Credentials
+# These are required to pull the manifests for both Satellite and AAP Controller
+# These are extremely sensitive. DO NOT PUBLISH
+# As an alternative we will support the zip file upload in a later release
+cdn_username_vault: ""
+cdn_password_vault: ""
+cdn_account_number_vault: ""
+satellite_manifest_zip_vault: "~/satellite_manifest.zip"
+aap_controller_manifest_zip_vault: "~/aap_controller_manifest.zip"
+
+# allows you to predefine the ssh keys for Satellite remote execution
+# e.g. remote_execution_ssh_keys_vault: "ssh-rsa AAAAB.........../x6GQ5"
+remote_execution_ssh_keys_vault: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+remote_execution_ssh_user_vault: "{{ ansible_user_id }}"
+
+# compute resource
+# It is strongly suggested that you use a service account here
+# see: https://access.redhat.com/solutions/1339483
+vcenter_service_username_vault: "Administrator@VSPHERE.LOCAL"
+vcenter_service_password_vault: "{{ default_environment_password }}"
+
+# virt_who_config - different than above!
+# It is strongly suggested that you use a service account here
+# see: https://access.redhat.com/solutions/495683
+# more: https://access.redhat.com/articles/1553923
+vcenter_virtwho_username_vault: "{{ vcenter_service_username_vault }}"
+vcenter_virtwho_password_vault: "{{ default_environment_password }}"
+
+# permissions to update satellite with discovered vms and hypervisors
+satellite_virtwho_username_vault: "{{ sat_inital_admin_username_vault }}"
+satellite_virtwho_password_vault: "{{ default_environment_password }}"
+

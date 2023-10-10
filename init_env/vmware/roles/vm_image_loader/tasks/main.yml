@@ -8,4 +8,5 @@
     datacenter: "{{ vcenter_datacenter }}"
     datastore: "{{ vcenter_datastore }}"
     path: "{{ vcenter_base_folder_path }}/{{ image_file_name }}"
-  delegate_to: localhost
+    validate_certs: "{{ vcenter_validate_certs }}"
+  

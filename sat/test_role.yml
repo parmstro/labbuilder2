@@ -1,8 +1,9 @@
 ---
-- name: "Test Task"
+- name: "Test Role"
   hosts: sat.example.ca
   become: true
   gather_facts: true
+  
   vars_files:
     - "vars/satellite_pre_vars.yml"
     - "vars/satellite_vars.yml"
@@ -11,5 +12,6 @@
 
   tasks:
 
-  - name: "Test the specified task"
-    ansible.builtin.include_tasks: roles/satellite_post/tasks/{{ test_task_name }}.yml
+  - name: "Run a role test "
+    ansible.builtin.include_role:
+      name: "{{ test_role_name }}"

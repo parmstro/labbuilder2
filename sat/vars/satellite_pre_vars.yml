@@ -26,7 +26,7 @@ ipa_server_domain: "example.ca"
 ipa_server_realm: "{{ ipa_server_domain | upper }}"
 ipa_client_domain: "{{ ipa_server_domain }}"
 ipa_client_configure_dns_resolver: true
-ipa_client_dns_servers: "192.168.254.5"
+ipa_client_dns_servers: "192.168.140.5"
 ipa_client_mkhomedir: true
 ipasssd_enable_dns_updates: true
 ipa_dns_reverse_zone: "168.192.in-addr.arpa"
