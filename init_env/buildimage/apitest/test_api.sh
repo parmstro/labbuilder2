@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # setup offline token
-OFFLINE_TOKEN="<enter_offline_token"
-export OFFLINE_TOKEN
+# OFFLINE_TOKEN=""
+# export OFFLINE_TOKEN
 
 # get access token
 access_token=$(curl --silent \
