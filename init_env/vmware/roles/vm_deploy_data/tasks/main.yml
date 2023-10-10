@@ -1,11 +1,9 @@
 ---
 # This set of tasks sets up the cloud-init metadata for the instances
-# (c) 2023, Paul Armstrong <parmstro@redhat.com>
-#
 
-
+# Get the executing users default ssh key
 - name: "Retrieve users public ssh key"
-  ansible.builtin.shell: "cat /home/ansiblerunner/.ssh/id_rsa.pub"
+  ansible.builtin.shell: "cat ~/.ssh/id_rsa.pub"
   register: output
 
 - name: "Assign the variable"
@@ -40,9 +38,6 @@
 - name: "Generate the base64 userdata variables"
   ansible.builtin.include_tasks: generate_base64_userdata.yml
   loop: "{{ instance_data }}"
-
-- debug: 
-    var: instance_data
 
 - name: "Clean-up the tmp files"
   ansible.builtin.include_tasks: cleanup.yml

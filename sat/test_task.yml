@@ -1,14 +1,13 @@
 ---
 - name: "Test Task"
   hosts: sat.example.ca
-  remote_user: ansiblerunner
   become: true
   gather_facts: true
   vars_files:
-    - ~/rhisbuilder_vault.yml
-    - vars/satellite_pre_vars.yml
-    - vars/satellite_vars.yml
-    - vars/satellite_provisioning_vars_vmware.yml
+    - "vars/satellite_pre_vars.yml"
+    - "vars/satellite_vars.yml"
+    - "vars/satellite_provisioning_vars_vmware.yml"
+    - "~/rhisbuilder_vault.yml"
 
   tasks:
 

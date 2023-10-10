@@ -5,8 +5,9 @@
   become: false
   gather_facts: true
   vars_files:
-    - "~/rhisbuilder_vault.yml"
     - "vars/aws_vars.yml"
+    - "~/rhisbuilder_vault.yml"
+
   tasks:
     - name: collection final check
       block:
@@ -24,8 +25,8 @@
   become: false
   gather_facts: false
   vars_files:
-    - "~/rhisbuilder_vault.yml"
     - "vars/aws_vars.yml"
+    - "~/rhisbuilder_vault.yml"
   vars:
     ec2_wait: false
     teardown: true

@@ -68,7 +68,7 @@ aap_controller_manifest_zip_vault: "~/aap_controller_manifest.zip"
 # allows you to predefine the ssh keys for Satellite remote execution
 # e.g. remote_execution_ssh_keys_vault: "ssh-rsa AAAAB.........../x6GQ5"
 remote_execution_ssh_keys_vault: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-remote_execution_ssh_user_vault: "ansiblerunner"
+remote_execution_ssh_user_vault: "{{ ansible_user_id }}"
 
 # compute resource
 # It is strongly suggested that you use a service account here
