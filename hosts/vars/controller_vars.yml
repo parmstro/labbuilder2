@@ -29,7 +29,7 @@ aap_manifest_validate_certs: false
 aap_manifest_cdn_username: "{{ aap_cdn_username_vault }}"
 aap_manifest_cdn_password: "{{ aap_cdn_password_vault }}"
 aap_manifest_account: "{{ aap_cdn_account_number_vault }}"
-aap_validate_controller_certs: false
+aap_validate_certs: false
 
 aap_ldap_domain_map: "dc=example,dc=ca"
 aap_admin_username: "{{ aap_admin_username_vault }}"

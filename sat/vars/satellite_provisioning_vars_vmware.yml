@@ -195,6 +195,33 @@ hostgroups_mandatory:
     subnet: "Public"
     root_pass: "{{ satellite_admin_password }}"
 
+  - name: "RHEL8_JBoss"
+    parent: "RHEL8base"
+    description: "RHEL 8 SOE for JBoss"
+    content_view: "SOE_JBoss"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
+
+  - name: "RHEL8_LAMP"
+    parent: "RHEL8base"
+    description: "RHEL 8 SOE for LAMP stack"
+    content_view: "SOE_RHEL8"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
+
+  - name: "RHEL8_WordPress"
+    parent: "RHEL8base"
+    description: "RHEL 8 SOE for WordPress"
+    content_view: "SOE_RHEL8EPEL"
+    ansible_roles:
+      - theforeman.foreman_scap_client
+    ptable: "RHEL_Server_Compliance"
+    organization: "{{ satellite_initial_organization }}"
+
 hostgroups_optional:
   - name: "RHEL9base"
     description: "RHEL 9 SOE base hostgroup"
@@ -234,16 +261,6 @@ hostgroups_optional:
     ansible_roles:
       - theforeman.foreman_scap_client
       - ansible-role-rhel9-cis
-    ptable: "RHEL_Server_Compliance"
-    organization: "{{ satellite_initial_organization }}"
-
-  - name: "RHEL8_JBoss"
-    parent: "RHEL8base/RHEL8_CIS2"
-    description: "RHEL 8 SOE CIS2 for JBoss"
-    content_view: "SOE_JBoss"
-    ansible_roles:
-      - theforeman.foreman_scap_client
-      - ansible-role-rhel8-cis
     ptable: "RHEL_Server_Compliance"
     organization: "{{ satellite_initial_organization }}"
 
