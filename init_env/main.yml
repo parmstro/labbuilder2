@@ -1,6 +1,5 @@
 - name: "Initialize the environment"
   hosts: build_control
-  connection: local
   become: false
   gather_facts: false
   vars_files:

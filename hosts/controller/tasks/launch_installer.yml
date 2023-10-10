@@ -16,12 +16,6 @@
     mode: 0600
   delegate_to: "{{ controllers[0].fqdn }}"
 
-#- name: "Create an authorized key file to the controller host"
-#  ansible.builtin.copy:
-#    src: "~/.ssh/authorized_keys"
-#    dest: "/root/.ssh/"
-#  delegate_to: "{{ controllers[0].fqdn }}"
-
 - name: "Add the new key to authorize_keys"
   ansible.posix.authorized_key:
     user: "{{ ansible_user_id }}"
@@ -30,6 +24,7 @@
 - name: "Launching installer"
   debug:
     msg: "Please be patient. This will take 10-30 minutes depending on the configuration."
+
 
 - name: "Run the AAP installer configuration"
   ansible.builtin.command: "{{ aap_installer_inventory_dir }}/setup.sh"

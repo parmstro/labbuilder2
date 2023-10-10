@@ -1,39 +1,19 @@
 ---
-# VMware specific initialization begins here
-
-- name: "init_vmware"
-  hosts: build_control
-  connection: local
-  become: false
+- name: "Reconfigure Satellite storage"
+  hosts: sat_primary
+  become: true
   gather_facts: true
 
   vars_files:
     - "../vars/builder_vars.yml"
     - "../vars/instance_bootstrap_vars.yml"
     - "~/rhisbuilder_vault.yml"
-
+  
   tasks:
-
-    - name: "Build the vmware environment"
-      block:
-      - name: "Apply the vm_deploy_data role"
-        ansible.builtin.include_role:
-          name: vm_deploy_data
-        tags:
-          - vm_deploy_data_role
-
-      - name: "Configure image on vCenter"
-        ansible.builtin.include_role:
-          name: vm_image_loader
-        tags:
-          - vm_deploy_data_role
-
-      - name: "Initialize bootstrap servers"
-        ansible.builtin.include_role:
-          name: vm_system_deployer
-        loop: "{{ instance_data }}"
-        tags:
-          - vm_deploy_data_role
+      - name: "Set the remote user for satellite storage config"
+        ansible.builtin.set_fact:
+          ansible_user: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='remoteuser') | first }}"
+ 
 
       - name: "Reconfigure the satellite primary volumes"
         ansible.builtin.include_tasks: "tasks/reconfigure_satellite_storage_config.yml"
@@ -48,9 +28,3 @@
           home_size_gb: "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='volumes.home_size_gb') | first }}"
         tags:
           - reconfigure_satellite_volumes
-
-      - name: "Add the bootstrap servers to inventory"
-        ansible.builtin.include_tasks: "tasks/add_host_to_inventory.yml"
-        loop: "{{ instance_data }}"
-        loop_control:
-          loop_var: host

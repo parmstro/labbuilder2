@@ -3,7 +3,6 @@
 - name: "init_vmware"
   hosts: build_control
   connection: local
-  remote_user: ansiblerunner
   become: true
 
   tasks:
