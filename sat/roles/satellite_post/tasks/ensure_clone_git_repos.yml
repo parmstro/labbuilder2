@@ -1,7 +1,7 @@
 ---
 # Clone git repositories to the Satellite Server
 # This is typically for ansible roles that run at build time - compliance roles.
-- name: "Clone the repository locally"
+- name: "Clone the repository locally - {{ gitrepo.repository }}"
   ansible.builtin.git:
     repo: "{{ gitrepo.repository }}"
     dest: "{{ gitrepo.dest }}"
