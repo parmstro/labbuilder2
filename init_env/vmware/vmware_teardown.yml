@@ -15,7 +15,12 @@
       ansible.builtin.include_vars:
         dir: "../vars"
 
-      
+    - name: "Cleaning up the following Virtual machines"
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_inventory_hostnames:
+        - all:!build_control
+
     - name: "Power off instances"
       community.vmware.vmware_guest_powerstate:
         hostname: "{{ vcenter_hostname }}"
@@ -24,10 +29,10 @@
         name: "{{ item }}"
         state: "powered-off"
         validate_certs: "{{ vcenter_validate_certs }}"
-      loop: 
-        - "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
-        - "{{ instance_data | selectattr('name', 'equalto', 'idm_primary') | map(attribute='fqdn') | first }}"
-    
+      with_inventory_hostnames:
+        - all:!build_control
+      ignore_errors: true
+
     - name: "Remove instances"
       community.vmware.vmware_guest:
         hostname: "{{ vcenter_hostname }}"
@@ -37,8 +42,7 @@
         cluster: "{{ vcenter_cluster }}"
         state: "absent"
         validate_certs: "{{ vcenter_validate_certs }}"
-      loop: 
-        - "{{ instance_data | selectattr('name', 'equalto', 'sat_primary') | map(attribute='fqdn') | first }}"
-        - "{{ instance_data | selectattr('name', 'equalto', 'idm_primary') | map(attribute='fqdn') | first }}"
-
+      with_inventory_hostnames:
+        - all:!build_control
+      ignore_errors: true
 
