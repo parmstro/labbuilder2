@@ -15,14 +15,7 @@
   tags:
     - tags_buildimage
 
-- name: "Initialize the environment on aws"
-  ansible.builtin.import_playbook: "./aws/main.yml"
-  when: rhisbuilder_bootstrap_target == "aws"
+- name: "Initialize the environment"
+  ansible.builtin.import_playbook: "./{{ rhisbuilder_bootstrap_target }}/main.yml"
   tags:
-    - tags_aws_init_env
-
-- name: "Initialize the environment on vmware"
-  ansible.builtin.import_playbook: "./vmware/main.yml"
-  when: rhisbuilder_bootstrap_target == "vmware"
-  tags:
-    - tags_vmware_init_env
+    - tags_init_env
