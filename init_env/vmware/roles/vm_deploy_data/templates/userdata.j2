@@ -3,6 +3,9 @@ password: {{ baseimage_password }}
 ssh_pwauth: True
 users:
   - default
+  - name: root
+    ssh_authorized_keys:
+      - {{ cloudint_ssh_key }}
   - name: {{ ansible_user_id }} 
     groups: users,wheel
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
