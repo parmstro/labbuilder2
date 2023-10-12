@@ -1,6 +1,16 @@
 ---
 # VMware specific initialization begins here
-- name: "init_vmware"
+- name: "Unregister rhis Env"
+  hosts: all:!build_control
+  become: true
+
+  tasks:
+    - name: Unregister
+      community.general.redhat_subscription:
+        state: absent
+      ignore_errors: true 
+
+- name: "Tear down rhis Env"
   hosts: build_control
   connection: local
   become: true
