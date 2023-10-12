@@ -251,7 +251,7 @@ projects:
     scm_track_submodules: false
     scm_update_on_launch: false
     scm_url: "https://github.com/parmstro/sat_ansible_callback.git"
-    scm_update_on_launch: false
+  
     state: present
     validate_certs: "{{ aap_validate_certs }}"
 
