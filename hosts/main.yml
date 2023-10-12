@@ -9,13 +9,12 @@
 
 - name: "Build aap"
   hosts: aap_controller
+  remote_user: ansiblerunner
   become: true
   gather_facts: true
   vars_files:
     - "vars/common_vars.yml"
-    - "vars/common_vault.yml"
     - "vars/controller_vars.yml"
-    - "vars/controller_vault.yml"
     - "~/rhisbuilder_vault.yml"
   
   tasks:
@@ -28,13 +27,12 @@
 
 - name: "Build automation hub"
   hosts: automation_hub
+  remote_user: ansiblerunner
   become: true
   gather_facts: true
   vars_files:
     - "vars/common_vars.yml"
-    - "vars/common_vault.yml"
     - "vars/hub_vars.yml"
-    - "vars/hub_vault.yml"
     - "~/rhisbuilder_vault.yml"
   
   tasks:
@@ -52,9 +50,7 @@
   gather_facts: true
   vars_files:
     - "vars/common_vars.yml"
-    - "vars/common_vault.yml"
     - "vars/tang_vars.yml"
-    - "vars/tang_vault.yml"
     - "~/rhisbuilder_vault.yml"
 
   tasks:
@@ -73,7 +69,8 @@
   gather_facts: true
   vars_files:
     - "vars/common_vars.yml"
-    - "vars/rhis_post.yml"
+    - "vars/hub_vars.yml"
+    - "vars/rhis_post_vars.yml"
     - "~/rhisbuilder_vault.yml"
 
   tasks:
