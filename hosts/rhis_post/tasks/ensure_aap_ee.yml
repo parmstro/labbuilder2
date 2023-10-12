@@ -1,12 +1,5 @@
 ---
 # Build and upload an ee
-
-- name: "Ensure the target directory exists"
-  ansible.builtin.file:
-    path: "{{ ee.git_dest }}"
-    state: directory
-  delegate_to: "{{ hubs[0].fqdn }}"
-
 - name: "Clone the git repo for the ee"
   ansible.builtin.git:
     repo: "{{ ee.git_repo }}"
