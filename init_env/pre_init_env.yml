@@ -10,6 +10,10 @@
     - "~/rhisbuilder_vault.yml"
 
   tasks:
+    - name: "User executing the build"
+      debug:
+        var: ansible_user_id
+
     - name: "Write ansible.cfg"
       ansible.builtin.template:
         src: ansible.cfg.j2
