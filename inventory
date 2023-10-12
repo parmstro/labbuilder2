@@ -12,9 +12,13 @@ sat.example.ca
 [sat_capsule]
 
 [aap_controller]
+controller1.example.ca
 
 [automation_hub]
+ah1.example.ca
 
 [container_servers]
+containerhost1.example.ca
+containerhost2.example.ca
 
 [aws_nodes]
