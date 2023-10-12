@@ -11,6 +11,7 @@ instance_data:
       - idm_primary
     instance_id: "idm"
     local_hostname: "idm"
+    remoteuser: "{{ rhisbuilder_default_user }}"
     iface: "eth0"
     network_config_type: "static"
     network_device_type: "vmxnet3"
@@ -38,7 +39,7 @@ instance_data:
       - sat_primary
     instance_id: "sat"
     local_hostname: "sat"
-    remoteuser: "{{ ansible_user_id }}"
+    remoteuser: "{{ rhisbuilder_default_user }}"
     iface: "eth0"
     network_config_type: "static"
     network_device_type: "vmxnet3"
