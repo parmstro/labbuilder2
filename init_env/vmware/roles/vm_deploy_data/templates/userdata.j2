@@ -6,7 +6,7 @@ users:
   - name: root
     ssh_authorized_keys:
       - {{ cloudint_ssh_key }}
-  - name: {{ ansible_user_id }} 
+  - name: {{ rhisbuilder_default_user }} 
     groups: users,wheel
     sudo: ["ALL=(ALL) NOPASSWD:ALL"]
     ssh_pwauth: True
@@ -16,7 +16,7 @@ chpasswd:
   list: |
     root:{{ baseimage_password }}
     cloud-user:{{ baseimage_password }}
-    {{ ansible_user_id }}:{{ baseimage_password }}
+    {{ rhisbuilder_default_user }}:{{ baseimage_password }}
   expire: False
 runcmd:
   - nmcli conn mod "System eth0" ipv4.method {{ item.network_config_type }} ipv4.address {{ item.ip }}/{{ item.prefix }} ipv4.gateway {{ item.gateway }} ipv4.dns {{ item.dns }}
