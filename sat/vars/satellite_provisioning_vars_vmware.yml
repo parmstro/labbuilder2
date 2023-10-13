@@ -67,7 +67,6 @@ virtwho_configs_mandatory:
 # compute_profiles
 compute_profiles_mandatory:
   - name: "SOE_Small"
-    updated_name: "SOE_Small"
     compute_attributes:
       - compute_resource: "VMware_Lab"
         vm_attrs:
@@ -102,7 +101,6 @@ compute_profiles_mandatory:
               network: "VM Network"
 
   - name: "SOE_Medium"
-    updated_name: "SOE_Medium"
     compute_attributes:
       - compute_resource: "VMware_Lab"
         vm_attrs:
@@ -137,12 +135,11 @@ compute_profiles_mandatory:
               network: "VM Network"
 
   - name: "SOE_Large"
-    updated_name: "SOE_Large"
     compute_attributes:
       - compute_resource: "VMware_Lab"
         vm_attrs:
           cpus: 4
-          corespersocket: 2
+          corespersocket: 1
           memory_mb: 8192
           cluster: "NUCLab"
           resource_pool: "Resources"
