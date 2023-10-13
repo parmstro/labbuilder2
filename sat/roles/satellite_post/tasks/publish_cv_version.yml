@@ -6,7 +6,7 @@
   when:
     - skip_publish == false
   block:
-    - name: "Check on CV by name"
+    - name: "Check on CV by name: {{ cv.name }}"
       redhat.satellite.content_view_info:
         username: "{{ satellite_admin_username }}"
         password: "{{ satellite_admin_password }}"
