@@ -6,6 +6,7 @@ images/
 rhisbuilder_vault.yml
 *.private
 *_vault.yml
+*.code-workspace
 init_env/buildimage/request-base-image.json
 init_env/buildimage/builder_main.vmdk
 ansible.cfg
