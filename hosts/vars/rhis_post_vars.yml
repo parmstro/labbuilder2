@@ -110,7 +110,7 @@ exec_envs:
     organization: "Default"
     tag: "v1"
     git_repo: "https://github.com/parmstro/rhis_ansible_ee.git"
-    git_dest: "{{ rhis_default_git_dest }}"
+    git_dest: "/tmp/rhis_example_ca_ee"
     git_clone: true
     git_force: true
 
