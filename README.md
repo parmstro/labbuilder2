@@ -1,3 +1,5 @@
+Deprecated: See rhis-builder-*
+
 # labbuilder2
 Be sure to check out the [Wiki](https://github.com/parmstro/labbuilder2/wiki)
 
